@@ -1,0 +1,130 @@
+Table user{
+  id int [pk]
+  username varchar2
+  password varchar2
+  email varchar2
+}
+
+Table post{
+  id int [pk]
+  id_user int
+  type varchar2
+  title varchar2
+  posted_date date
+  content clob
+}
+Ref: post.id_user > user.id
+
+table comment{
+  id int [pk]
+  id_user int
+  id_post int
+  content clob
+  posted_date date
+  number_reacts int
+}
+Ref: comment.id_user > user.id
+Ref: comment.id_post > post.id
+
+table post_setup{
+  id int [pk]
+  id_setup int
+  
+}
+table setup{
+  id int [pk]
+  name varchar2
+  path varchar2
+  user_id int
+}
+
+Ref: setup.user_id > user.id
+Ref: post_setup.id > post.id
+Ref: post_setup.id_setup > setup.id
+
+table tag{
+  id int [pk]
+  id_post int
+  name_tag varchar2
+}
+Ref: tag.id_post > post.id
+
+table post_item_review{
+  id int [pk]
+  id_item int 
+}
+
+
+Ref: post_item_review.id_item > products.id
+Ref: post_item_review.id > post.id
+
+table favorite{
+  id_post int [pk]
+  id_user int [pk]
+}
+Ref: favorite.id_post > post.id
+Ref: favorite.id_user > user.id
+
+table report{
+  id int [pk]
+  id_post int
+  title varchar2
+  motivation varchar2
+  date date
+}
+Ref: report.id_post > post.id
+
+
+
+//tabela marketplace
+Table products {
+  id int [pk]
+  category_id int [ref: - categories.id]
+  name varchar
+  price float
+  rating float
+  forum_link varchar
+}
+
+//Table specifications {
+//  id int [pk]
+//  product_id int [ref: - products.id]
+//  category_id int [ref: - categories.id]
+//  spec_name varchar
+//  spec_value varchar
+//}
+
+Table wishlists {
+  id int [pk]
+  //product_id int [ref: > products.id]
+  user_id int //trebuie o referinta
+  create_date date
+  name varchar
+}
+Ref: user.id < wishlists.user_id
+
+Table wishlist_items {
+  product_id int [ref: > products.id]
+  wishlist_id int [ref: > wishlists.id]
+}
+
+Table categories {
+  id int [pk]
+  name varchar
+  description varchar //de revazut
+}
+
+Table suppliers {
+  id int [pk]
+  //poduct_id int [ref: > products.id] //many to many
+  name varchar
+}
+
+Table supplier_items {
+  supplier_id int [ref: > suppliers.id]
+  product_id int [ref: > products.id]
+}
+
+//de revazut relatiile 
+//de adaugat tabela separat pentru specs
+// (pentru compatibilitati) !!!foarte important
