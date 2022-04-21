@@ -47,13 +47,18 @@ class _MarketplaceState extends State<Marketplace> {
                 style: ButtonStyle(elevation: MaterialStateProperty.all(1))),
           ],
         ),])),
-        SingleChildScrollView( child: Column(
-          children: DUMMY_PRODUCTS
-              .map((proData) => ProductItem(
-                  proData.id, proData.title, proData.pret, proData.linkImg))
-              .toList(),
-        )
-      )]),
+          Expanded(
+            child: ListView(
+            shrinkWrap: true,
+            physics: AlwaysScrollableScrollPhysics(),
+            children: DUMMY_PRODUCTS
+                .map((proData) => ProductItem(
+                    proData.id, proData.title, proData.pret, proData.linkImg))
+                .toList(),
+            )
+          )
+      ]),
+      
     ));
   }
 }
