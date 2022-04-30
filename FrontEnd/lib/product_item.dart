@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:marketplace/product_item_expanded.dart';
+import 'package:homepage/product_item_expanded.dart';
 
 class ProductItem extends StatelessWidget {
   final String id;
