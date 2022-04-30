@@ -1,4 +1,4 @@
-name: marketplace
+name: homepage
 description: A new Flutter project.
 
 # The following line prevents the package from being accidentally published to
@@ -34,6 +34,7 @@ dependencies:
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.2
+  simple_gradient_text: ^1.2.2
 
 dev_dependencies:
   flutter_test:
@@ -72,12 +73,15 @@ flutter:
   # "family" key with the font family name, and a "fonts" key with a
   # list giving the asset and other descriptors for the font. For
   # example:
-  # fonts:
-  #   - family: Schyler
-  #     fonts:
-  #       - asset: fonts/Schyler-Regular.ttf
-  #       - asset: fonts/Schyler-Italic.ttf
-  #         style: italic
+  fonts:
+    - family: BarlowCondensed
+      fonts:
+        - asset: fonts/BarlowCondensed-Bold.ttf
+          weight: 500
+    - family: BebasNeuePro
+      fonts:
+        - asset: fonts/BebasNeuePro-Regular.ttf
+          weight: 500
   #   - family: Trajan Pro
   #     fonts:
   #       - asset: fonts/TrajanPro.ttf

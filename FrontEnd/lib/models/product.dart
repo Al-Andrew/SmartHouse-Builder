@@ -1,3 +1,5 @@
+// import 'dart:math';
+
 class Product {
   final String id;
   final String title;

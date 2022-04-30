@@ -30,7 +30,8 @@ class ProductItemExpanded extends StatelessWidget {
                   ))),
           Expanded(
               child: FloatingActionButton(
-                  onPressed: Navigator.of(context).pop, child: Icon(Icons.close))),
+                  onPressed: Navigator.of(context).pop,
+                  child: Icon(Icons.close))),
         ],
         content: Center(
             child: Container(
@@ -48,11 +49,27 @@ class ProductItemExpanded extends StatelessWidget {
                     ),
                     Expanded(
                         child: Text(
-                      '\n\$$pret\n',
+                      (() {
+                        if (pret != 0) {
+                          return "\n\$$pret\n";
+                        }
+
+                        return "ERR";
+                      })(),
                       textAlign: TextAlign.center,
                       style: TextStyle(
-                          fontWeight: FontWeight.bold, color: Colors.red),
-                    )),
+                        fontWeight: FontWeight.bold,
+                        color: Colors.red,
+                      ),
+                    )
+
+                        //     Text(
+                        //   '\n\$$pret\n',
+                        //   textAlign: TextAlign.center,
+                        //   style: TextStyle(
+                        //       fontWeight: FontWeight.bold, color: Colors.red),
+                        // )
+                        ),
                     Expanded(
                       child: Container(
                         width: MediaQuery.of(context).size.width *
