@@ -1,6 +1,7 @@
-package basic.structure;
+package working.structure;
 
-import basic.structure.exceptions.IllegalAddingPost;
+import exceptions.IllegalAddingPost;
+import backend.post.Post;
 
 import java.util.ArrayList;
 import java.util.List;

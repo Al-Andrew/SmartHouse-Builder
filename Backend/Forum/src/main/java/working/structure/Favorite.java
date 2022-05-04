@@ -1,14 +1,14 @@
-package basic.structure;
+package working.structure;
 
-import basic.structure.exceptions.InvalidFavoritePost;
+import exceptions.InvalidFavoritePost;
+import backend.post.Post;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Vector;
 
 public class Favorite {
 
-  //TODO: List sau Map?
+  //TODO: List sau Map? (Nu conteaza)
   List<Post> posts = new ArrayList<>();
 
   private boolean isLogged;

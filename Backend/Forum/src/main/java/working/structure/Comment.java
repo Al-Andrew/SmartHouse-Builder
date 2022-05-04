@@ -1,6 +1,4 @@
-package basic.structure;
-
-import java.util.Vector;
+package working.structure;
 
 public class Comment {
 

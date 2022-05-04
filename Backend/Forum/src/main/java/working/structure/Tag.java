@@ -1,4 +1,4 @@
-package basic.structure;
+package working.structure;
 
 
 public class Tag {
