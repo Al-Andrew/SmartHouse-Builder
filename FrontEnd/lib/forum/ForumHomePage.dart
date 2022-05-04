@@ -35,12 +35,44 @@ class _ForumState extends State<Forum> {
                 children: [
                   Expanded(
                     flex: 1,
-                    child: Center(
-                      child: Container(
-                        color: Colors.blue,
-                        child: Center(child: Text('Forum')),
-                      ),
-                    ),
+                    child: Container(
+                        color: Colors.orange,
+                        child: Column(
+                          children: [
+                            ButtonBar(
+                                buttonPadding: EdgeInsets.symmetric(
+                                    horizontal: 30, vertical: 10),
+                                children: [
+                                  TextButton(
+                                    style: TextButton.styleFrom(
+                                        textStyle: const TextStyle(
+                                            color: Colors.black)),
+                                    onPressed: () => {
+                                      //do something
+                                    },
+                                    child: const Center(
+                                      child: Text('New Post'),
+                                    ),
+                                  ),
+                                  TextButton(
+                                    style: TextButton.styleFrom(
+                                        textStyle: const TextStyle(
+                                            color: Colors.black)),
+                                    onPressed: () => {
+                                      //do something
+                                    },
+                                    child: const Center(
+                                      child: Text('My Posts'),
+                                    ),
+                                  ),
+                                ]),
+                            Container(
+                              color: Colors.white,
+                              margin: const EdgeInsets.only(top: 10.0),
+                              child: Center(child: Text('Filter')),
+                            ),
+                          ],
+                        )),
                   ),
                   Expanded(
                     flex: 6,
