@@ -1,4 +1,4 @@
-package basic.structure.exceptions;
+package exceptions;
 
 public class InvalidFavoritePost extends RuntimeException{
     public InvalidFavoritePost(){

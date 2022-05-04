@@ -1,28 +1,47 @@
-package basic.structure;
+package backend.post;
 
+import exceptions.InvalidLength;
+import working.structure.Comment;
+import working.structure.Report;
 
-import basic.structure.exceptions.InvalidLength;
-
+import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class Post {
+@Entity
+@Table(name = "post")
+public class Post {
 
   //limita de caractere: 10_000 la post-uri
-  protected String content;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  protected int id;
+  protected int id_user;
+  protected String typePost;
   protected String title;
+  protected String date;
+  protected String content;
+
+  @Transient
   protected String author;
   //alegi intre String si LocalTime -> de intrebat
-  protected String date;
 
+
+  @Transient
   List<Comment> comments = new ArrayList<>();
+  @Transient
   List<Report> reports = new ArrayList<>();
 
-  public Post(String content, String title, String author, String date) {
+  public Post(int id, String content, String title, String author, String date) {
+    this.id = id;
     this.content = content;
     this.title = title;
     this.author = author;
     this.date = date;
+  }
+
+  public Post() {
+
   }
 
   public boolean modifyContent(String newPostContent) {
@@ -70,5 +89,13 @@ public abstract class Post {
 
   public List<Report> getReports() {
     return reports;
+  }
+
+  public int getId() {
+    return id;
+  }
+
+  public void setId(int id) {
+    this.id = id;
   }
 }

@@ -1,8 +1,7 @@
-package basic.structure;
+package working.structure;
 
-import basic.structure.exceptions.InvalidLength;
 
-import java.util.Vector;
+import exceptions.InvalidLength;
 
 public class Report {
 

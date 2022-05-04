@@ -1,4 +1,4 @@
-package basic.structure.exceptions;
+package exceptions;
 
 public class InvalidTag extends RuntimeException{
     public InvalidTag(){
