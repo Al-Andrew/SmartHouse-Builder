@@ -8,7 +8,7 @@ class BuilderCon extends StatelessWidget {
     return Container(
       padding: EdgeInsets.all(8.0),
       child: Container(
-        color: Colors.deepPurple,
+        color: Colors.blueAccent,
         child: Center(child: Text("Builderul")),
       ),
     );
