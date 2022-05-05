@@ -2,15 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-<<<<<<< HEAD
-      <module fileurl="file://$PROJECT_DIR$/frontend.iml" filepath="$PROJECT_DIR$/frontend.iml" />
-      <module fileurl="file://$PROJECT_DIR$/android/frontend_android.iml" filepath="$PROJECT_DIR$/android/frontend_android.iml" />
-    </modules>
-  </component>
-</project>
-=======
       <module fileurl="file://$PROJECT_DIR$/.idea/FrontEnd.iml" filepath="$PROJECT_DIR$/.idea/FrontEnd.iml" />
     </modules>
   </component>
 </project>
->>>>>>> f48f64e44d3f8d2f6a2d59e755a6a5b955ff20df
