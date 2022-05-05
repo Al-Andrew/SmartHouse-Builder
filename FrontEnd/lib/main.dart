@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:homepage/about_us.dart';
 import 'package:homepage/homepage.dart';
 import 'package:homepage/marketplace.dart';
+import 'package:homepage/forum/ForumHomePage.dart';
 import 'package:homepage/shb.dart';
 // import 'package:simple_gradient_text/simple_gradient_text.dart';
 
@@ -41,6 +42,7 @@ class _MyHomePageState extends State<MyHomePage> {
     HomePage(),
     SHB(),
     Marketplace(),
+    Forum(),
     AboutUs(),
   ];
 
@@ -79,9 +81,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 TextButton(
                     style: TextButton.styleFrom(
                         textStyle: const TextStyle(color: Colors.black)),
-                    onPressed: () => {
-                          //do something
-                        },
+                    onPressed: () => changeScreen(3),
                     child: const Center(
                       child: Text('Forum'),
                     )),
