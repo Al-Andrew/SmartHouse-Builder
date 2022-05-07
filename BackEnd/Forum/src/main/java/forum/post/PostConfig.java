@@ -1,4 +1,4 @@
-package backend.post;
+package forum.post;
 
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
@@ -10,7 +10,7 @@ import java.util.List;
 public class PostConfig {
 
     @Bean
-    CommandLineRunner commandLineRunner(PostRepository repository){
+    CommandLineRunner commandLineRunnerPost(PostRepository repository){
         return args -> {
 
             Post post1 =  new Post(1, "Acest set-up este minunat",

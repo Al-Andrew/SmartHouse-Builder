@@ -1,4 +1,4 @@
-package exceptions;
+package forum.exceptions;
 
 public class InvalidFavoritePost extends RuntimeException{
     public InvalidFavoritePost(){

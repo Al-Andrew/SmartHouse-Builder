@@ -1,7 +1,7 @@
 package working.structure;
 
-import exceptions.IllegalAddingPost;
-import backend.post.Post;
+import forum.exceptions.IllegalAddingPost;
+import forum.post.Post;
 
 import java.util.ArrayList;
 import java.util.List;

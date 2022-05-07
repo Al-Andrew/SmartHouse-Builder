@@ -1,4 +1,4 @@
-package exceptions;
+package forum.exceptions;
 
 public class InvalidTag extends RuntimeException{
     public InvalidTag(){
