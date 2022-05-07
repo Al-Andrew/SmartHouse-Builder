@@ -1,7 +1,7 @@
 package working.structure;
 
-import exceptions.InvalidFavoritePost;
-import backend.post.Post;
+import forum.exceptions.InvalidFavoritePost;
+import forum.post.Post;
 
 import java.util.ArrayList;
 import java.util.List;

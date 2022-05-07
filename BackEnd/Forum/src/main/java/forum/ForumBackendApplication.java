@@ -1,10 +1,10 @@
-package backend.post;
+package forum;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.ComponentScan;
 
 @SpringBootApplication
-//@ComponentScan("backend.post")
 public class ForumBackendApplication {
 
 	public static void main(String[] args) {

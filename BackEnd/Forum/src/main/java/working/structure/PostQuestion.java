@@ -1,7 +1,7 @@
 package working.structure;
 
-import exceptions.InvalidTag;
-import backend.post.Post;
+import forum.exceptions.InvalidTag;
+import forum.post.Post;
 
 import java.util.ArrayList;
 import java.util.List;

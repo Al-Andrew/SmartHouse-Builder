@@ -1,7 +1,7 @@
 package working.structure;
 
 
-import exceptions.InvalidLength;
+import forum.exceptions.InvalidLength;
 
 public class Report {
 

@@ -1,4 +1,4 @@
-package backend.post;
+package forum.post;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -15,7 +15,7 @@ public class PostService {
         this.postRepository = postRepository;
     }
 
-    public List<Post> getPost(){
+    public List<Post> getAllPosts(){
         return postRepository.findAll();
     }
 
@@ -33,5 +33,19 @@ public class PostService {
         }
         postRepository.deleteById(postId);
 
+    }
+    public Optional<Post> getPost(int id){
+        Optional<Post> postOptional = postRepository.findPostById(id);
+        if (postOptional.isEmpty())
+            throw new IllegalStateException("Nu exista acest post cu id-ul" + id);
+        return postOptional;
+    }
+
+    public void updatePost(Post post, Integer id) {
+        postRepository.findPostById(id).map(post1 -> {
+            post1.setContent(post.getContent());
+            post1.setTitle(post.title);
+            return postRepository.save(post1);
+        });
     }
 }

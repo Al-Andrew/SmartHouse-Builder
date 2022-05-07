@@ -1,6 +1,6 @@
-package backend.post;
+package forum.post;
 
-import exceptions.InvalidLength;
+import forum.exceptions.InvalidLength;
 import working.structure.Comment;
 import working.structure.Report;
 
@@ -97,5 +97,13 @@ public class Post {
 
   public void setId(int id) {
     this.id = id;
+  }
+
+  public void setTitle(String title) {
+    this.title = title;
+  }
+
+  public void setContent(String content) {
+    this.content = content;
   }
 }

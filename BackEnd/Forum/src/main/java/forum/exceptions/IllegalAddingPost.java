@@ -1,4 +1,4 @@
-package exceptions;
+package forum.exceptions;
 
 public class IllegalAddingPost extends RuntimeException{
     public IllegalAddingPost(){
