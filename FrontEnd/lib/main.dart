@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:homepage/about_us.dart';
 import 'package:homepage/homepage.dart';
 import 'package:homepage/marketplace.dart';
-import 'package:homepage/product_item.dart';
+import 'package:homepage/forum/ForumHomePage.dart';
 import 'package:homepage/shb.dart';
 // import 'package:simple_gradient_text/simple_gradient_text.dart';
 
@@ -19,14 +19,10 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Smart House Builder',
-      initialRoute: '/',
-      routes: {
-        '/': (context) => const MyHomePage(title: 'Smart House Builder'),
-        // ProductItem.routeName: (context) => ProductItem(_toggleFavorite),
-      },
       theme: ThemeData(
         primarySwatch: Colors.cyan,
       ),
+      home: const MyHomePage(title: 'Smart House Builder'),
     );
   }
 }
@@ -46,6 +42,7 @@ class _MyHomePageState extends State<MyHomePage> {
     HomePage(),
     SHB(),
     Marketplace(),
+    Forum(),
     AboutUs(),
   ];
 
@@ -84,9 +81,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 TextButton(
                     style: TextButton.styleFrom(
                         textStyle: const TextStyle(color: Colors.black)),
-                    onPressed: () => {
-                          //do something
-                        },
+                    onPressed: () => changeScreen(3),
                     child: const Center(
                       child: Text('Forum'),
                     )),
