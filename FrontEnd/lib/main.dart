@@ -102,7 +102,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 TextButton(
                     style: TextButton.styleFrom(
                         textStyle: const TextStyle(color: Colors.black)),
-                    onPressed: () => changeScreen(3),
+                    onPressed: () => changeScreen(4),
                     child: const Center(
                       child: Text('About'),
                     )),
