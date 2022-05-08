@@ -5,6 +5,7 @@ class Product {
   final String title;
   final int pret;
   final String linkImg;
+  // bool favorite;
 
   const Product(
       {required this.id,
@@ -12,4 +13,5 @@ class Product {
       this.pret = 0,
       this.linkImg =
           "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f0/Error.svg/1200px-Error.svg.png"});
+      // this.favorite = false;
 }

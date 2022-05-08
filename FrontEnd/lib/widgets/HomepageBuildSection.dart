@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:homepage/mainshb.dart';
 import 'package:simple_gradient_text/simple_gradient_text.dart';
 
 class HomepageBuildSection extends StatelessWidget {
@@ -44,7 +45,9 @@ class HomepageBuildSection extends StatelessWidget {
                   child: TextButton(
                     style: TextButton.styleFrom(
                         textStyle: const TextStyle(color: Colors.black)),
-                    onPressed: () => {},
+                    onPressed: () => {Navigator.pushReplacement(context,
+                            MaterialPageRoute(builder: (context) => MyHomePageSHB()))
+                      },
                     child: const Center(
                         child: Text('Build',
                             style: TextStyle(
