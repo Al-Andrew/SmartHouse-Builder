@@ -1,7 +1,7 @@
 package working.structure;
 
 import exceptions.InvalidFavoritePost;
-import backend.post.Post;
+import forum.comment.Comment;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -9,7 +9,7 @@ import java.util.List;
 public class Favorite {
 
   //TODO: List sau Map? (Nu conteaza)
-  List<Post> posts = new ArrayList<>();
+  List<Comment> comments = new ArrayList<>();
 
   private boolean isLogged;
 
@@ -17,10 +17,10 @@ public class Favorite {
     //TODO: cautam in baza de date toate post-urile care sunt favorite si le adaugam (in cazul in care user-ul s-a deconectat)
 
   }
-  public boolean addPost(Post post) {
+  public boolean addPost(Comment comment) {
     //TODO: Adaugam in baza de date ID-ul postului si al user-ului
-    if (posts.contains(post)) throw new InvalidFavoritePost();
-    posts.add(post);
+    if (comments.contains(comment)) throw new InvalidFavoritePost();
+    comments.add(comment);
     return true;
   }
   public boolean isLogged() {

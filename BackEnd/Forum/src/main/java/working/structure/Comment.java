@@ -18,8 +18,8 @@ public class Comment {
     this.numberReacts = 0;
   }
   public void userAddReact() {
-      //TODO: setam in baza de date ca user-ul a dat react
-      numberReacts++;
+    //TODO: setam in baza de date ca user-ul a dat react
+    numberReacts++;
   }
   public void userRemoveReact(){
     //TODO: setam in baza de date ca user-ul si-a schimbat opinia (trebuie verificat daca a dat like)
