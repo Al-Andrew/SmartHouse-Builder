@@ -16,7 +16,13 @@ class _MyPostsState extends State<MyPosts> {
   @override
   Widget build(BuildContext context) {
     return Container(
-        //child: CustomTitle(text: 'My Posts'),
-        );
+        child: Center(
+      child: Row(
+        children: [
+          ButtonBack(context: context, width: 20, height: 20),
+          CustomTitle(text: 'My Posts'),
+        ],
+      ),
+    ));
   }
 }

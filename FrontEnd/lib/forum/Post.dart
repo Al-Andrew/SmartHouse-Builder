@@ -4,12 +4,12 @@ import 'package:flutter/material.dart';
 import 'package:homepage/forum/Utilities.dart';
 
 class Post {
-  String id;
+  int id;
   String topic;
   String author;
   String date;
-  String likes;
-  String comments;
+  int likes;
+  int comments;
 
   Post({
     required this.id,
@@ -23,111 +23,124 @@ class Post {
   static List<Post> getPosts() {
     return <Post>[
       Post(
-          id: '1',
+          id: 1,
           topic: "What do you think about Amazon Alexa?",
           author: 'John H.',
           date: '06/04/2022',
-          likes: '1',
-          comments: '2'),
+          likes: 1,
+          comments: 2),
       Post(
-          id: '2',
-          topic: "Need options on my first SmartHouse...",
-          author: 'Andrewhhhhhhh J.',
-          date: '06/04/2022',
-          likes: '1',
-          comments: '12'),
-      Post(
-          id: '3',
-          topic:
-              "Should I buy Amazon Alexa or it is better to buy the box from Apple? What do you think?",
-          author: 'Elisabeth H.',
-          date: '06/04/2022',
-          likes: '1',
-          comments: '2'),
-      Post(
-          id: '4',
-          topic: "What do you think about Amazon Alexa?",
-          author: 'Cristian H.',
-          date: '06/04/2022',
-          likes: '1',
-          comments: '2'),
-      Post(
-          id: '5',
+          id: 1,
           topic: "What do you think about Amazon Alexa?",
           author: 'John H.',
           date: '06/04/2022',
-          likes: '1',
-          comments: '2'),
+          likes: 1,
+          comments: 2),
       Post(
-          id: '6',
+          id: 1,
           topic: "What do you think about Amazon Alexa?",
           author: 'John H.',
           date: '06/04/2022',
-          likes: '1',
-          comments: '2'),
+          likes: 1,
+          comments: 2),
       Post(
-          id: '7',
+          id: 1,
           topic: "What do you think about Amazon Alexa?",
           author: 'John H.',
           date: '06/04/2022',
-          likes: '1',
-          comments: '2'),
+          likes: 1,
+          comments: 2),
       Post(
-          id: '8',
+          id: 1,
           topic: "What do you think about Amazon Alexa?",
           author: 'John H.',
           date: '06/04/2022',
-          likes: '1',
-          comments: '2'),
+          likes: 1,
+          comments: 2),
       Post(
-          id: '9',
+          id: 1,
           topic: "What do you think about Amazon Alexa?",
           author: 'John H.',
           date: '06/04/2022',
-          likes: '1',
-          comments: '2'),
+          likes: 1,
+          comments: 2),
       Post(
-          id: '10',
+          id: 1,
           topic: "What do you think about Amazon Alexa?",
           author: 'John H.',
           date: '06/04/2022',
-          likes: '1',
-          comments: '2'),
+          likes: 1,
+          comments: 2),
       Post(
-          id: '11',
+          id: 1,
           topic: "What do you think about Amazon Alexa?",
           author: 'John H.',
           date: '06/04/2022',
-          likes: '1',
-          comments: '2'),
+          likes: 1,
+          comments: 2),
       Post(
-          id: '12',
+          id: 1,
           topic: "What do you think about Amazon Alexa?",
           author: 'John H.',
           date: '06/04/2022',
-          likes: '1',
-          comments: '2'),
+          likes: 1,
+          comments: 2),
       Post(
-          id: '13',
+          id: 1,
           topic: "What do you think about Amazon Alexa?",
           author: 'John H.',
           date: '06/04/2022',
-          likes: '1',
-          comments: '2'),
+          likes: 1,
+          comments: 2),
       Post(
-          id: '14',
+          id: 1,
           topic: "What do you think about Amazon Alexa?",
           author: 'John H.',
           date: '06/04/2022',
-          likes: '1',
-          comments: '2'),
+          likes: 1,
+          comments: 2),
       Post(
-          id: '15',
+          id: 1,
           topic: "What do you think about Amazon Alexa?",
           author: 'John H.',
           date: '06/04/2022',
-          likes: '1',
-          comments: '2'),
+          likes: 1,
+          comments: 2),
+      Post(
+          id: 1,
+          topic: "What do you think about Amazon Alexa?",
+          author: 'John H.',
+          date: '06/04/2022',
+          likes: 1,
+          comments: 2),
+      Post(
+          id: 1,
+          topic: "What do you think about Amazon Alexa?",
+          author: 'John H.',
+          date: '06/04/2022',
+          likes: 1,
+          comments: 2),
+      Post(
+          id: 1,
+          topic: "What do you think about Amazon Alexa?",
+          author: 'John H.',
+          date: '06/04/2022',
+          likes: 1,
+          comments: 2),
+      Post(
+          id: 1,
+          topic: "What do you think about Amazon Alexa?",
+          author: 'John H.',
+          date: '06/04/2022',
+          likes: 1,
+          comments: 2),
+      Post(
+          id: 1,
+          topic: "What do you think about Amazon Alexa?",
+          author: 'John H.',
+          date: '06/04/2022',
+          likes: 1,
+          comments: 2),
     ];
   }
 }
@@ -143,7 +156,12 @@ class _POSTState extends State<POST> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      child: CustomTitle(text: "Post PAGE"),
+      child: Row(
+        children: [
+          ButtonBack(context: context, width: 20, height: 20),
+          CustomTitle(text: 'Post'),
+        ],
+      ),
     );
   }
 }

@@ -3,6 +3,57 @@ import 'dart:html';
 import 'package:flutter/material.dart';
 import './Post.dart';
 
+// ------------------------------------------------------------------------ BACK BUTTON
+
+class ButtonBack extends StatelessWidget {
+  const ButtonBack({
+    Key? key,
+    required this.context,
+    required this.width,
+    required this.height,
+  }) : super(key: key);
+
+  final BuildContext context;
+  final double width;
+  final double height;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      margin: const EdgeInsets.only(top: 20.0),
+      height: height,
+      width: width,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.all(Radius.circular(20)),
+        gradient: LinearGradient(
+          colors: [
+            Color.fromARGB(255, 109, 184, 245),
+            Color.fromARGB(255, 37, 108, 214),
+          ],
+        ),
+      ),
+      child: ElevatedButton.icon(
+        onPressed: () {
+          Navigator.of(context).pop();
+        },
+        label: Text(
+          "Back",
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        icon: Icon(Icons.list),
+        style: ElevatedButton.styleFrom(
+            shape: new RoundedRectangleBorder(
+              borderRadius: new BorderRadius.circular(20.0),
+            ),
+            primary: Colors.transparent,
+            shadowColor: Colors.transparent),
+      ),
+    );
+  }
+}
+
 // ------------------------------------------------------------------------ SORT WIDGET
 
 class CustomSort extends StatefulWidget {
@@ -350,7 +401,7 @@ class _PostsTabelState extends State<PostsTabel> {
                       cells: [
                         DataCell(
                           Center(
-                            child: Center(child: Text(post.id)),
+                            child: Center(child: Text(post.id.toString())),
                           ),
                         ),
                         DataCell(
@@ -388,12 +439,12 @@ class _PostsTabelState extends State<PostsTabel> {
                         ),
                         DataCell(
                           Center(
-                            child: Text(post.likes),
+                            child: Text(post.likes.toString()),
                           ),
                         ),
                         DataCell(
                           Center(
-                            child: Text(post.comments),
+                            child: Text(post.likes.toString()),
                           ),
                         ),
                       ],

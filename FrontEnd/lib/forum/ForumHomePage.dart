@@ -6,14 +6,14 @@ import 'package:homepage/forum/MyPosts.dart';
 import 'package:homepage/forum/CreatePost.dart';
 import 'package:homepage/main.dart';
 
-class Forum extends StatefulWidget {
-  Forum();
+class ForumHomePage extends StatefulWidget {
+  ForumHomePage();
 
   @override
-  State<Forum> createState() => _ForumState();
+  State<ForumHomePage> createState() => _ForumHomePageState();
 }
 
-class _ForumState extends State<Forum> {
+class _ForumHomePageState extends State<ForumHomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -177,7 +177,7 @@ class _ForumState extends State<Forum> {
         onPressed: () {
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => const MyPosts()),
+            MaterialPageRoute(builder: (child) => const MyPosts()),
           );
         },
         label: Text(

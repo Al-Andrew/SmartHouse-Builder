@@ -3,8 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:homepage/about_us.dart';
 import 'package:homepage/homepage.dart';
 import 'package:homepage/marketplace.dart';
-import 'package:homepage/forum/ForumHomePage.dart';
+import 'package:homepage/forum/Forum.dart';
 import 'package:homepage/shb.dart';
+
 // import 'package:simple_gradient_text/simple_gradient_text.dart';
 
 void main() {
