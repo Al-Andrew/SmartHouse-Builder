@@ -1,20 +1,21 @@
-package Categories;
+package com.example.marketplace.Category;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 @Entity
-@Table(name="Categories")
+@Table( name = "categories")
 public class Category {
     @Id
     @GeneratedValue
+    @Column(name="id")
     private Integer id;
 
     private String name;
 
     private String description;
+    public Category() {
+
+    }
 
     public Integer getId() {
         return id;
@@ -32,11 +33,18 @@ public class Category {
         this.name = name;
     }
 
+
     public String getDescription() {
         return description;
     }
 
     public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public Category(Integer id, String name, String description) {
+        this.id = id;
+        this.name = name;
         this.description = description;
     }
 
