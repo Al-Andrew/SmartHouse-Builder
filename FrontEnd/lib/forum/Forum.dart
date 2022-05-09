@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:homepage/forum/ForumHomePage.dart';
-import 'package:homepage/forum/MyPosts.dart';
 import 'package:homepage/forum/CreatePost.dart';
 import 'package:homepage/forum/Post.dart';
-
-import 'package:homepage/forum/ForumNestedNavigator.dart';
+import 'package:homepage/forum/MyPosts.dart';
+import 'package:homepage/forum/ForumHomePage.dart';
 
 class Forum extends StatefulWidget {
   const Forum({Key? key}) : super(key: key);
@@ -13,22 +11,37 @@ class Forum extends StatefulWidget {
   State<Forum> createState() => _ForumState();
 }
 
+const routeForumHome = '/';
+const routeMyPosts = '/myposts';
+const routeCreatePost = '/createposts';
+const routePost = '/post';
+
 class _ForumState extends State<Forum> {
-  final GlobalKey<NavigatorState> navigationKey = GlobalKey<NavigatorState>();
   @override
   Widget build(BuildContext context) {
-    return Expanded(
-      child: ForumNestedNavigator(
-        forumNavigationKey: navigationKey,
-        initialRoute: '/',
-        routes: {
-          // default rout as '/' is necessary!
-          '/': (context) => ForumHomePage(),
-          '/myposts': (context) => MyPosts(),
-          '/createpost': (context) => CreatePost(),
-          '/post': (context) => POST(),
-        },
-      ),
+    return MaterialApp(
+      onGenerateRoute: (settings) {
+        late Widget page;
+        if (settings.name == routeForumHome) {
+          page = ForumHomePage();
+        } else if (settings.name == routeMyPosts) {
+          page = const MyPosts();
+        } else if (settings.name == routeCreatePost) {
+          page = const CreatePost();
+        } else if (settings.name == routePost) {
+          page = const POST();
+        } else {
+          throw Exception('Unknown route: ${settings.name}');
+        }
+
+        return MaterialPageRoute<dynamic>(
+          builder: (context) {
+            return page;
+          },
+          settings: settings,
+        );
+      },
+      debugShowCheckedModeBanner: false,
     );
   }
 }

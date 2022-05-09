@@ -155,13 +155,65 @@ class POST extends StatefulWidget {
 class _POSTState extends State<POST> {
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: Row(
-        children: [
-          ButtonBack(context: context, width: 20, height: 20),
-          CustomTitle(text: 'Post'),
-        ],
+    return Scaffold(
+      body: SafeArea(
+        child: LayoutBuilder(builder: (context, constraints) {
+          //
+          //------------------------------------------------------- PHONE MODE --------------------------------------------------------------------------------------------
+
+          if (constraints.maxWidth < 700) {
+            return SingleChildScrollView(
+              child: Column(
+                children: <Widget>[
+                  CustomTitle(text: "Post"),
+                ],
+              ),
+            );
+          }
+
+          //------------------------------------------------------- TABLET MODE --------------------------------------------------------------------------------------------
+
+          else if (constraints.maxWidth < 1100) {
+            return SingleChildScrollView(
+              child: Column(
+                children: <Widget>[
+                  CustomTitle(text: "Post"),
+                ],
+              ),
+            );
+          }
+
+          //------------------------------------------------------- DESKTOP MODE --------------------------------------------------------------------------------------------
+
+          else {
+            return SingleChildScrollView(
+              child: Column(
+                children: <Widget>[
+                  Padding(
+                    padding: const EdgeInsets.only(left: 10.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Expanded(
+                          flex: 0,
+                          child: ButtonBack(
+                              context: context, width: 40, height: 40),
+                        ),
+                        Expanded(
+                          child: CustomTitle(text: "Post"),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            );
+          }
+        }),
       ),
     );
   }
 }
+
+//------------------------------------------------------- METHODS --------------------------------------------------------------------------------------------

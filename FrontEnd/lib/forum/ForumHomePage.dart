@@ -184,9 +184,13 @@ class _ForumHomePageState extends State<ForumHomePage> {
           "My Posts",
           style: TextStyle(
             fontWeight: FontWeight.bold,
+            color: Colors.black,
           ),
         ),
-        icon: Icon(Icons.list),
+        icon: Icon(
+          Icons.list,
+          color: Colors.black,
+        ),
         style: ElevatedButton.styleFrom(
             shape: new RoundedRectangleBorder(
               borderRadius: new BorderRadius.circular(20.0),
@@ -222,9 +226,13 @@ class _ForumHomePageState extends State<ForumHomePage> {
           "New Post",
           style: TextStyle(
             fontWeight: FontWeight.bold,
+            color: Colors.black,
           ),
         ),
-        icon: Icon(Icons.add),
+        icon: Icon(
+          Icons.add,
+          color: Colors.black,
+        ),
         style: ElevatedButton.styleFrom(
             shape: new RoundedRectangleBorder(
               borderRadius: new BorderRadius.circular(20.0),

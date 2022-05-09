@@ -23,32 +23,24 @@ class ButtonBack extends StatelessWidget {
       margin: const EdgeInsets.only(top: 20.0),
       height: height,
       width: width,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.all(Radius.circular(20)),
-        gradient: LinearGradient(
-          colors: [
-            Color.fromARGB(255, 109, 184, 245),
-            Color.fromARGB(255, 37, 108, 214),
-          ],
+      child: Ink(
+        child: IconButton(
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+          icon: Icon(Icons.arrow_back),
+          hoverColor: Colors.transparent,
+          focusColor: Colors.transparent,
         ),
-      ),
-      child: ElevatedButton.icon(
-        onPressed: () {
-          Navigator.of(context).pop();
-        },
-        label: Text(
-          "Back",
-          style: TextStyle(
-            fontWeight: FontWeight.bold,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.all(Radius.circular(20)),
+          gradient: LinearGradient(
+            colors: [
+              Color.fromARGB(255, 109, 184, 245),
+              Color.fromARGB(255, 37, 108, 214),
+            ],
           ),
         ),
-        icon: Icon(Icons.list),
-        style: ElevatedButton.styleFrom(
-            shape: new RoundedRectangleBorder(
-              borderRadius: new BorderRadius.circular(20.0),
-            ),
-            primary: Colors.transparent,
-            shadowColor: Colors.transparent),
       ),
     );
   }
