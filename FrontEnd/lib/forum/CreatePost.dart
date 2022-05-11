@@ -78,20 +78,7 @@ class _CreatePostState extends State<CreatePost> {
                                           fontWeight: FontWeight.bold),
                                     ),
                                   ),
-                                  Container(
-                                    margin: EdgeInsets.fromLTRB(100, 0, 30, 0),
-                                    child: TextField(
-                                      decoration: InputDecoration(
-                                          fillColor: Color.fromARGB(
-                                              255, 130, 230, 239),
-                                          filled: true,
-                                          border: OutlineInputBorder(
-                                              borderRadius:
-                                                  BorderRadius.circular(45)),
-                                          hintText:
-                                              "Write your wanted topic in here"),
-                                    ),
-                                  ),
+                                  TopicTextField(),
                                 ],
                               ),
                             ),
@@ -107,23 +94,7 @@ class _CreatePostState extends State<CreatePost> {
                               ),
                             ),
                             //////Aici am fieldul cu textul de la descriere
-                            Container(
-                              margin: EdgeInsets.fromLTRB(20, 20, 20, 10),
-                              child: TextField(
-                                decoration: InputDecoration(
-                                    fillColor:
-                                        Color.fromARGB(255, 130, 230, 239),
-                                    filled: true,
-                                    border: OutlineInputBorder(
-                                        borderRadius:
-                                            BorderRadius.circular(20)),
-                                    hintText:
-                                        "You can write about the insight of the article in here"),
-                                keyboardType: TextInputType.multiline,
-                                minLines: 5,
-                                maxLines: 100,
-                              ),
-                            ),
+                            DescriptionField(),
                           ],
                         )),
                   ],
@@ -137,9 +108,58 @@ class _CreatePostState extends State<CreatePost> {
   }
 }
 
-
 ////let's make the classes
-
 /*
 _class ca sa imi dau seama ca e propriul meu object definit
  */
+
+/////////----Clasa pentru TopicTextField
+
+class TopicTextField extends StatefulWidget {
+  TopicTextField();
+  @override
+  State<TopicTextField> createState() => _TopicTextFieldState();
+}
+
+class _TopicTextFieldState extends State<TopicTextField> {
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      margin: EdgeInsets.fromLTRB(100, 0, 30, 0),
+      child: TextField(
+        decoration: InputDecoration(
+            fillColor: Color.fromARGB(255, 130, 230, 239),
+            filled: true,
+            border: OutlineInputBorder(borderRadius: BorderRadius.circular(45)),
+            hintText: "Write your wanted topic in here"),
+      ),
+    );
+  }
+}
+
+///////-------Clasa pentru DescriptionField
+
+class DescriptionField extends StatefulWidget {
+  DescriptionField();
+  @override
+  State<DescriptionField> createState() => _DescriptionFieldState();
+}
+
+class _DescriptionFieldState extends State<DescriptionField> {
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      margin: EdgeInsets.fromLTRB(20, 20, 20, 10),
+      child: TextField(
+        decoration: InputDecoration(
+            fillColor: Color.fromARGB(255, 130, 230, 239),
+            filled: true,
+            border: OutlineInputBorder(borderRadius: BorderRadius.circular(20)),
+            hintText: "You can write about the insight of the article in here"),
+        keyboardType: TextInputType.multiline,
+        minLines: 10,
+        maxLines: 100,
+      ),
+    );
+  }
+}
