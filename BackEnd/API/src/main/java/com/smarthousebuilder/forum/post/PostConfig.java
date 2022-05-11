@@ -14,7 +14,7 @@ public class PostConfig {
     CommandLineRunner commandLineRunnerPost(PostRepository repository){
         return args -> {
 
-            Post post1 =  new Post(1, "Acest set-up este minunat",
+           /*Post post1 =  new Post(1, "Acest set-up este minunat",
                     "Primul set-up",
                     "Marcel",
                     "05.05.2022");
@@ -22,7 +22,7 @@ public class PostConfig {
                     "Al doilea set-up",
                     "Pavel",
                     "05.05.2022");
-            repository.saveAll(List.of(post1, post2));
+            repository.saveAll(List.of(post1, post2));*/
         };
     }
 }
