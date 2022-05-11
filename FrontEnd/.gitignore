@@ -2,3 +2,7 @@
 .packages
 pubspec.lock
 build
+.idea
+android
+ios
+windows
