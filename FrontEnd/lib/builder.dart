@@ -1,132 +1,108 @@
-import 'dart:html';
-import 'dart:math';
-import 'package:flutter/material.dart';
+import 'package:flame/components.dart';
+import 'package:flame/game.dart';
+import 'package:flutter/material.dart' hide Draggable;
+import 'package:flame/input.dart';
 
-class BuilderCon extends StatefulWidget {
-  @override
-  BuilderState createState() => BuilderState();
+void main() {
+  var game = DragDemoGame();
+  runApp(
+    MaterialApp(
+      home: Stack(children: [GameWidget(game: game), ButtonScreen(game: game)]),
+    ),
+  );
 }
 
-class BuilderState extends State<BuilderCon> {
-  List<Wall> walls = [];
-  List<Window> windows = [];
-  @override
-  void initState() {
-    super.initState();
-  }
+class ButtonScreen extends StatelessWidget {
+  const ButtonScreen({Key? key, required this.game}) : super(key: key);
+
+  final DragDemoGame game;
 
   @override
-  Widget build(BuildContext ctx) {
-    return Scaffold(
-      body: CustomPaint(
-        size: MediaQuery.of(ctx).size,
-        painter: BuilderPainter(walls: walls, windows: windows),
-        child: GestureDetector(
-          onTapDown: (details) {
-            bool windowClicked = false;
-            bool wallClicked = false;
-            for (Window w in windows)
-              if (w.isClicked(details.localPosition) == true)
-                windowClicked = true;
-            for (Wall w in walls)
-              if (w.isClicked(details.localPosition) == true)
-                windowClicked = true;
-            print(windowClicked);
-            print(wallClicked);
-            if (wallClicked == false && windowClicked == false) {
-              //aici trebuie sa stabilim cum facem switch de la un obiect la altul, era vorba sa se vorbeasca la alta echipa de modificarea unui meniu
-              walls.add(Wall(
-                  p1: details.localPosition + Offset(0, 50),
-                  p2: details.localPosition - Offset(0, 50)));
-              /*windows.add(Window(
-                  p1: details.localPosition + Offset(5, 50),
-                  p2: details.localPosition - Offset(5, 50),
-                  p3: details.localPosition + Offset(-5, 50),
-                  p4: details.localPosition - Offset(-5, 50)));*/
-            }
-          },
-        ),
-      ),
+  Widget build(BuildContext context) {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.end,
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            ElevatedButton(
+                onPressed: () {
+                  game.wall.x -= 40;
+                },
+                child: const Text('Flutter Button L')),
+            ElevatedButton(
+                onPressed: () {
+                  game.wall.x += 40;
+                },
+                child: const Text('Flutter Button R')),
+          ],
+        )
+      ],
     );
   }
 }
 
-//mai trebui adaugate usile
-class Window {
-  Offset p1, p2, p3, p4;
+class DragDemoGame extends FlameGame with HasDraggables {
+  late SpriteAnimation wallRun;
+  late wallComponent wall;
 
-  static final Paint paint = Paint()
-    ..strokeCap = StrokeCap.square
-    ..isAntiAlias = true
-    ..color = Colors.black
-    ..strokeWidth = 1;
-  bool isClicked(Offset clickPosition) {
-    double min_dx, min_dy, max_dx, max_dy;
-    min_dx = min(p1.dx, min(p2.dx, min(p3.dx, p4.dx)));
-    max_dx = max(p1.dx, max(p2.dx, max(p3.dx, p4.dx)));
-    min_dy = min(p1.dy, min(p2.dy, min(p3.dy, p4.dy)));
-    max_dy = max(p1.dy, max(p2.dy, max(p3.dy, p4.dy)));
-    if (clickPosition.dx <= max_dx &&
-        clickPosition.dx >= min_dx &&
-        clickPosition.dy <= max_dy &&
-        clickPosition.dy >= min_dy) {
-      ///am apasat un window
-      return true;
-    }
-    return false;
+  // DragDemoGame({required this.zoom});
+  @override
+  Future<void> onLoad() async {
+    await super.onLoad();
+    SpriteAnimationData frameData = SpriteAnimationData.sequenced(
+        amount: 10, stepTime: .05, textureSize: Vector2(94, 130));
+    wallRun = await loadSpriteAnimation('wall.png', frameData);
+
+    wall = wallComponent()
+      ..animation = wallRun
+      ..anchor = Anchor.center
+      ..position = size / 2
+      ..size = Vector2(81, 200);
+    add(wall);
   }
-
-  Window(
-      {required this.p1, required this.p2, required this.p3, required this.p4});
 }
 
-class Wall {
-  Offset p1, p2;
-  static final Paint paint = Paint()
-    ..strokeCap = StrokeCap.square
-    ..isAntiAlias = true
-    ..color = Colors.black
-    ..strokeWidth = 5;
-  bool isClicked(Offset clickPosition) {
-    double min_dx, min_dy, max_dx, max_dy;
-    min_dx = min(p1.dx, p2.dx);
-    max_dx = max(p1.dx, p2.dx);
-    min_dy = min(p1.dy, p2.dy);
-    max_dy = max(p1.dy, p2.dy);
-    if (clickPosition.dx <= max_dx &&
-        clickPosition.dx >= min_dx &&
-        clickPosition.dy <= max_dy &&
-        clickPosition.dy >= min_dy) {
-      ///am apasat un wall
-      return true;
-    }
-    return false;
-  }
-
-  Wall({required this.p1, required this.p2});
-}
-
-class BuilderPainter extends CustomPainter {
-  List<Wall> walls;
-  List<Window> windows;
-  BuilderPainter({required this.walls, required this.windows});
+class wallComponent extends SpriteAnimationComponent with Draggable {
+  Vector2? dragDeltaPosition;
 
   @override
-  void paint(Canvas canvas, Size size) {
-    Paint background = Paint()..color = Color.fromARGB(161, 189, 24, 24);
-    Rect rect = Rect.fromLTWH(0, 0, size.width, size.height);
-    canvas.drawRect(rect, background);
-    canvas.clipRect(rect);
-    for (Wall w in walls) {
-      canvas.drawLine(w.p1, w.p2, Wall.paint);
-    }
-    for (Window w in windows) {
-      canvas.drawLine(w.p1, w.p4, Wall.paint);
-      canvas.drawLine(w.p2, w.p3, Wall.paint);
-    }
+  void update(double dt) {
+    super.update(dt);
+    debugColor = isDragged && parent is DragDemoGame
+        ? Colors.greenAccent
+        : Colors.purple;
   }
 
   @override
-  bool shouldRepaint(BuilderPainter oldDelegate) =>
-      oldDelegate.walls != walls || oldDelegate.windows != windows;
+  bool onDragStart(int pointerId, DragStartInfo info) {
+    dragDeltaPosition = info.eventPosition.game - position;
+    return false;
+  }
+
+  @override
+  bool onDragUpdate(int pointerId, DragUpdateInfo info) {
+    if (parent is! DragDemoGame) {
+      return true;
+    }
+    final dragDeltaPosition = this.dragDeltaPosition;
+    if (dragDeltaPosition == null) {
+      return false;
+    }
+
+    position.setFrom(info.eventPosition.game - dragDeltaPosition);
+    return false;
+  }
+
+  @override
+  bool onDragEnd(int pointerId, DragEndInfo _) {
+    dragDeltaPosition = null;
+    return false;
+  }
+
+  @override
+  bool onDragCancel(int pointerId) {
+    dragDeltaPosition = null;
+    return false;
+  }
 }
