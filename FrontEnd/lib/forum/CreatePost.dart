@@ -4,8 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:homepage/forum/Utilities.dart';
 import 'package:homepage/homepage.dart';
 import 'package:homepage/main.dart';
-
-import 'Post.dart';
+import './Post.dart';
 
 class CreatePost extends StatefulWidget {
   const CreatePost({Key? key}) : super(key: key);
@@ -95,6 +94,7 @@ class _CreatePostState extends State<CreatePost> {
                             ),
                             //////Aici am fieldul cu textul de la descriere
                             DescriptionField(),
+                            /////Aici pun butonul pentru creearea postului
                           ],
                         )),
                   ],
