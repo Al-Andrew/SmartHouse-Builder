@@ -1,6 +1,7 @@
 import 'dart:html';
 
 import 'package:flutter/material.dart';
+import 'package:homepage/forum/classes/PostClass.dart';
 import './Post.dart';
 
 // ------------------------------------------------------------------------ BACK BUTTON
@@ -184,19 +185,22 @@ class CustomTitle extends StatelessWidget {
   const CustomTitle({
     Key? key,
     required this.text,
+    required this.fontSize,
   }) : super(key: key);
 
   final String text;
+  final double fontSize;
 
   @override
   Widget build(BuildContext context) {
     return Container(
+      margin: const EdgeInsets.only(top: 20.0),
       height: 100,
       child: Center(
         child: GradientText(
           text,
-          style: const TextStyle(
-            fontSize: 35,
+          style: TextStyle(
+            fontSize: fontSize,
             fontWeight: FontWeight.bold,
             fontFamily: 'Barlow Condensed',
           ),
@@ -314,6 +318,17 @@ class _PostsTabelState extends State<PostsTabel> {
     posts = Post.getPosts();
     super.initState();
   }
+  //late List<Post> posts;
+
+  // @override
+  // void initState() async {
+  //   Post.igetPosts().then((value) {
+  //     setState(() {
+  //       posts.addAll(value);
+  //     });
+  //   });
+  //   super.initState();
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -411,7 +426,7 @@ class _PostsTabelState extends State<PostsTabel> {
                                   Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                        builder: (context) => const POST()),
+                                        builder: (context) => POST(post: post)),
                                   );
                                 },
                               ),
@@ -431,12 +446,12 @@ class _PostsTabelState extends State<PostsTabel> {
                         ),
                         DataCell(
                           Center(
-                            child: Text(post.likes.toString()),
+                            child: Text(post.nrLikes.toString()),
                           ),
                         ),
                         DataCell(
                           Center(
-                            child: Text(post.likes.toString()),
+                            child: Text(post.nrLikes.toString()),
                           ),
                         ),
                       ],
