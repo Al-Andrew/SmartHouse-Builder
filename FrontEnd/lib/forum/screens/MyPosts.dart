@@ -8,7 +8,6 @@ import 'package:homepage/main.dart';
 
 import 'Post.dart';
 
-//ButtonBack(context: context, width: 20, height: 20),
 class MyPosts extends StatefulWidget {
   const MyPosts({Key? key}) : super(key: key);
 
@@ -134,9 +133,6 @@ class _MyPostsState extends State<MyPosts> {
           else if (constraints.maxWidth < 1100) {
             return SingleChildScrollView(
               child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                mainAxisSize: MainAxisSize.min,
-                verticalDirection: VerticalDirection.down,
                 children: <Widget>[
                   Padding(
                     padding: const EdgeInsets.only(left: 10.0),
@@ -159,39 +155,6 @@ class _MyPostsState extends State<MyPosts> {
                     ),
                   ),
                   SearchBar(),
-                  Container(
-                    height: 200,
-                    child: Center(child: CustomSort(height: 180, width: 160)),
-                  ),
-                  Container(
-                    child: Center(
-                      child: MyPostsTable(30, 19, 250),
-                    ),
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Container(
-                        margin: const EdgeInsets.all(30.0),
-                        child: Center(
-                          child: GradientText(
-                            'Selected ${selectedPosts.length}',
-                            style: const TextStyle(
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold,
-                              fontFamily: 'Barlow Condensed',
-                            ),
-                            gradient: LinearGradient(colors: [
-                              Colors.blue.shade400,
-                              Colors.blue.shade900,
-                            ]),
-                          ),
-                        ),
-                      ),
-                      ButtonRemovePost(160, 45),
-                    ],
-                  ),
                 ],
               ),
             );
@@ -224,49 +187,6 @@ class _MyPostsState extends State<MyPosts> {
                     ),
                   ),
                   SearchBar(),
-                  Container(
-                    height: 400,
-                    child: Row(
-                      children: [
-                        Expanded(
-                          flex: 1,
-                          child: Column(
-                            children: [
-                              Container(
-                                margin: const EdgeInsets.only(top: 10.0),
-                                child: CustomSort(height: 180, width: 160),
-                              ),
-                              Container(
-                                margin: const EdgeInsets.only(top: 10.0),
-                                child: Center(
-                                  child: GradientText(
-                                    'Selected ${selectedPosts.length}',
-                                    style: const TextStyle(
-                                      fontSize: 20,
-                                      fontWeight: FontWeight.bold,
-                                      fontFamily: 'Barlow Condensed',
-                                    ),
-                                    gradient: LinearGradient(colors: [
-                                      Colors.blue.shade400,
-                                      Colors.blue.shade900,
-                                    ]),
-                                  ),
-                                ),
-                              ),
-                              ButtonRemovePost(160, 45),
-                            ],
-                          ),
-                        ),
-                        Expanded(
-                          flex: 6,
-                          child: Container(
-                              child: Center(
-                            child: MyPostsTable(40, 20, 350),
-                          )),
-                        ),
-                      ],
-                    ),
-                  ),
                 ],
               ),
             );
@@ -275,6 +195,7 @@ class _MyPostsState extends State<MyPosts> {
       ),
     );
   }
+}
 
 //------------------------------------------------------- METHODS --------------------------------------------------------------------------------------------
 
