@@ -1,17 +1,8 @@
-// ignore_for_file: non_constant_identifier_names
-
-import 'dart:io';
-import 'dart:math' as math;
-
-import 'package:flame/collisions.dart';
-import 'package:flame/components.dart';
-import 'package:flame/flame.dart';
+import 'package:flame/components.dart' as flame_components;
 import 'package:flame/game.dart';
 import 'package:flame/input.dart';
-import 'package:flame/palette.dart';
 import 'package:flutter/material.dart';
-
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/widgets.dart';
 
 class BuilderCon extends StatefulWidget {
   @override
@@ -21,72 +12,77 @@ class BuilderCon extends StatefulWidget {
 }
 
 class BuilderState extends State<BuilderCon> {
-  var flameContext = Builder();
-
+  var game = DragDemoGame();
   @override
   Widget build(BuildContext context) {
-    return GameWidget(game: flameContext);
+    return GameWidget(game: game);
   }
 }
 
-class Builder extends FlameGame with HasTappables, HasDraggables {
-  @override
-  Future<void>? onLoad() {
-    add(Wall());
-    return super.onLoad();
-  }
+class DragDemoGame extends FlameGame {
+  late flame_components.SpriteAnimation wallRun;
+  late wallComponent wall;
 
+  // DragDemoGame({required this.zoom});
   @override
-  void onTapUp(int pointerId, TapUpInfo info) {
-    propagateToChildren(
-      (Tappable child) => child.handleTapUp(pointerId, info),
-    );
+  Future<void> onLoad() async {
+    await super.onLoad();
+    flame_components.SpriteAnimationData frameData =
+        flame_components.SpriteAnimationData.sequenced(
+            amount: 10, stepTime: .05, textureSize: Vector2(94, 130));
+    wallRun = await loadSpriteAnimation('wall.png', frameData);
+
+    wall = wallComponent()
+      ..animation = wallRun
+      ..anchor = flame_components.Anchor.center
+      ..position = size / 2
+      ..size = Vector2(81, 200);
+    add(wall);
   }
 }
 
-class Wall extends PositionComponent with Tappable {
-  Wall() {
-    this.positionType = PositionType.widget;
-    this.position.setValues(200, 200);
-    this.size.setValues(200, 10);
+// ignore: camel_case_types, must_be_immutable
+class wallComponent extends flame_components.SpriteAnimationComponent
+    with flame_components.Draggable {
+  Vector2? dragDeltaPosition;
+
+  @override
+  void update(double dt) {
+    super.update(dt);
+    debugColor = isDragged && parent is DragDemoGame
+        ? Colors.greenAccent
+        : Colors.purple;
   }
 
   @override
-  void render(Canvas canvas) {
-    Paint paint = Paint();
-    paint.style = PaintingStyle.fill;
-    paint.color = Colors.red;
-
-    //print("Position" + this.position.toString());
-
-    Rect rect = Rect.fromLTWH(
-        this.position.x, this.position.y, this.size.x, this.size.y);
-
-    canvas.drawRect(rect, paint);
+  bool onDragStart(DragStartInfo info) {
+    dragDeltaPosition = info.eventPosition.game - position;
+    return false;
   }
 
   @override
-  bool containsPoint(Vector2 point) {
-    print("Check colision: " + point.toString());
-    print("Position" + this.position.toString());
-    print("Size: " + this.size.toString());
-    return (point.x >= this.position.x &&
-        point.x <= this.position.x + this.size.x &&
-        point.y >= this.position.y &&
-        point.y <= this.position.y + this.size.y);
-  }
-
-  @override
-  bool onTapUp(TapUpInfo info) {
-    print("TAPPED");
-    return true;
-  }
-
-  @override
-  bool handleTapUp(int pointerId, TapUpInfo info) {
-    if (containsPoint(info.eventPosition.widget)) {
-      return onTapUp(info);
+  bool onDragUpdate(DragUpdateInfo info) {
+    if (parent is! DragDemoGame) {
+      return true;
     }
+    final dragDeltaPosition = this.dragDeltaPosition;
+    if (dragDeltaPosition == null) {
+      return false;
+    }
+
+    position.setFrom(info.eventPosition.game - dragDeltaPosition);
+    return false;
+  }
+
+  @override
+  bool onDragEnd(DragEndInfo _) {
+    dragDeltaPosition = null;
+    return false;
+  }
+
+  @override
+  bool onDragCancel() {
+    dragDeltaPosition = null;
     return false;
   }
 }
