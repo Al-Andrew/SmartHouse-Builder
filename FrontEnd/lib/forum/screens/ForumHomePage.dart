@@ -32,15 +32,15 @@ class _ForumHomePageState extends State<ForumHomePage> {
                   ),
                   SearchBar(),
                   Container(
-                    height: 200,
+                    height: 230,
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
-                        Center(child: CustomSort(height: 180, width: 160)),
+                        Center(child: CustomSort(height: 230, width: 160)),
                         Column(
                           children: [
                             Container(
-                                margin: const EdgeInsets.only(top: 25.0),
+                                margin: const EdgeInsets.only(top: 35.0),
                                 child: Column(
                                   children: [
                                     ButtonNewPost(160, 45),
@@ -78,15 +78,15 @@ class _ForumHomePageState extends State<ForumHomePage> {
                   ),
                   SearchBar(),
                   Container(
-                    height: 200,
+                    height: 230,
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
-                        Center(child: CustomSort(height: 180, width: 160)),
+                        Center(child: CustomSort(height: 230, width: 160)),
                         Column(
                           children: [
                             Container(
-                                margin: const EdgeInsets.only(top: 20.0),
+                                margin: const EdgeInsets.only(top: 35.0),
                                 child: Column(
                                   children: [
                                     ButtonNewPost(160, 45),
@@ -135,7 +135,7 @@ class _ForumHomePageState extends State<ForumHomePage> {
                               ButtonMyPosts(160, 45),
                               Container(
                                 margin: const EdgeInsets.only(top: 20.0),
-                                child: CustomSort(height: 180, width: 160),
+                                child: CustomSort(height: 230, width: 160),
                               ),
                             ],
                           ),
