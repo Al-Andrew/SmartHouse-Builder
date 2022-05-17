@@ -1,13 +1,12 @@
 import 'dart:html';
 import 'package:flutter/material.dart';
 
-class ProductItemExpanded extends StatelessWidget {
+class SchematicItemExpanded extends StatelessWidget {
   final String id;
   final String title;
-  final int pret;
   final String linkImg;
 
-  ProductItemExpanded(this.id, this.title, this.pret, this.linkImg);
+  SchematicItemExpanded(this.id, this.title, this.linkImg);
 
   @override
   Widget build(BuildContext context) {
@@ -25,12 +24,6 @@ class ProductItemExpanded extends StatelessWidget {
                   onPressed: null, child: Icon(Icons.add))),
           Expanded(
               child: FloatingActionButton(
-                  onPressed: null,
-                  child: Icon(
-                    Icons.favorite,
-                  ))),
-          Expanded(
-              child: FloatingActionButton(
                   onPressed: Navigator.of(context).pop,
                   child: Icon(Icons.close))),
         ],
@@ -42,35 +35,14 @@ class ProductItemExpanded extends StatelessWidget {
                     child: ListView(
                   children: [
                     Expanded(
-                      child: Text(
-                        title + '\n',
-                        softWrap: true,
-                        style: TextStyle(fontWeight: FontWeight.bold),
+                      child: Center(
+                        child: Text(
+                          title + '\n',
+                          softWrap: true,
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        ),
                       ),
                     ),
-                    Expanded(
-                        child: Text(
-                      (() {
-                        if (pret != 0) {
-                          return "\n\$$pret\n";
-                        }
-
-                        return "ERR";
-                      })(),
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        color: Colors.red,
-                      ),
-                    )
-
-                        //     Text(
-                        //   '\n\$$pret\n',
-                        //   textAlign: TextAlign.center,
-                        //   style: TextStyle(
-                        //       fontWeight: FontWeight.bold, color: Colors.red),
-                        // )
-                        ),
                     Expanded(
                       child: Container(
                         width: MediaQuery.of(context).size.width *
@@ -86,7 +58,7 @@ class ProductItemExpanded extends StatelessWidget {
                         child: Image.network(linkImg),
                       ),
                     ),
-                    const Expanded(child: Text('\ndescriere\n')),
+                    const Expanded(child: Center(child: Text('\ndescriere\n'))),
                   ],
                 )))));
     // TextButton(

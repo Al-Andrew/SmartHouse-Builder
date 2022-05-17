@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:homepage/forum/CreatePost.dart';
-import 'package:homepage/forum/Post.dart';
-import 'package:homepage/forum/MyPosts.dart';
-import 'package:homepage/forum/ForumHomePage.dart';
+import 'package:homepage/forum/screens/CreatePost.dart';
+import 'package:homepage/forum/screens/Post.dart';
+import 'package:homepage/forum/screens/MyPosts.dart';
+import 'package:homepage/forum/screens/ForumHomePage.dart';
 
 class Forum extends StatefulWidget {
   const Forum({Key? key}) : super(key: key);
@@ -28,9 +28,10 @@ class _ForumState extends State<Forum> {
           page = const MyPosts();
         } else if (settings.name == routeCreatePost) {
           page = const CreatePost();
-        } else if (settings.name == routePost) {
-          page = const POST();
-        } else {
+        } // else if (settings.name == routePost) {
+        //   page = const POST();
+        // }
+        else {
           throw Exception('Unknown route: ${settings.name}');
         }
 

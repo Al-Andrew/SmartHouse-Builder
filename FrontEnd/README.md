@@ -1,4 +1,7 @@
 # frontend
+Update 11.05.2022 - In meniul de selectare a widget-urilor din shb.dart trebuie adaugat AllSchematics() ca optiunea#2 dar da eroare pentru ca cere parametru, dar _allSchematics nu merge 4 some reason.
+
+
 
 A new Flutter project.
 

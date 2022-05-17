@@ -1,7 +1,8 @@
 import 'dart:html';
 
 import 'package:flutter/material.dart';
-import 'package:homepage/forum/Utilities.dart';
+import 'package:homepage/forum/screens/Utilities.dart';
+import 'package:homepage/forum/classes/PostClass.dart';
 import 'package:homepage/homepage.dart';
 import 'package:homepage/main.dart';
 
@@ -24,6 +25,12 @@ class _MyPostsState extends State<MyPosts> {
     myPosts = Post.getPosts();
     super.initState();
   }
+  // @override
+  // Future<void> initState() async {
+  //   selectedPosts = [];
+  //   myPosts = await Post.getPosts();
+  //   super.initState();
+  // }
 
   onSelectedRow(bool selected, Post post) async {
     setState(() {
@@ -73,7 +80,10 @@ class _MyPostsState extends State<MyPosts> {
                               context: context, width: 40, height: 40),
                         ),
                         Expanded(
-                          child: CustomTitle(text: "My Posts"),
+                          child: CustomTitle(
+                            text: "My Posts",
+                            fontSize: 35,
+                          ),
                         ),
                       ],
                     ),
@@ -108,12 +118,12 @@ class _MyPostsState extends State<MyPosts> {
                             ]),
                           ),
                         ),
-                        Center(child: ButtonRemovePost(160, 45),)
-
+                        Center(
+                          child: ButtonRemovePost(160, 45),
+                        )
                       ],
                     ),
                   ),
-                  
                 ],
               ),
             );
@@ -140,7 +150,10 @@ class _MyPostsState extends State<MyPosts> {
                               context: context, width: 40, height: 40),
                         ),
                         Expanded(
-                          child: CustomTitle(text: "My Posts"),
+                          child: CustomTitle(
+                            text: "My Posts",
+                            fontSize: 35,
+                          ),
                         ),
                       ],
                     ),
@@ -202,7 +215,10 @@ class _MyPostsState extends State<MyPosts> {
                               context: context, width: 40, height: 40),
                         ),
                         Expanded(
-                          child: CustomTitle(text: "My Posts"),
+                          child: CustomTitle(
+                            text: "My Posts",
+                            fontSize: 35,
+                          ),
                         ),
                       ],
                     ),
@@ -434,7 +450,7 @@ class _MyPostsState extends State<MyPosts> {
                                   Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                        builder: (context) => const POST()),
+                                        builder: (context) => POST(post: post)),
                                   );
                                 },
                               ),
@@ -448,12 +464,12 @@ class _MyPostsState extends State<MyPosts> {
                         ),
                         DataCell(
                           Center(
-                            child: Text(post.likes.toString()),
+                            child: Text(post.nrLikes.toString()),
                           ),
                         ),
                         DataCell(
                           Center(
-                            child: Text(post.likes.toString()),
+                            child: Text(post.nrComments.toString()),
                           ),
                         ),
                       ],
