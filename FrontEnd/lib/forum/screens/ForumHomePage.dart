@@ -2,8 +2,8 @@ import 'dart:html';
 
 import 'package:flutter/material.dart';
 import 'Utilities.dart';
-import 'package:homepage/forum/MyPosts.dart';
-import 'package:homepage/forum/CreatePost.dart';
+import 'package:homepage/forum/screens/MyPosts.dart';
+import 'package:homepage/forum/screens/CreatePost.dart';
 import 'package:homepage/main.dart';
 
 class ForumHomePage extends StatefulWidget {
@@ -26,7 +26,10 @@ class _ForumHomePageState extends State<ForumHomePage> {
             return SingleChildScrollView(
               child: Column(
                 children: <Widget>[
-                  CustomTitle(text: "Forum"),
+                  CustomTitle(
+                    text: "Forum",
+                    fontSize: 35,
+                  ),
                   SearchBar(),
                   Container(
                     height: 200,
@@ -37,7 +40,7 @@ class _ForumHomePageState extends State<ForumHomePage> {
                         Column(
                           children: [
                             Container(
-                                margin: const EdgeInsets.only(top: 35.0),
+                                margin: const EdgeInsets.only(top: 25.0),
                                 child: Column(
                                   children: [
                                     ButtonNewPost(160, 45),
@@ -69,7 +72,10 @@ class _ForumHomePageState extends State<ForumHomePage> {
             return SingleChildScrollView(
               child: Column(
                 children: <Widget>[
-                  CustomTitle(text: "Forum"),
+                  CustomTitle(
+                    text: "Forum",
+                    fontSize: 35,
+                  ),
                   SearchBar(),
                   Container(
                     height: 200,
@@ -112,7 +118,10 @@ class _ForumHomePageState extends State<ForumHomePage> {
             return SingleChildScrollView(
               child: Column(
                 children: <Widget>[
-                  CustomTitle(text: "Forum"),
+                  CustomTitle(
+                    text: "Forum",
+                    fontSize: 35,
+                  ),
                   SearchBar(),
                   Container(
                     height: 400,
