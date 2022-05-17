@@ -3,7 +3,7 @@ import 'dart:html';
 import 'package:flutter/material.dart';
 import 'package:homepage/forum/utilities/Utilities.dart';
 import 'package:homepage/forum/classes/PostClass.dart';
-import 'package:intl/intl.dart';
+//import 'package:intl/intl.dart';
 
 class POST extends StatefulWidget {
   const POST({
@@ -19,15 +19,23 @@ class POST extends StatefulWidget {
 class _POSTState extends State<POST> {
   Color _likeIconColor = Colors.black;
   bool _isLiked = false;
-  late TextEditingController controller;
+  late TextEditingController commentController;
+  late TextEditingController titleReportController;
+
+  late TextEditingController motivationReportController;
+
   @override
   void initState() {
-    controller = TextEditingController();
+    commentController = TextEditingController();
+    titleReportController = TextEditingController();
+    motivationReportController = TextEditingController();
   }
 
   @override
   void dispose() {
-    controller.dispose();
+    commentController.dispose();
+    titleReportController.dispose();
+    motivationReportController.dispose();
     super.dispose();
   }
 
@@ -505,6 +513,9 @@ class _POSTState extends State<POST> {
                         ],
                       ),
                       ButtonShare(30, 30),
+                      Container(
+                          margin: const EdgeInsets.only(bottom: 4.0),
+                          child: ButtonReport(30, 30)),
                     ],
                   ),
                 )
@@ -707,42 +718,130 @@ class _POSTState extends State<POST> {
       child: ElevatedButton(
         child: Text('Add a comment'),
         onPressed: () async {
-          final comment = await OpenDialog();
+          final comment = await OpenDialogComment();
           if (comment == null || comment.isEmpty) {
             return;
           }
-          var now = new DateTime.now();
-          var formatter = DateFormat('dd/MM/yyyy');
-          String formattedDate = formatter.format(now);
-          setState(() => widget.post.addComment(
-              1, 1, widget.post.id, comment, "author", formattedDate, 0));
-          controller.clear();
+          // var now = new DateTime.now();
+          // var formatter = DateFormat('dd/MM/yyyy');
+          // String formattedDate = formatter.format(now);
+          setState(() => widget.post
+              .addComment(1, 1, widget.post.id, comment, "author", "date", 0));
+          commentController.clear();
         },
       ),
     );
   }
 
-  Future<String?> OpenDialog() => showDialog<String>(
+  Future<String?> OpenDialogComment() => showDialog<String>(
         context: context,
         builder: (context) => AlertDialog(
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(30),
           ),
           title: Text('Type your comment'),
-          content: TextField(
-            autofocus: true,
-            keyboardType: TextInputType.multiline,
-            minLines: 1,
-            maxLines: 20,
-            decoration: InputDecoration(
-              hintText: 'Enter your comment here',
+          content: Container(
+            constraints: BoxConstraints(
+              maxWidth: 300.0,
+              maxHeight: 400.0,
             ),
-            controller: controller,
+            child: TextField(
+              autofocus: true,
+              keyboardType: TextInputType.multiline,
+              minLines: 1,
+              maxLines: 20,
+              decoration: InputDecoration(
+                hintText: 'Enter your comment here',
+              ),
+              controller: commentController,
+            ),
           ),
           actions: [
             TextButton(
               onPressed: () {
-                Navigator.of(context).pop(controller.text);
+                Navigator.of(context).pop(commentController.text);
+              },
+              child: Text('Submit'),
+            ),
+          ],
+        ),
+      );
+
+//-------------------------------------------------------------------------------------- REPORT BUTTON --------------------------------------------------------------------------------------------
+
+  Container ButtonReport(double width, double height) {
+    return Container(
+      height: height,
+      width: width,
+      child: Ink(
+        child: IconButton(
+          onPressed: () async {
+            final report = await OpenDialogReport();
+            if (report == null || report.isEmpty) {
+              return;
+            }
+            // var now = new DateTime.now();
+            // var formatter = DateFormat('dd/MM/yyyy');
+            // String formattedDate = formatter.format(now);
+            setState(
+                () => widget.post.addReport(1, 1, 1, report, report, "date"));
+            titleReportController.clear();
+            motivationReportController.clear();
+          },
+          icon: Icon(Icons.report, color: Colors.black),
+          iconSize: 28,
+          hoverColor: Colors.transparent,
+          focusColor: Colors.transparent,
+        ),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.all(Radius.circular(20)),
+          color: Colors.transparent,
+        ),
+      ),
+    );
+  }
+
+  Future<String?> OpenDialogReport() => showDialog<String>(
+        context: context,
+        builder: (context) => AlertDialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(30),
+          ),
+          title: Text('Type your report'),
+          content: Container(
+            constraints: BoxConstraints(
+              maxHeight: 400.0,
+              maxWidth: 300.0,
+            ),
+            child: Column(
+              children: [
+                TextField(
+                  autofocus: true,
+                  keyboardType: TextInputType.multiline,
+                  minLines: 1,
+                  maxLines: 5,
+                  decoration: InputDecoration(
+                    hintText: 'Enter the title here',
+                  ),
+                  controller: titleReportController,
+                ),
+                TextField(
+                  autofocus: true,
+                  keyboardType: TextInputType.multiline,
+                  minLines: 1,
+                  maxLines: 10,
+                  decoration: InputDecoration(
+                    hintText: 'Enter the motivation here',
+                  ),
+                  controller: motivationReportController,
+                ),
+              ],
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop(motivationReportController.text);
               },
               child: Text('Submit'),
             ),

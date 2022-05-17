@@ -45,14 +45,7 @@ class _MyPostsState extends State<MyPosts> {
   //functia pentru butonul remove
   deleteSelectedPosts() async {
     setState(() {
-      if (selectedPosts.isNotEmpty) {
-        List<Post> tmp = [];
-        tmp.addAll(selectedPosts);
-        for (Post post in tmp) {
-          myPosts.remove(post);
-          selectedPosts.remove(post);
-        }
-      }
+      Post.removePosts(selectedPosts, myPosts);
     });
   }
 

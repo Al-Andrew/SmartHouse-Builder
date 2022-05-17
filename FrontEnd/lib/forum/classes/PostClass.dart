@@ -26,17 +26,17 @@ class Post {
     required this.reports,
   });
 
-  factory Post.fromJson(Map<String, dynamic> json) {
+  factory Post.fromJson(dynamic json) {
     return Post(
-        id: json["id"] as int,
-        topic: json["title"] as String,
-        content: json["content"] as String,
-        author: json["author"] as String,
-        date: json["date"] as String,
+        id: json["id"],
+        date: json["date"],
+        topic: json["title"],
+        content: json["content"],
+        author: "Marcel",
         nrLikes: 0,
         nrComments: 0,
-        comments: json["comments"] as List<Comment>,
-        reports: json["reports"] as List<Report>);
+        comments: [],
+        reports: []);
   }
 
   Map<String, dynamic> toJson() => {
@@ -57,12 +57,32 @@ class Post {
         author: author,
         date: date,
         nrLikes: nrLikes));
+  }
+
+  void addReport(int id, int id_author, int id_post, String title,
+      String motivation, String date) {
+    reports.add(new Report(
+      id: id,
+      id_author: id_author,
+      id_post: id_post,
+      title: title,
+      motivation: motivation,
+      date: date,
+    ));
     print(id);
-    print(id_post);
-    print(content);
-    print(author);
-    print(date);
-    print(nrLikes);
+    print(motivation);
+    print(title);
+  }
+
+  static void removePosts(List<Post> selectedPosts, List<Post> myPosts) {
+    if (selectedPosts.isNotEmpty) {
+      List<Post> tmp = [];
+      tmp.addAll(selectedPosts);
+      for (Post post in tmp) {
+        myPosts.remove(post);
+        selectedPosts.remove(post);
+      }
+    }
   }
 
   void setNrLikes(int newNrLikes) {
@@ -70,16 +90,29 @@ class Post {
   }
 
   static Future<List<Post>> getPosts() async {
-    print("1");
-    print(Uri.parse('http://localhost:8070/api/forum'));
-
-    http.get(Uri.parse('http://localhost:8070/api/forum'));
     final response = await http.get(
         Uri.parse(
           'http://localhost:8070/api/forum',
         ),
         headers: {"Access-Control-Allow-Origin": "*"});
-    print("2");
+    List<Post> posts = [];
+
+    var jsonData = json.decode(response.body);
+    for (var v in jsonData) {
+      print(v);
+      print('Spatiu');
+      posts.add(Post.fromJson(v));
+    }
+
+    return posts;
+  }
+
+  static Future<List<Post>> getMyPosts() async {
+    final response = await http.get(
+        Uri.parse(
+          'http://localhost:8070/api/forum',
+        ),
+        headers: {"Access-Control-Allow-Origin": "*"});
     List<Post> posts = [];
 
     var jsonData = json.decode(response.body);
