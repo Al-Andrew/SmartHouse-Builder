@@ -6,8 +6,7 @@ import 'package:homepage/marketplace.dart';
 import 'package:homepage/forum/Forum.dart';
 import 'package:homepage/shb.dart';
 import 'package:homepage/contact_us.dart';
-
-// import 'package:simple_gradient_text/simple_gradient_text.dart';
+import 'package:homepage/signup.dart';
 
 void main() {
   runApp(const MyApp());
@@ -47,6 +46,7 @@ class _MyHomePageState extends State<MyHomePage> {
     Forum(),
     ContactUs(),
     AboutUs(),
+    SignUp(),
   ];
 
   void changeScreen(int index) {
@@ -124,9 +124,8 @@ class _MyHomePageState extends State<MyHomePage> {
                     child: TextButton(
                         style: TextButton.styleFrom(
                             textStyle: const TextStyle(color: Colors.white)),
-                        onPressed: () => {
-                              //do something
-                            },
+                          onPressed: () => changeScreen(5)
+                        ,
                         child: const Center(
                           child: Text(
                             'Sign Up',
