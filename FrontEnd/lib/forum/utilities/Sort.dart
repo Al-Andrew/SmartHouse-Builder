@@ -1,6 +1,7 @@
 import 'dart:html';
 
 import 'package:flutter/material.dart';
+import './buttons/SortButton.dart';
 
 class CustomSort extends StatefulWidget {
   const CustomSort({
@@ -51,6 +52,7 @@ class _CustomSortState extends State<CustomSort> {
               CheckedRecent(),
               CheckedPopular(),
               CheckedCommented(),
+              SortButton(width: 100, height: 35),
             ],
           ),
         ],

@@ -18,7 +18,7 @@ class MyPosts extends StatefulWidget {
 class _MyPostsState extends State<MyPosts> {
   List<Post> myPosts = <Post>[];
   late List<Post> selectedPosts;
-  
+
   @override
   void initState() {
     Post.getLocalPosts().then(
@@ -319,8 +319,7 @@ class _MyPostsState extends State<MyPosts> {
               borderRadius: new BorderRadius.circular(20.0),
             ),
             primary: Colors.transparent,
-            shadowColor: Colors.transparent
-        ),
+            shadowColor: Colors.transparent),
       ),
     );
   }

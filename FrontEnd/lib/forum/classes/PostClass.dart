@@ -71,17 +71,24 @@ class Post {
 
   static Future<List<Post>> getPosts() async {
     print("1");
-    final data = await http.get(
-      Uri.parse('https://reqres.in/api/users?page=2'),
-    );
+    print(Uri.parse('http://localhost:8070/api/forum'));
+
+    http.get(Uri.parse('http://localhost:8070/api/forum'));
+    final response = await http.get(
+        Uri.parse(
+          'http://localhost:8070/api/forum',
+        ),
+        headers: {"Access-Control-Allow-Origin": "*"});
     print("2");
     List<Post> posts = [];
 
-    var jsonData = json.decode(data.body);
-    for (var e in jsonData) {
-      posts.add(Post.fromJson(e));
+    var jsonData = json.decode(response.body);
+    for (var v in jsonData) {
+      print(v);
+      print('Spatiu');
+      posts.add(Post.fromJson(v));
     }
-    print("3");
+
     return posts;
   }
 
