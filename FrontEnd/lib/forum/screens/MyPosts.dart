@@ -1,10 +1,9 @@
 import 'dart:html';
 
 import 'package:flutter/material.dart';
-import 'package:homepage/forum/screens/Utilities.dart';
+import 'package:homepage/forum/utilities/Utilities.dart';
+
 import 'package:homepage/forum/classes/PostClass.dart';
-import 'package:homepage/homepage.dart';
-import 'package:homepage/main.dart';
 
 import 'Post.dart';
 
@@ -17,20 +16,20 @@ class MyPosts extends StatefulWidget {
 }
 
 class _MyPostsState extends State<MyPosts> {
-  late List<Post> myPosts;
+  List<Post> myPosts = <Post>[];
   late List<Post> selectedPosts;
   @override
   void initState() {
+    Post.getLocalPosts().then(
+      (value) {
+        setState(() {
+          myPosts.addAll(value);
+        });
+      },
+    );
     selectedPosts = [];
-    myPosts = Post.getPosts();
     super.initState();
   }
-  // @override
-  // Future<void> initState() async {
-  //   selectedPosts = [];
-  //   myPosts = await Post.getPosts();
-  //   super.initState();
-  // }
 
   onSelectedRow(bool selected, Post post) async {
     setState(() {

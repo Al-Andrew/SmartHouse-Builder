@@ -1,9 +1,10 @@
 import 'dart:html';
 
 import 'package:flutter/material.dart';
-import 'Utilities.dart';
+import 'package:homepage/forum/utilities/Utilities.dart';
 import 'package:homepage/forum/screens/MyPosts.dart';
 import 'package:homepage/forum/screens/CreatePost.dart';
+
 import 'package:homepage/main.dart';
 
 class ForumHomePage extends StatefulWidget {
@@ -43,8 +44,14 @@ class _ForumHomePageState extends State<ForumHomePage> {
                                 margin: const EdgeInsets.only(top: 25.0),
                                 child: Column(
                                   children: [
-                                    ButtonNewPost(160, 45),
-                                    ButtonMyPosts(160, 45),
+                                    ButtonNewPost(
+                                        context: context,
+                                        width: 160,
+                                        height: 45),
+                                    ButtonMyPosts(
+                                        context: context,
+                                        width: 160,
+                                        height: 45),
                                   ],
                                 ))
                           ],
@@ -56,7 +63,8 @@ class _ForumHomePageState extends State<ForumHomePage> {
                     child: Center(
                         child: PostsTabel(
                       spaceBetweenColumns: 20,
-                      fontSize: 17,
+                      fontSizeColumn: 17,
+                      fontSizeRow: 13,
                       topicWidth: 150,
                       authorWidth: 75,
                     )),
@@ -89,8 +97,14 @@ class _ForumHomePageState extends State<ForumHomePage> {
                                 margin: const EdgeInsets.only(top: 20.0),
                                 child: Column(
                                   children: [
-                                    ButtonNewPost(160, 45),
-                                    ButtonMyPosts(160, 45),
+                                    ButtonNewPost(
+                                        context: context,
+                                        width: 160,
+                                        height: 45),
+                                    ButtonMyPosts(
+                                        context: context,
+                                        width: 160,
+                                        height: 45),
                                   ],
                                 ))
                           ],
@@ -102,7 +116,8 @@ class _ForumHomePageState extends State<ForumHomePage> {
                     child: Center(
                         child: PostsTabel(
                       spaceBetweenColumns: 30,
-                      fontSize: 19,
+                      fontSizeColumn: 19,
+                      fontSizeRow: 14,
                       topicWidth: 250,
                       authorWidth: 100,
                     )),
@@ -131,8 +146,10 @@ class _ForumHomePageState extends State<ForumHomePage> {
                           flex: 1,
                           child: Column(
                             children: [
-                              ButtonNewPost(160, 45),
-                              ButtonMyPosts(160, 45),
+                              ButtonNewPost(
+                                  context: context, width: 160, height: 45),
+                              ButtonMyPosts(
+                                  context: context, width: 160, height: 45),
                               Container(
                                 margin: const EdgeInsets.only(top: 20.0),
                                 child: CustomSort(height: 180, width: 160),
@@ -146,7 +163,8 @@ class _ForumHomePageState extends State<ForumHomePage> {
                             child: Center(
                                 child: PostsTabel(
                               spaceBetweenColumns: 40,
-                              fontSize: 20,
+                              fontSizeColumn: 20,
+                              fontSizeRow: 15,
                               topicWidth: 350,
                               authorWidth: 125,
                             )),
@@ -160,94 +178,6 @@ class _ForumHomePageState extends State<ForumHomePage> {
             );
           }
         }),
-      ),
-    );
-  }
-
-//------------------------------------------------------- METHODS --------------------------------------------------------------------------------------------
-
-// ------------------------------------------------------------------------BUTTONS
-
-  Container ButtonMyPosts(double width, double height) {
-    return Container(
-      margin: const EdgeInsets.only(top: 20.0),
-      height: height,
-      width: width,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.all(Radius.circular(20)),
-        gradient: LinearGradient(
-          colors: [
-            Color.fromARGB(255, 109, 184, 245),
-            Color.fromARGB(255, 37, 108, 214),
-          ],
-        ),
-      ),
-      child: ElevatedButton.icon(
-        onPressed: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (child) => const MyPosts()),
-          );
-        },
-        label: Text(
-          "My Posts",
-          style: TextStyle(
-            fontWeight: FontWeight.bold,
-            color: Colors.black,
-          ),
-        ),
-        icon: Icon(
-          Icons.list,
-          color: Colors.black,
-        ),
-        style: ElevatedButton.styleFrom(
-            shape: new RoundedRectangleBorder(
-              borderRadius: new BorderRadius.circular(20.0),
-            ),
-            primary: Colors.transparent,
-            shadowColor: Colors.transparent),
-      ),
-    );
-  }
-
-  Container ButtonNewPost(double width, double height) {
-    return Container(
-      margin: const EdgeInsets.only(top: 20.0),
-      height: height,
-      width: width,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.all(Radius.circular(20)),
-        gradient: LinearGradient(
-          colors: [
-            Color.fromARGB(255, 109, 184, 245),
-            Color.fromARGB(255, 37, 108, 214),
-          ],
-        ),
-      ),
-      child: ElevatedButton.icon(
-        onPressed: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => const CreatePost()),
-          );
-        },
-        label: Text(
-          "New Post",
-          style: TextStyle(
-            fontWeight: FontWeight.bold,
-            color: Colors.black,
-          ),
-        ),
-        icon: Icon(
-          Icons.add,
-          color: Colors.black,
-        ),
-        style: ElevatedButton.styleFrom(
-            shape: new RoundedRectangleBorder(
-              borderRadius: new BorderRadius.circular(20.0),
-            ),
-            primary: Colors.transparent,
-            shadowColor: Colors.transparent),
       ),
     );
   }
