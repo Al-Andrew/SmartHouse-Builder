@@ -19,6 +19,7 @@ class MyPosts extends StatefulWidget {
 class _MyPostsState extends State<MyPosts> {
   late List<Post> myPosts;
   late List<Post> selectedPosts;
+  
   @override
   void initState() {
     selectedPosts = [];
@@ -90,8 +91,8 @@ class _MyPostsState extends State<MyPosts> {
                   ),
                   SearchBar(),
                   Container(
-                    height: 200,
-                    child: Center(child: CustomSort(height: 180, width: 160)),
+                    height: 230,
+                    child: Center(child: CustomSort(height: 230, width: 160)),
                   ),
                   Container(
                     child: Center(
@@ -160,8 +161,8 @@ class _MyPostsState extends State<MyPosts> {
                   ),
                   SearchBar(),
                   Container(
-                    height: 200,
-                    child: Center(child: CustomSort(height: 180, width: 160)),
+                    height: 230,
+                    child: Center(child: CustomSort(height: 230, width: 160)),
                   ),
                   Container(
                     child: Center(
@@ -234,7 +235,7 @@ class _MyPostsState extends State<MyPosts> {
                             children: [
                               Container(
                                 margin: const EdgeInsets.only(top: 10.0),
-                                child: CustomSort(height: 180, width: 160),
+                                child: CustomSort(height: 230, width: 160),
                               ),
                               Container(
                                 margin: const EdgeInsets.only(top: 10.0),
@@ -319,7 +320,8 @@ class _MyPostsState extends State<MyPosts> {
               borderRadius: new BorderRadius.circular(20.0),
             ),
             primary: Colors.transparent,
-            shadowColor: Colors.transparent),
+            shadowColor: Colors.transparent
+        ),
       ),
     );
   }

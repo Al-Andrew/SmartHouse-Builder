@@ -98,6 +98,7 @@ class _CustomSortState extends State<CustomSort> {
               CheckedRecent(),
               CheckedPopular(),
               CheckedCommented(),
+              SortButton(100, 35),
             ],
           ),
         ],
@@ -175,6 +176,35 @@ class _CustomSortState extends State<CustomSort> {
           ),
         ),
       ],
+    );
+  }
+
+  Container SortButton(double width, double height){
+    return Container(
+      margin: const EdgeInsets.only(top: 10.0),
+      height: height,
+      width: width,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.all(Radius.circular(20)),
+        color: Color.fromARGB(255, 53, 205, 255),
+      ),
+      child: ElevatedButton(
+        onPressed: () {},
+        child: Text(
+          "Sort",
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+            color: Colors.black,
+          ),
+        ),
+        style: ElevatedButton.styleFrom(
+            shape: new RoundedRectangleBorder(
+              borderRadius: new BorderRadius.circular(20.0),
+            ),
+            primary: Colors.transparent,
+            shadowColor: Colors.transparent
+        ),
+      ),
     );
   }
 }
