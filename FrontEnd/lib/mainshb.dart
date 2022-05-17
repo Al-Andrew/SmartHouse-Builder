@@ -4,6 +4,8 @@ import 'package:homepage/about_us.dart';
 import 'package:homepage/homepage.dart';
 import 'package:homepage/marketplace.dart';
 import 'package:homepage/shb.dart';
+
+import 'forum/Forum.dart';
 // import 'package:simple_gradient_text/simple_gradient_text.dart';
 
 class MyHomePageSHB extends StatefulWidget {
@@ -21,6 +23,7 @@ class _MyHomePageSHBState extends State<MyHomePageSHB> {
     HomePage(),
     SHB(),
     Marketplace(),
+    Forum(),
     AboutUs(),
   ];
 
@@ -59,9 +62,7 @@ class _MyHomePageSHBState extends State<MyHomePageSHB> {
                 TextButton(
                     style: TextButton.styleFrom(
                         textStyle: const TextStyle(color: Colors.black)),
-                    onPressed: () => {
-                          //do something
-                        },
+                    onPressed: () => changeScreen(3),
                     child: const Center(
                       child: Text('Forum'),
                     )),
@@ -82,7 +83,7 @@ class _MyHomePageSHBState extends State<MyHomePageSHB> {
                 TextButton(
                     style: TextButton.styleFrom(
                         textStyle: const TextStyle(color: Colors.black)),
-                    onPressed: () => changeScreen(3),
+                    onPressed: () => changeScreen(4),
                     child: const Center(
                       child: Text('About'),
                     )),

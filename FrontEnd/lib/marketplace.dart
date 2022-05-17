@@ -1,10 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:homepage/all_products.dart';
+import 'package:homepage/schematics.dart';
 // import 'package:flutter/rendering.dart';
 import 'package:homepage/dummy_products.dart';
+import 'package:homepage/dummy_schematics.dart';
 import 'package:homepage/fav_products.dart';
 import 'package:homepage/models/product.dart';
+import 'package:homepage/models/schematic.dart';
 import 'package:homepage/product_item.dart';
+import 'package:homepage/schematics_item.dart';
+
+import 'forum/Utilities.dart';
+import 'forum/screens/Utilities.dart';
 
 class Marketplace extends StatefulWidget {
   Marketplace();
@@ -15,6 +22,7 @@ class Marketplace extends StatefulWidget {
 
 class _MarketplaceState extends State<Marketplace> {
   List<Product> _allProducts = DUMMY_PRODUCTS;
+  List<Schematic> _allSchematics = DUMMY_SCHEMATICS;
   List<Product> _favoriteProducts = [];
 
   int _selectedIndex = 0;
@@ -53,29 +61,12 @@ class _MarketplaceState extends State<Marketplace> {
 
   @override
   Widget build(BuildContext context) {
-    
     return Container(
         child: Scaffold(
       body: Column(children: [
         Container(
             child: Column(children: [
-          ListTile(
-              title: TextField(
-                controller: TextEditingController(text: ''),
-                decoration: InputDecoration(
-                  // prefixIcon: Icon(Icons.search),
-                  border: OutlineInputBorder(),
-                  contentPadding: EdgeInsets.all(8.0),
-                  hintText: 'Search',
-                ),
-              ),
-              trailing: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  new IconButton(
-                      onPressed: null, icon: Icon(Icons.search_outlined))
-                ],
-              )),
+          SearchBar(),
           Center(
             child: TextButton(
                 onPressed: null,
@@ -106,5 +97,4 @@ class _MarketplaceState extends State<Marketplace> {
       ]),
     ));
   }
-
 }
