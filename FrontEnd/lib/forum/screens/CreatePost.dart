@@ -1,10 +1,6 @@
-import 'dart:html';
 import 'dart:math';
 import 'package:flutter/material.dart';
-import 'package:homepage/forum/screens/Utilities.dart';
-import 'package:homepage/homepage.dart';
-import 'package:homepage/main.dart';
-import './Post.dart';
+import 'package:homepage/forum/utilities/Utilities.dart';
 
 class CreatePost extends StatefulWidget {
   const CreatePost({Key? key}) : super(key: key);

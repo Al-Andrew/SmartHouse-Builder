@@ -5,8 +5,8 @@ import 'package:homepage/homepage.dart';
 import 'package:homepage/marketplace.dart';
 import 'package:homepage/forum/Forum.dart';
 import 'package:homepage/shb.dart';
-
-// import 'package:simple_gradient_text/simple_gradient_text.dart';
+import 'package:homepage/contact_us.dart';
+import 'package:homepage/signup.dart';
 
 void main() {
   runApp(const MyApp());
@@ -44,7 +44,9 @@ class _MyHomePageState extends State<MyHomePage> {
     SHB(),
     Marketplace(),
     Forum(),
+    ContactUs(),
     AboutUs(),
+    SignUp(),
   ];
 
   void changeScreen(int index) {
@@ -103,16 +105,14 @@ class _MyHomePageState extends State<MyHomePage> {
                 TextButton(
                     style: TextButton.styleFrom(
                         textStyle: const TextStyle(color: Colors.black)),
-                    onPressed: () => changeScreen(4),
+                    onPressed: () => changeScreen(5),
                     child: const Center(
                       child: Text('About'),
                     )),
                 TextButton(
                     style: TextButton.styleFrom(
                         textStyle: const TextStyle(color: Colors.black)),
-                    onPressed: () => {
-                          //do something
-                        },
+                    onPressed: () => changeScreen(4),
                     child: const Center(
                       child: Text('Contact Us'),
                     )),
@@ -124,9 +124,8 @@ class _MyHomePageState extends State<MyHomePage> {
                     child: TextButton(
                         style: TextButton.styleFrom(
                             textStyle: const TextStyle(color: Colors.white)),
-                        onPressed: () => {
-                              //do something
-                            },
+                          onPressed: () => changeScreen(5)
+                        ,
                         child: const Center(
                           child: Text(
                             'Sign Up',
