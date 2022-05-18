@@ -12,7 +12,7 @@ public class ReportConfig {
     @Bean
     CommandLineRunner commandLineRunnerReport(ReportRepository repository){
         return args -> {
-
+            /*
             Report report1 =  new Report(1, 1,5,
                     "Primul report",
                     "Imi era foame",
@@ -22,6 +22,8 @@ public class ReportConfig {
                     "Imi era sete",
                     "07.05.2022");
             repository.saveAll(List.of(report1, report2));
+
+             */
         };
     }
 }

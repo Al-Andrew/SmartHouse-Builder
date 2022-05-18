@@ -15,17 +15,14 @@ public class CommentService {
         this.commentRepository = commentRepository;
     }
 
-    public Optional<Comment> getComment(Integer commentId){
-        boolean exists = commentRepository.existsById(commentId);
-        if(!exists){
-            throw new IllegalStateException("Comment with id " + commentId + "does not exists!");
-        }
-        return commentRepository.findCommentById(commentId);
+    public List<Comment> getComment(Integer commentId){
+//        boolean exists = commentRepository.existsById(commentId);
+//        if(!exists){
+//            throw new IllegalStateException("Comment with id " + commentId + "does not exists!");
+//        }
+        return commentRepository.findCommentByIdPost(commentId);
     }
     public void addNewComment(Comment comment) {
-        Optional<Comment> userOptional= commentRepository.findCommentById(comment.getId());
-        if(userOptional.isPresent())
-            throw new IllegalStateException("Comment already send!");
         commentRepository.save(comment);
     }
 
