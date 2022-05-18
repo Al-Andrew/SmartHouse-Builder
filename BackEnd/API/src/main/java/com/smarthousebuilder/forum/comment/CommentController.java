@@ -16,9 +16,9 @@ public class CommentController {
         this.commentService = commentService;
     }
 
-    @GetMapping(path = "/{commentId}")
-    public Optional<Comment> getComment(@PathVariable("commentId") Integer commentId){
-        return commentService.getComment(commentId);
+    @GetMapping(path = "/{idPost}")
+    public List<Comment> getComment(@PathVariable("idPost") Integer idPost){
+        return commentService.getComment(idPost);
     }
     @PutMapping("/{commentId}")
     public void updateComment(@RequestBody Comment comment, @PathVariable Integer commentId){
@@ -27,6 +27,7 @@ public class CommentController {
     }
     @PostMapping
     public void registerNewComment(@RequestBody Comment comment){
+        System.out.println(comment);
         commentService.addNewComment(comment);
     }
     @DeleteMapping(path = "/{commentId}")

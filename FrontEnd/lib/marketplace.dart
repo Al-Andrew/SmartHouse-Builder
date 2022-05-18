@@ -24,6 +24,8 @@ class _MarketplaceState extends State<Marketplace> {
   List<Schematic> _allSchematics = DUMMY_SCHEMATICS;
   List<Product> _favoriteProducts = [];
 
+  
+
   int _selectedIndex = 0;
 
   late List<Widget> _widgetOptions;

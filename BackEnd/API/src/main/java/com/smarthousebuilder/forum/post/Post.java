@@ -17,8 +17,11 @@ public class Post {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   protected int id;
   protected int id_user;
+  @Column(name = "type")
   protected String typePost;
   protected String title;
+
+  @Column(name = "posted_date")
   protected String date;
   protected String content;
 
@@ -32,16 +35,33 @@ public class Post {
   @Transient
   List<Report> reports = new ArrayList<>();
 
-  public Post(int id, String content, String title, String author, String date) {
+  public Post(int id, int id_user, String typePost,
+              String title, String date, String content) {
     this.id = id;
-    this.content = content;
+    this.id_user = id_user;
+    this.typePost = typePost;
     this.title = title;
-    this.author = author;
     this.date = date;
+    this.content = content;
   }
 
   public Post() {
 
+  }
+
+  @Override
+  public String toString() {
+    return "Post{" +
+            "id=" + id +
+            ", id_user=" + id_user +
+            ", typePost='" + typePost + '\'' +
+            ", title='" + title + '\'' +
+            ", date='" + date + '\'' +
+            ", content='" + content + '\'' +
+            ", author='" + author + '\'' +
+            ", comments=" + comments +
+            ", reports=" + reports +
+            '}';
   }
 
   public boolean modifyContent(String newPostContent) {
@@ -67,30 +87,6 @@ public class Post {
     return true;
   }
 
-  public String getContent() {
-    return content;
-  }
-
-  public String getTitle() {
-    return title;
-  }
-
-  public String getAuthor() {
-    return author;
-  }
-
-  public String getDate() {
-    return date;
-  }
-
-  public List<Comment> getComments() {
-    return comments;
-  }
-
-  public List<Report> getReports() {
-    return reports;
-  }
-
   public int getId() {
     return id;
   }
@@ -99,11 +95,67 @@ public class Post {
     this.id = id;
   }
 
+  public int getId_user() {
+    return id_user;
+  }
+
+  public void setId_user(int id_user) {
+    this.id_user = id_user;
+  }
+
+  public String getTypePost() {
+    return typePost;
+  }
+
+  public void setTypePost(String typePost) {
+    this.typePost = typePost;
+  }
+
+  public String getTitle() {
+    return title;
+  }
+
   public void setTitle(String title) {
     this.title = title;
   }
 
+  public String getDate() {
+    return date;
+  }
+
+  public void setDate(String date) {
+    this.date = date;
+  }
+
+  public String getContent() {
+    return content;
+  }
+
   public void setContent(String content) {
     this.content = content;
+  }
+
+  public String getAuthor() {
+    return author;
+  }
+
+  public void setAuthor(String author) {
+    this.author = author;
+  }
+
+  public List<Comment> getComments() {
+    return comments;
+  }
+
+  public void setComments(List<Comment> comments) {
+    this.comments = comments;
+  }
+
+  public List<Report> getReports() {
+    return reports;
+  }
+
+  public void setReports(List<Report> reports) {
+    this.reports = reports;
   }
 }
