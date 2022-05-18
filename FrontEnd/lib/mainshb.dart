@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:homepage/about_us.dart';
+import 'package:homepage/contact_us.dart';
 import 'package:homepage/homepage.dart';
 import 'package:homepage/marketplace.dart';
 import 'package:homepage/shb.dart';
@@ -25,6 +26,7 @@ class _MyHomePageSHBState extends State<MyHomePageSHB> {
     Marketplace(),
     Forum(),
     AboutUs(),
+    ContactUs()
   ];
 
   void changeScreen(int index) {
@@ -91,7 +93,7 @@ class _MyHomePageSHBState extends State<MyHomePageSHB> {
                     style: TextButton.styleFrom(
                         textStyle: const TextStyle(color: Colors.black)),
                     onPressed: () => {
-                          //do something
+                          changeScreen(5)
                         },
                     child: const Center(
                       child: Text('Contact Us'),
