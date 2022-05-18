@@ -10,8 +10,7 @@ import 'package:homepage/models/schematic.dart';
 import 'package:homepage/product_item.dart';
 import 'package:homepage/schematics_item.dart';
 
-import 'forum/Utilities.dart';
-import 'forum/screens/Utilities.dart';
+import 'forum/utilities/Utilities.dart';
 
 class Marketplace extends StatefulWidget {
   Marketplace();
