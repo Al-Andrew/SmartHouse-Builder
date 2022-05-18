@@ -3,6 +3,7 @@ import 'dart:html';
 import 'package:flutter/material.dart';
 import 'package:homepage/forum/classes/PostClass.dart';
 import '../screens/Post.dart';
+import '../ForumGlobals.dart' as globals;
 
 class PostsTabel extends StatefulWidget {
   const PostsTabel({
@@ -21,10 +22,13 @@ class PostsTabel extends StatefulWidget {
   final double authorWidth;
 
   @override
-  State<PostsTabel> createState() => _PostsTabelState();
+  State<PostsTabel> createState() {
+    return _PostsTabelState();
+  }
 }
 
 class _PostsTabelState extends State<PostsTabel> {
+  @override
   void initState() {
     super.initState();
   }
@@ -191,7 +195,7 @@ class _PostsTabelState extends State<PostsTabel> {
                         DataCell(
                           Center(
                             child: Text(
-                              post.nrLikes.toString(),
+                              post.nrComments.toString(),
                               style: TextStyle(
                                 fontSize: widget.fontSizeRow,
                                 color: Colors.black,

@@ -10,25 +10,43 @@ public class Comment {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @Column(name = "id")
   protected int id;
+  @Column(name = "id_user")
   protected int id_user;
+  @Column(name = "id_post")
   protected int id_post;
+  @Column(name = "posted_date")
   protected String date;
+  @Column(name = "content")
   protected String content;
+  @Column(name = "number_reacts")
   protected int numberReacts;
 
-  public Comment(int id, int id_user, int id_post, String date, String content) {
-    this.id = id;
+  public Comment(int id_user, int id_post, String date, String content, int numberReacts) {
     this.id_user = id_user;
     this.id_post = id_post;
     this.date = date;
     this.content = content;
-    this.numberReacts = 0;
+    this.numberReacts = numberReacts;
   }
 
   public Comment(){
 
   }
+
+  @Override
+  public String toString() {
+    return "Comment{" +
+            "id=" + id +
+            ", id_user=" + id_user +
+            ", id_post=" + id_post +
+            ", date='" + date + '\'' +
+            ", content='" + content + '\'' +
+            ", numberReacts=" + numberReacts +
+            '}';
+  }
+
   public void userAddReact() {
     //TODO: setam in baza de date ca user-ul a dat react
     numberReacts++;

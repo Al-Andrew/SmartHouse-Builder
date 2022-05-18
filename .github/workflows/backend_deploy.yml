@@ -2,10 +2,8 @@ name: main_backend_push
 
 # Run this workflow every time a commit gets pushed to main or a pull request gets opened against main
 on:
-  push:
-    branches:
-      - main
-
+  workflow_dispatch
+  
 jobs:
     build:
         name: Call Azure Pipeline
@@ -15,5 +13,5 @@ jobs:
           uses: Azure/pipelines@v1
           with:
             azure-devops-project-url: https://dev.azure.com/horiaapostol/SmartHouse-Builder
-            azure-pipeline-name: 'SmartHouse-Builder-Maven-CI'
+            azure-pipeline-name: 'SmartHouse-Builder-Maven-BE'
             azure-devops-token: ${{ secrets.AZURE_DEVOPS_TOKEN }}
