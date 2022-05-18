@@ -3,7 +3,7 @@ package com.smarthousebuilder.marketplace.wishlist;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/wishlist")
+@RequestMapping("/api/wishlist")
 public class WishlistController {
 
     private final WishlistService wishlistService;
