@@ -58,6 +58,33 @@ public class WishlistService {
 
     }
 
+    public void AddToExisting(Integer userId, Integer productId, String name) {
+        Wishlists wishlists = wishlistRepository.findByUserId(userId);
+        Optional<Product> p = productService.getById(productId);
+
+        boolean existsInWishlist = false;
+
+        if( wishlists != null){
+            boolean condition = wishlistItemRepository.existsByWishlistIdAndAndProductId(wishlists.getId(),productId);
+
+            if(condition){
+                existsInWishlist = true;
+            }
+        }
+
+        if(wishlists != null && (!existsInWishlist)){
+            WishlistItems item1 = new WishlistItems();
+
+            item1.setWishlistId(wishlists.getId());
+            item1.setProductId(productId);
+
+            wishlistItemRepository.save(item1);
+
+
+        }
+    }
+
+
     public void getByWishlistId(Integer wishlistId) {
         boolean exists = wishlistRepository.existsByUserId(wishlistId);
 
