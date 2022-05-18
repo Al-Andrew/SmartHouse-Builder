@@ -1,9 +1,7 @@
 name: Azure Static Web Apps Fe Push
 
 on:
-  push:
-    branches:
-      - live
+  workflow_dispatch
 
 jobs:
   build_and_deploy_job:
