@@ -2,10 +2,8 @@ name: main_backend_push
 
 # Run this workflow every time a commit gets pushed to main or a pull request gets opened against main
 on:
-  push:
-    branches:
-      - main
-
+  workflow_dispatch
+  
 jobs:
     build:
         name: Call Azure Pipeline
