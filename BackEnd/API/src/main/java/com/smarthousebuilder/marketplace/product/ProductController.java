@@ -1,9 +1,7 @@
 package com.smarthousebuilder.marketplace.product;
 
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
-import javax.persistence.criteria.CriteriaBuilder;
 import java.util.List;
 import java.util.Optional;
 
@@ -31,6 +29,11 @@ public class ProductController {
     @GetMapping()
     public Optional<Product> getByName(@RequestParam(value="name") String name){
         return productService.getByName(name);
+    }
+
+    @GetMapping("/category")
+    public List<Product> getByCategory(@RequestParam (value = "categoryId") Integer categoryId){
+        return productService.getByCategoryId(categoryId);
     }
 
     @PostMapping("/add")
