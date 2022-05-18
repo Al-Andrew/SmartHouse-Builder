@@ -13,6 +13,6 @@ public class DemoController {
 
     @GetMapping
     public String demo(@RequestParam String name){
-        return "Hello" + name;
+        return "Hello " + name;
     }
 }
