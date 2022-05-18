@@ -28,14 +28,15 @@ public class PostService {
 
     public void deletePost(Integer postId) {
         boolean exists = postRepository.existsById(postId);
+        System.out.println(exists);
         if(!exists){
-            throw new IllegalStateException("student with id " + postId + " does not exist");
+            throw new IllegalStateException("post with id " + postId + " does not exist");
         }
         postRepository.deleteById(postId);
 
     }
-    public Optional<Post> getPost(int id){
-        Optional<Post> postOptional = postRepository.findPostById(id);
+    public List<Post> getPostByUserId(int id){
+        List<Post> postOptional = postRepository.findPostByUserId(id);
         if (postOptional.isEmpty())
             throw new IllegalStateException("Nu exista acest post cu id-ul" + id);
         return postOptional;
