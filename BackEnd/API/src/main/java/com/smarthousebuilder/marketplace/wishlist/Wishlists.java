@@ -1,12 +1,14 @@
 package com.smarthousebuilder.marketplace.wishlist;
 
+import org.hibernate.annotations.GenericGenerator;
+
 import javax.persistence.*;
 import java.sql.Date;
 
 @Entity
-@Table (name="wishlists")
-public class Wishlist {
-    @GeneratedValue()
+@Table(name = "wishlists")
+public class Wishlists {
+    @GeneratedValue
     @Id
     @Column(name = "id")
     private int id;
@@ -57,12 +59,12 @@ public class Wishlist {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        Wishlist wishlist = (Wishlist) o;
+        Wishlists wishlists = (Wishlists) o;
 
-        if (id != wishlist.id) return false;
-        if (userId != null ? !userId.equals(wishlist.userId) : wishlist.userId != null) return false;
-        if (createDate != null ? !createDate.equals(wishlist.createDate) : wishlist.createDate != null) return false;
-        if (name != null ? !name.equals(wishlist.name) : wishlist.name != null) return false;
+        if (id != wishlists.id) return false;
+        if (userId != null ? !userId.equals(wishlists.userId) : wishlists.userId != null) return false;
+        if (createDate != null ? !createDate.equals(wishlists.createDate) : wishlists.createDate != null) return false;
+        if (name != null ? !name.equals(wishlists.name) : wishlists.name != null) return false;
 
         return true;
     }
