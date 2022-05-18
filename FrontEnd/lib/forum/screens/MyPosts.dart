@@ -1,9 +1,9 @@
 import 'dart:html';
 
 import 'package:flutter/material.dart';
-import 'package:homepage/forum/Utilities.dart';
-import 'package:homepage/homepage.dart';
-import 'package:homepage/main.dart';
+import 'package:homepage/forum/utilities/Utilities.dart';
+
+import 'package:homepage/forum/classes/PostClass.dart';
 
 import 'Post.dart';
 
@@ -16,12 +16,19 @@ class MyPosts extends StatefulWidget {
 }
 
 class _MyPostsState extends State<MyPosts> {
-  late List<Post> myPosts;
+  List<Post> myPosts = <Post>[];
   late List<Post> selectedPosts;
+
   @override
   void initState() {
+    Post.getLocalPosts().then(
+      (value) {
+        setState(() {
+          myPosts.addAll(value);
+        });
+      },
+    );
     selectedPosts = [];
-    myPosts = Post.getPosts();
     super.initState();
   }
 
@@ -38,14 +45,7 @@ class _MyPostsState extends State<MyPosts> {
   //functia pentru butonul remove
   deleteSelectedPosts() async {
     setState(() {
-      if (selectedPosts.isNotEmpty) {
-        List<Post> tmp = [];
-        tmp.addAll(selectedPosts);
-        for (Post post in tmp) {
-          myPosts.remove(post);
-          selectedPosts.remove(post);
-        }
-      }
+      Post.removePosts(selectedPosts, myPosts);
     });
   }
 
@@ -73,15 +73,18 @@ class _MyPostsState extends State<MyPosts> {
                               context: context, width: 40, height: 40),
                         ),
                         Expanded(
-                          child: CustomTitle(text: "My Posts"),
+                          child: CustomTitle(
+                            text: "My Posts",
+                            fontSize: 35,
+                          ),
                         ),
                       ],
                     ),
                   ),
                   SearchBar(),
                   Container(
-                    height: 200,
-                    child: Center(child: CustomSort(height: 180, width: 160)),
+                    height: 230,
+                    child: Center(child: CustomSort(height: 230, width: 160)),
                   ),
                   Container(
                     child: Center(
@@ -108,12 +111,12 @@ class _MyPostsState extends State<MyPosts> {
                             ]),
                           ),
                         ),
-                        Center(child: ButtonRemovePost(160, 45),)
-
+                        Center(
+                          child: ButtonRemovePost(160, 45),
+                        )
                       ],
                     ),
                   ),
-                  
                 ],
               ),
             );
@@ -140,15 +143,18 @@ class _MyPostsState extends State<MyPosts> {
                               context: context, width: 40, height: 40),
                         ),
                         Expanded(
-                          child: CustomTitle(text: "My Posts"),
+                          child: CustomTitle(
+                            text: "My Posts",
+                            fontSize: 35,
+                          ),
                         ),
                       ],
                     ),
                   ),
                   SearchBar(),
                   Container(
-                    height: 200,
-                    child: Center(child: CustomSort(height: 180, width: 160)),
+                    height: 230,
+                    child: Center(child: CustomSort(height: 230, width: 160)),
                   ),
                   Container(
                     child: Center(
@@ -202,7 +208,10 @@ class _MyPostsState extends State<MyPosts> {
                               context: context, width: 40, height: 40),
                         ),
                         Expanded(
-                          child: CustomTitle(text: "My Posts"),
+                          child: CustomTitle(
+                            text: "My Posts",
+                            fontSize: 35,
+                          ),
                         ),
                       ],
                     ),
@@ -218,7 +227,7 @@ class _MyPostsState extends State<MyPosts> {
                             children: [
                               Container(
                                 margin: const EdgeInsets.only(top: 10.0),
-                                child: CustomSort(height: 180, width: 160),
+                                child: CustomSort(height: 230, width: 160),
                               ),
                               Container(
                                 margin: const EdgeInsets.only(top: 10.0),
@@ -434,7 +443,7 @@ class _MyPostsState extends State<MyPosts> {
                                   Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                        builder: (context) => const POST()),
+                                        builder: (context) => POST(post: post)),
                                   );
                                 },
                               ),
@@ -448,12 +457,12 @@ class _MyPostsState extends State<MyPosts> {
                         ),
                         DataCell(
                           Center(
-                            child: Text(post.likes.toString()),
+                            child: Text(post.nrLikes.toString()),
                           ),
                         ),
                         DataCell(
                           Center(
-                            child: Text(post.likes.toString()),
+                            child: Text(post.nrComments.toString()),
                           ),
                         ),
                       ],

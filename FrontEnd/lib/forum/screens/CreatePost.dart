@@ -1,10 +1,6 @@
-import 'dart:html';
 import 'dart:math';
 import 'package:flutter/material.dart';
-import 'package:homepage/forum/Utilities.dart';
-import 'package:homepage/homepage.dart';
-import 'package:homepage/main.dart';
-import './Post.dart';
+import 'package:homepage/forum/utilities/Utilities.dart';
 
 class CreatePost extends StatefulWidget {
   const CreatePost({Key? key}) : super(key: key);
@@ -39,7 +35,10 @@ class _CreatePostState extends State<CreatePost> {
                   children: <Widget>[
                     Container(
                       child: Stack(children: [
-                        CustomTitle(text: "Create a Post"),
+                        CustomTitle(
+                          text: "Create a Post",
+                          fontSize: 35,
+                        ),
                         Container(
                           margin: const EdgeInsets.only(top: 10),
                           child: Container(
