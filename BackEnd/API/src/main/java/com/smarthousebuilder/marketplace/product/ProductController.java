@@ -36,6 +36,11 @@ public class ProductController {
         return productService.getByCategoryId(categoryId);
     }
 
+    @GetMapping("/price-range")
+    public List<Product> getByPriceRange(@RequestParam (value = "lower") Double lower,@RequestParam (value = "upper") Double upper){
+        return productService.getByPriceRange(lower,upper);
+    }
+
     @PostMapping("/add")
     public void add (@RequestBody Product product){
         productService.addNew(product);

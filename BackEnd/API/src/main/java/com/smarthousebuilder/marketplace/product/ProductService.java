@@ -81,4 +81,8 @@ public class ProductService {
         return productRepository.getAllByCategoryId(categoryId);
 
     }
+
+    public List<Product> getByPriceRange(Double lower, Double upper) {
+        return  productRepository.findByPriceBetween(lower,upper);
+    }
 }
