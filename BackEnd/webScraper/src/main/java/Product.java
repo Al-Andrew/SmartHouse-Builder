@@ -1,15 +1,15 @@
 
-import java.util.List;
+import java.util.HashMap;
 import java.util.Map;
 
-public class Product {
+public class Product extends AllProducts{
     String name;
     String price;
     String linkToProduct;
     String linkToPng;
 
-    List<String> details;
-    String Size;
+    Map<String, String> detailsOfProduct;
+    String sizeOfProduct;
 
 
     Product(String name, String linkToPng, String linkToProduct){
@@ -17,6 +17,7 @@ public class Product {
         this.price = "Out of Stock";
         this.linkToPng = linkToPng;
         this.linkToProduct = linkToProduct;
+        this.detailsOfProduct = new HashMap<>();
     }
 
 
@@ -41,7 +42,7 @@ public class Product {
     }
 
     public String getSize() {
-        return Size;
+        return sizeOfProduct;
     }
 
 
@@ -64,6 +65,8 @@ public class Product {
                 ", price='" + price + '\'' +
                 ", linkToProduct='" + linkToProduct + '\'' +
                 ", linkToPng='" + linkToPng + '\'' +
+                ", detailsOfProduct=" + detailsOfProduct +
+                ", sizeOfProduct='" + sizeOfProduct + '\'' +
                 '}';
     }
 
@@ -72,7 +75,7 @@ public class Product {
     }
 
     public void setSize(String size) {
-        Size = size;
+        sizeOfProduct = size;
     }
 
 }

@@ -1,3 +1,4 @@
+import 'dart:html';
 import 'package:flutter/material.dart';
 
 class ProductItemExpanded extends StatelessWidget {
