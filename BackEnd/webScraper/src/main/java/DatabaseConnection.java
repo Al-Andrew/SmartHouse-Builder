@@ -2,20 +2,21 @@ import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.sql.*;
 
 public class DatabaseConnection {
-    String dbURL;
-    String user;
-    String pass;
-    Connection conn;
+    private static final String URL = "jdbc:oracle:thin:@localhost:1521:xe";
+    private static final String USER = "PROGAVAN";
+    private static final String PASSWORD = "PROGAVAN";
+    private static Connection conn;
 
-    private DatabaseConnection() {
-        this.dbURL = System.getenv("DB_URL_SECRET");
-        this.user = System.getenv("DB_USER_SECRET");
-        this.pass = System.getenv("DB_PASS_SECRET");
+    public static void createconnection() {
+        //this.dbURL = System.getenv("DB_URL_SECRET");
+        //this.user = System.getenv("DB_USER_SECRET");
+        //this.pass = System.getenv("DB_PASS_SECRET");
 
         try {
-            conn = DriverManager.getConnection(dbURL, user, pass);
+            conn = DriverManager.getConnection(URL, USER, PASSWORD);
             if (conn != null) {
                 DatabaseMetaData dm = conn.getMetaData();
                 System.out.println("Driver name: " + dm.getDriverName());
@@ -26,16 +27,12 @@ public class DatabaseConnection {
 
         } catch (SQLException ex) {
             ex.printStackTrace();
-        } finally {
-            try {
-                if (conn != null && !conn.isClosed()) {
-                    conn.close();
-                }
-            } catch (SQLException ex) {
-                ex.printStackTrace();
-            }
         }
     }
 
-    ;
+    public static Connection getConnection() {
+        return conn;
+    }
+
+
 }
