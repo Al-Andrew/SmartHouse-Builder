@@ -39,13 +39,13 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   int _selectedIndex = 0;
 
-  static List<Widget> _widgetOptions = <Widget>[
+  static final List<Widget> _widgetOptions = <Widget>[
     HomePage(),
     SHB(),
     Marketplace(),
-    Forum(),
-    ContactUs(),
-    AboutUs(),
+    const Forum(),
+    const ContactUs(),
+    const AboutUs(),
     SignUp(),
   ];
 
@@ -124,8 +124,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     child: TextButton(
                         style: TextButton.styleFrom(
                             textStyle: const TextStyle(color: Colors.white)),
-                          onPressed: () => changeScreen(5)
-                        ,
+                        onPressed: () => changeScreen(6),
                         child: const Center(
                           child: Text(
                             'Sign Up',
