@@ -2,6 +2,7 @@ import 'dart:html';
 
 import 'package:flutter/material.dart';
 import 'package:homepage/forum/utilities/Utilities.dart';
+import '../ForumGlobals.dart' as globals;
 
 import 'package:homepage/forum/classes/PostClass.dart';
 
@@ -16,12 +17,12 @@ class MyPosts extends StatefulWidget {
 }
 
 class _MyPostsState extends State<MyPosts> {
-  List<Post> myPosts = <Post>[];
+  List<Post> myPosts = [];
   late List<Post> selectedPosts;
 
   @override
   void initState() {
-    Post.getLocalPosts().then(
+    Post.getMyPosts(1).then(
       (value) {
         setState(() {
           myPosts.addAll(value);

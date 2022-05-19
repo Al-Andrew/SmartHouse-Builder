@@ -1,6 +1,9 @@
 import 'dart:html';
 
 import 'package:flutter/material.dart';
+import 'package:homepage/forum/classes/PostClass.dart';
+import '../../ForumGlobals.dart' as globals;
+import '../PostsTable.dart';
 
 class ButtonBack extends StatelessWidget {
   const ButtonBack({
@@ -24,6 +27,7 @@ class ButtonBack extends StatelessWidget {
         child: IconButton(
           onPressed: () {
             Navigator.of(context).pop();
+            globals.homePageTabel.createState();
           },
           icon: Icon(Icons.arrow_back),
           hoverColor: Colors.transparent,

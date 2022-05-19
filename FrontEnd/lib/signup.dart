@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class SignUp extends StatefulWidget {
-  SignUp();
+  const SignUp();
 
   @override
   State<SignUp> createState() => _SignUpState();
@@ -18,7 +18,7 @@ class _SignUpState extends State<SignUp> {
     return SingleChildScrollView(
       child: Container(
         decoration: BoxDecoration(
-            gradient: LinearGradient(
+            gradient: const LinearGradient(
               begin: Alignment.topRight,
               end: Alignment.bottomLeft,
               colors: [
@@ -31,7 +31,7 @@ class _SignUpState extends State<SignUp> {
         width: 450,
         child: Column(
           children: [
-            SizedBox(
+            const SizedBox(
               height: 10,
             ),
             Text(
@@ -44,7 +44,7 @@ class _SignUpState extends State<SignUp> {
                     ..color = Colors.blue[700]!,
                   fontWeight: FontWeight.bold),
             ),
-            SizedBox(
+            const SizedBox(
               height: 10,
             ),
             Column(
@@ -54,15 +54,15 @@ class _SignUpState extends State<SignUp> {
                     height: 300,
                     child: isForgetPasswordClicked != true
                         ? LoginForm(
-                        formKey: _formKey,
-                        emailTextController: _emailTextController,
-                        passwordTextController: _passwordTextController)
-                        : Text(' ')),
+                            formKey: _formKey,
+                            emailTextController: _emailTextController,
+                            passwordTextController: _passwordTextController)
+                        : const Text(' ')),
                 TextButton.icon(
-                    icon: Icon(Icons.portrait_rounded),
+                    icon: const Icon(Icons.portrait_rounded),
                     style: TextButton.styleFrom(
                         primary: Colors.indigo,
-                        textStyle: TextStyle(
+                        textStyle: const TextStyle(
                           fontSize: 18,
                           fontStyle: FontStyle.italic,
                           fontWeight: FontWeight.bold,
@@ -71,18 +71,20 @@ class _SignUpState extends State<SignUp> {
                       setState(() {
                         if (!isForgetPasswordClicked) {
                           isForgetPasswordClicked = true;
-                        } else
+                        } else {
                           isForgetPasswordClicked = false;
+                        }
                       });
                     },
                     label: Text(isForgetPasswordClicked
                         ? 'Log in'
-                        : 'Change Password')),
-                SizedBox(
+                        : 'Forgot Password')),
+                const SizedBox(
                   height: 10,
                 ),
-                Text('SmartHouseBuilder does not sell '
-                    'your personal information!',
+                const Text(
+                  'SmartHouseBuilder does not sell '
+                  'your personal information!',
                   style: TextStyle(fontSize: 10),
                 )
               ],
@@ -122,19 +124,19 @@ class LoginForm extends StatelessWidget {
                 return '*Please enter your username/e-mail';
               }
               return null;
-            }
-            ,
+            },
             controller: _emailTextController,
             decoration: InputDecoration(
                 fillColor: Colors.white,
                 focusedBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(12),
-                    borderSide: BorderSide(color: Colors.black)),
+                    borderSide: const BorderSide(color: Colors.black)),
                 enabledBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(25),
-                    borderSide: BorderSide(color: Colors.black, width: 2.0)),
+                    borderSide:
+                        const BorderSide(color: Colors.black, width: 2.0)),
                 labelText: 'Enter Username/E-mail',
-                labelStyle: TextStyle(color: Colors.black),
+                labelStyle: const TextStyle(color: Colors.black),
                 hintText: 'Username/E-mail'),
           ),
         ),
@@ -153,27 +155,28 @@ class LoginForm extends StatelessWidget {
                   fillColor: Colors.white,
                   focusedBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(12),
-                      borderSide: BorderSide(color: Colors.black)),
+                      borderSide: const BorderSide(color: Colors.black)),
                   enabledBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(25),
-                      borderSide: BorderSide(color: Colors.black, width: 2.0)),
+                      borderSide:
+                          const BorderSide(color: Colors.black, width: 2.0)),
                   labelText: 'Enter password',
-                  labelStyle: TextStyle(color: Colors.black),
+                  labelStyle: const TextStyle(color: Colors.black),
                   hintText: 'Password')),
         ),
         TextButton(
             style: TextButton.styleFrom(
                 primary: Colors.black,
-                padding: EdgeInsets.all(15),
+                padding: const EdgeInsets.all(15),
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(4)),
                 backgroundColor: Colors.grey,
                 textStyle:
-                TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                    const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
             onPressed: () {
-              if (_formKey.currentState!.validate()){}
+              if (_formKey.currentState!.validate()) {}
             },
-            child: Text('SIGN IN'))
+            child: const Text('SIGN IN'))
       ]),
     );
   }

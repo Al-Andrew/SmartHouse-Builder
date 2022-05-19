@@ -71,4 +71,18 @@ public class ProductService {
                         }
                 );
     }
+
+    public List<Product> getByCategoryId(Integer categoryId) {
+        boolean exists = productRepository.existsByCategoryId(categoryId);
+
+        if(!exists)
+            throw new IllegalStateException("Product with category id  " + categoryId + " doesn't exist!");
+
+        return productRepository.getAllByCategoryId(categoryId);
+
+    }
+
+    public List<Product> getByPriceRange(Double lower, Double upper) {
+        return  productRepository.findByPriceBetween(lower,upper);
+    }
 }

@@ -24,9 +24,10 @@ public class PostController {
     }
 
     @GetMapping(path = "/{Id}")
-    public Optional<Post> getPostById(@PathVariable Integer Id){
-        return postService.getPost(Id);
+    public List<Post> getPostByUserId(@PathVariable Integer Id){
+        return postService.getPostByUserId(Id);
     }
+
     @PutMapping("/{postId}")
     public void updatePost(@RequestBody Post post, @PathVariable Integer postId){
         if (post.getTitle() == null || post.getContent() == null) return;

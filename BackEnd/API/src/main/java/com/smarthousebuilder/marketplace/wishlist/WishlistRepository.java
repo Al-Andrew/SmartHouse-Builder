@@ -1,21 +1,11 @@
 package com.smarthousebuilder.marketplace.wishlist;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
-import java.util.Date;
-import java.util.List;
-
-public interface WishlistRepository extends JpaRepository<Wishlist,Integer> {
-
+@Repository
+public interface WishlistRepository extends JpaRepository<Wishlists,Integer> {
     Boolean existsByUserId(Integer userId);
 
-    List<Wishlist> findAllByUserId(Integer userId);
-
-    Boolean existsByCreateDate(Date createDate);
-
-    List<Wishlist> findAllByCreateDate(Date createDate);
-
-    Boolean existsByName(String name);
-
-    List<Wishlist> findAllByName(String name);
+    Wishlists findByUserId(Integer userId);
 }
