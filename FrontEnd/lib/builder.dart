@@ -1,108 +1,203 @@
-import 'package:flame/components.dart';
-import 'package:flame/game.dart';
-import 'package:flutter/material.dart' hide Draggable;
-import 'package:flame/input.dart';
+// ignore_for_file: non_constant_identifier_names
 
-void main() {
-  var game = DragDemoGame();
-  runApp(
-    MaterialApp(
-      home: Stack(children: [GameWidget(game: game), ButtonScreen(game: game)]),
-    ),
-  );
+import 'dart:io';
+import 'dart:math' as math;
+
+import 'package:flame/collisions.dart';
+import 'package:flame/components.dart';
+import 'package:flame/flame.dart';
+import 'package:flame/game.dart';
+import 'package:flame/input.dart';
+import 'package:flame/palette.dart';
+import 'package:flutter/material.dart' hide Draggable;
+
+//import 'package:flutter/cupertino.dart';
+
+class BuilderCon extends StatefulWidget {
+  @override
+  State<StatefulWidget> createState() {
+    return BuilderState();
+  }
 }
 
-class ButtonScreen extends StatelessWidget {
-  const ButtonScreen({Key? key, required this.game}) : super(key: key);
-
-  final DragDemoGame game;
+class BuilderState extends State<BuilderCon> {
+  var flameContext = Builder();
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.end,
-      children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            ElevatedButton(
-                onPressed: () {
-                  game.wall.x -= 40;
-                },
-                child: const Text('Flutter Button L')),
-            ElevatedButton(
-                onPressed: () {
-                  game.wall.x += 40;
-                },
-                child: const Text('Flutter Button R')),
-          ],
-        )
-      ],
+    return GameWidget(game: flameContext);
+  }
+}
+
+class Builder extends FlameGame with HasTappables, HasDraggables {
+  @override
+  Future<void>? onLoad() {
+    add(Window());
+    add(Window()..y = 350);
+    add(Wall()
+      ..y = 350
+      ..x = 400);
+    add(Wall()..x = 400);
+    return super.onLoad();
+  }
+
+  @override
+  void onTapUp(int pointerId, TapUpInfo info) {
+    propagateToChildren(
+      (Tappable child) => child.handleTapUp(pointerId, info),
     );
   }
 }
 
-class DragDemoGame extends FlameGame with HasDraggables {
-  late SpriteAnimation wallRun;
-  late wallComponent wall;
-
-  // DragDemoGame({required this.zoom});
+class Window extends PositionComponent with Draggable, Tappable {
   @override
-  Future<void> onLoad() async {
-    await super.onLoad();
-    SpriteAnimationData frameData = SpriteAnimationData.sequenced(
-        amount: 10, stepTime: .05, textureSize: Vector2(94, 130));
-    wallRun = await loadSpriteAnimation('wall.png', frameData);
+  bool debugMode = false;
 
-    wall = wallComponent()
-      ..animation = wallRun
-      ..anchor = Anchor.center
-      ..position = size / 2
-      ..size = Vector2(81, 200);
-    add(wall);
-  }
-}
+  Window({Vector2? position})
+      : super(
+          position: position ?? Vector2(100, 200),
+          size: Vector2(200, 20),
+        );
 
-class wallComponent extends SpriteAnimationComponent with Draggable {
   Vector2? dragDeltaPosition;
+  bool get isDragging => dragDeltaPosition != null;
 
   @override
   void update(double dt) {
     super.update(dt);
-    debugColor = isDragged && parent is DragDemoGame
-        ? Colors.greenAccent
-        : Colors.purple;
+    debugColor = isDragging ? Colors.greenAccent : Colors.purple;
   }
 
   @override
-  bool onDragStart(int pointerId, DragStartInfo info) {
+  bool onDragStart(DragStartInfo info) {
     dragDeltaPosition = info.eventPosition.game - position;
     return false;
   }
 
   @override
-  bool onDragUpdate(int pointerId, DragUpdateInfo info) {
-    if (parent is! DragDemoGame) {
-      return true;
-    }
+  bool onDragUpdate(DragUpdateInfo event) {
     final dragDeltaPosition = this.dragDeltaPosition;
     if (dragDeltaPosition == null) {
       return false;
     }
 
-    position.setFrom(info.eventPosition.game - dragDeltaPosition);
+    position.setFrom(event.eventPosition.game - dragDeltaPosition);
     return false;
   }
 
   @override
-  bool onDragEnd(int pointerId, DragEndInfo _) {
+  bool onDragEnd(_) {
     dragDeltaPosition = null;
     return false;
   }
 
   @override
-  bool onDragCancel(int pointerId) {
+  bool onDragCancel() {
     dragDeltaPosition = null;
+    return false;
+  }
+
+  @override
+  void render(Canvas canvas) {
+    Paint paint = Paint();
+    paint.style = PaintingStyle.fill;
+    paint.color = Colors.red;
+    paint.strokeWidth = 4;
+
+    canvas.drawLine(Offset.zero, Offset(size.x, 0), paint);
+    canvas.drawLine(Offset(0, size.y), Offset(size.x, size.y), paint);
+  }
+
+  @override
+  bool onTapUp(TapUpInfo info) {
+    print("asdasd");
+    var swp = size.x;
+    size.x = size.y;
+    size.y = swp;
+    return true;
+  }
+
+  @override
+  bool handleTapUp(int pointerId, TapUpInfo info) {
+    if (containsPoint(info.eventPosition.widget)) {
+      return onTapUp(info);
+    }
+    return false;
+  }
+}
+
+class Wall extends PositionComponent with Draggable, Tappable {
+  @override
+  bool debugMode = false;
+  Wall({Vector2? position})
+      : super(
+          position: position ?? Vector2(100, 200),
+          size: Vector2(200, 24),
+        );
+
+  Vector2? dragDeltaPosition;
+  bool get isDragging => dragDeltaPosition != null;
+
+  @override
+  void update(double dt) {
+    super.update(dt);
+    debugColor = isDragging ? Colors.greenAccent : Colors.purple;
+  }
+
+  @override
+  bool onDragStart(DragStartInfo info) {
+    dragDeltaPosition = info.eventPosition.game - position;
+    return false;
+  }
+
+  @override
+  bool onDragUpdate(DragUpdateInfo event) {
+    final dragDeltaPosition = this.dragDeltaPosition;
+    if (dragDeltaPosition == null) {
+      return false;
+    }
+
+    position.setFrom(event.eventPosition.game - dragDeltaPosition);
+    return false;
+  }
+
+  @override
+  bool onDragEnd(_) {
+    dragDeltaPosition = null;
+    return false;
+  }
+
+  @override
+  bool onDragCancel() {
+    dragDeltaPosition = null;
+    return false;
+  }
+
+  @override
+  void render(Canvas canvas) {
+    Paint paint = Paint();
+    paint.style = PaintingStyle.fill;
+    paint.color = Colors.red;
+
+    //print("Position" + this.position.toString());
+    Rect myRect = Offset.zero & Size(size.x, size.y);
+    canvas.drawRect(myRect, paint);
+  }
+
+  @override
+  bool onTapUp(TapUpInfo info) {
+    print("asdasd");
+    var swp = size.x;
+    size.x = size.y;
+    size.y = swp;
+    return true;
+  }
+
+  @override
+  bool handleTapUp(int pointerId, TapUpInfo info) {
+    if (containsPoint(info.eventPosition.widget)) {
+      return onTapUp(info);
+    }
     return false;
   }
 }
