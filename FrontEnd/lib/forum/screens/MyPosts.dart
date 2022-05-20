@@ -22,7 +22,7 @@ class _MyPostsState extends State<MyPosts> {
 
   @override
   void initState() {
-    Post.getMyPosts(1).then(
+    Post.getLocalPosts().then(
       (value) {
         setState(() {
           myPosts.addAll(value);
@@ -47,6 +47,7 @@ class _MyPostsState extends State<MyPosts> {
   deleteSelectedPosts() async {
     setState(() {
       Post.removePosts(selectedPosts, myPosts);
+      globals.isChanged = true;
     });
   }
 
@@ -71,7 +72,11 @@ class _MyPostsState extends State<MyPosts> {
                         Expanded(
                           flex: 0,
                           child: ButtonBack(
-                              context: context, width: 40, height: 40),
+                            context: context,
+                            width: 40,
+                            height: 40,
+                            route: '/',
+                          ),
                         ),
                         Expanded(
                           child: CustomTitle(
@@ -141,7 +146,11 @@ class _MyPostsState extends State<MyPosts> {
                         Expanded(
                           flex: 0,
                           child: ButtonBack(
-                              context: context, width: 40, height: 40),
+                            context: context,
+                            width: 40,
+                            height: 40,
+                            route: '/',
+                          ),
                         ),
                         Expanded(
                           child: CustomTitle(
@@ -206,7 +215,11 @@ class _MyPostsState extends State<MyPosts> {
                         Expanded(
                           flex: 0,
                           child: ButtonBack(
-                              context: context, width: 40, height: 40),
+                            context: context,
+                            width: 40,
+                            height: 40,
+                            route: '/',
+                          ),
                         ),
                         Expanded(
                           child: CustomTitle(
@@ -444,7 +457,10 @@ class _MyPostsState extends State<MyPosts> {
                                   Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                        builder: (context) => POST(post: post)),
+                                        builder: (context) => POST(
+                                              post: post,
+                                              homeRoute: '/myposts',
+                                            )),
                                   );
                                 },
                               ),

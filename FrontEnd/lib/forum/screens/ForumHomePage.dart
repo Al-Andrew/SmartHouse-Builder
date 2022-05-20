@@ -4,14 +4,16 @@ import 'package:flutter/material.dart';
 import 'package:homepage/forum/utilities/Utilities.dart';
 import 'package:homepage/forum/screens/MyPosts.dart';
 import 'package:homepage/forum/screens/CreatePost.dart';
-
+import '../ForumGlobals.dart' as globals;
 import 'package:homepage/main.dart';
 
 class ForumHomePage extends StatefulWidget {
   ForumHomePage();
 
   @override
-  State<ForumHomePage> createState() => _ForumHomePageState();
+  State<ForumHomePage> createState() {
+    return _ForumHomePageState();
+  }
 }
 
 class _ForumHomePageState extends State<ForumHomePage> {

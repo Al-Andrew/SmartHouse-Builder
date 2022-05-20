@@ -3,14 +3,21 @@ import 'dart:html';
 import 'package:flutter/material.dart';
 import 'package:homepage/forum/utilities/Utilities.dart';
 import 'package:homepage/forum/classes/PostClass.dart';
+import 'package:homepage/forum/classes/CommentClass.dart';
+
+import '../ForumGlobals.dart' as globals;
+import 'MyPosts.dart';
+
 //import 'package:intl/intl.dart';
 
 class POST extends StatefulWidget {
   const POST({
     Key? key,
     required this.post,
+    required this.homeRoute,
   }) : super(key: key);
   final Post post;
+  final String homeRoute;
 
   @override
   State<POST> createState() => _POSTState();
@@ -48,6 +55,8 @@ class _POSTState extends State<POST> {
           //------------------------------------------------------- PHONE MODE --------------------------------------------------------------------------------------------
 
           if (constraints.maxWidth < 700) {
+            double tagWidth;
+
             return SingleChildScrollView(
               child: Column(
                 children: <Widget>[
@@ -60,7 +69,11 @@ class _POSTState extends State<POST> {
                         Expanded(
                           flex: 0,
                           child: ButtonBack(
-                              context: context, width: 40, height: 40),
+                            context: context,
+                            width: 40,
+                            height: 40,
+                            route: widget.homeRoute,
+                          ),
                         ),
                         Expanded(
                           flex: 0,
@@ -132,10 +145,127 @@ class _POSTState extends State<POST> {
                                 ],
                               ),
                             ),
-                            ContentBox(
-                              20,
-                              20,
-                              13,
+                            Padding(
+                              padding: EdgeInsets.only(
+                                left: 20,
+                                right: 20,
+                                bottom: 20 / 2,
+                              ),
+                              child: ConstrainedBox(
+                                constraints: new BoxConstraints(
+                                  minWidth: 400,
+                                ),
+                                child: Container(
+                                    decoration: BoxDecoration(
+                                      borderRadius:
+                                          BorderRadius.all(Radius.circular(20)),
+                                      color: Color(0xFFAAECF5),
+                                    ),
+                                    padding: EdgeInsets.only(
+                                      left: 20,
+                                      right: 20,
+                                      top: 20,
+                                      bottom: 10,
+                                    ),
+                                    child: Column(
+                                      children: [
+                                        Container(
+                                          child: Text(
+                                            widget.post.content,
+                                            style: TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 13,
+                                            ),
+                                          ),
+                                          alignment: Alignment.topLeft,
+                                        ),
+                                        Padding(
+                                            padding: EdgeInsets.only(
+                                              top: 40 - 20,
+                                              bottom: 10,
+                                            ),
+                                            child: Column(
+                                              children: <Widget>[
+                                                Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.end,
+                                                  children: [
+                                                    Container(
+                                                      width: widget.post.tags
+                                                              .length *
+                                                          60,
+                                                      constraints:
+                                                          BoxConstraints(
+                                                        maxWidth: 220,
+                                                      ),
+                                                      height: 25,
+                                                      child: ListView.builder(
+                                                        scrollDirection:
+                                                            Axis.horizontal,
+                                                        itemCount: widget
+                                                            .post.tags.length,
+                                                        itemBuilder:
+                                                            (context, index) {
+                                                          return TagBox(
+                                                            60,
+                                                            25,
+                                                            widget.post
+                                                                .tags[index],
+                                                            12,
+                                                          );
+                                                        },
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                                Container(
+                                                  margin: const EdgeInsets.only(
+                                                    right: 10,
+                                                  ),
+                                                  child: Row(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment.end,
+                                                    children: [
+                                                      Row(
+                                                        children: [
+                                                          Container(
+                                                              margin:
+                                                                  const EdgeInsets
+                                                                      .only(
+                                                                top: 15.0,
+                                                              ),
+                                                              child: Text(
+                                                                widget.post
+                                                                    .nrLikes
+                                                                    .toString(),
+                                                                style:
+                                                                    TextStyle(
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .bold,
+                                                                  fontSize:
+                                                                      12.0,
+                                                                ),
+                                                              )),
+                                                          ButtonLike(25, 25),
+                                                        ],
+                                                      ),
+                                                      ButtonShare(25, 25),
+                                                      Container(
+                                                          margin:
+                                                              const EdgeInsets
+                                                                      .only(
+                                                                  bottom: 4.0),
+                                                          child: ButtonReport(
+                                                              25, 25)),
+                                                    ],
+                                                  ),
+                                                ),
+                                              ],
+                                            ))
+                                      ],
+                                    )),
+                              ),
                             ), //POST TEXT + COMMENTS AND LIKEBUTTON SHAREBUTTON REPORTBUTTON
                             Padding(
                               padding: EdgeInsets.only(
@@ -276,7 +406,7 @@ class _POSTState extends State<POST> {
                                                       padding: EdgeInsets.only(
                                                         left: 20,
                                                         right: 20,
-                                                        bottom: 20,
+                                                        bottom: 10,
                                                       ),
                                                       child: Text(
                                                         widget
@@ -288,6 +418,26 @@ class _POSTState extends State<POST> {
                                                               FontWeight.bold,
                                                           fontSize: 13.0,
                                                         ),
+                                                      ),
+                                                    ),
+                                                    Padding(
+                                                      padding: EdgeInsets.only(
+                                                        bottom: 10,
+                                                        right: 20,
+                                                      ),
+                                                      child: Row(
+                                                        mainAxisAlignment:
+                                                            MainAxisAlignment
+                                                                .end,
+                                                        children: [
+                                                          ButtonDeleteComment(
+                                                            30,
+                                                            30,
+                                                            widget.post
+                                                                    .comments[
+                                                                index],
+                                                          ),
+                                                        ],
                                                       ),
                                                     )
                                                   ]),
@@ -326,7 +476,11 @@ class _POSTState extends State<POST> {
                         Expanded(
                           flex: 0,
                           child: ButtonBack(
-                              context: context, width: 40, height: 40),
+                            context: context,
+                            width: 40,
+                            height: 40,
+                            route: widget.homeRoute,
+                          ),
                         ),
                         Expanded(
                           child: CustomTitle(
@@ -337,7 +491,7 @@ class _POSTState extends State<POST> {
                       ],
                     ),
                   ),
-                  PostBox(100, 40, 40, 14, 13),
+                  PostBox(100, 40, 40, 14, 13, 230, 62),
                 ],
               ),
             );
@@ -358,7 +512,11 @@ class _POSTState extends State<POST> {
                         Expanded(
                           flex: 0,
                           child: ButtonBack(
-                              context: context, width: 40, height: 40),
+                            context: context,
+                            width: 40,
+                            height: 40,
+                            route: widget.homeRoute,
+                          ),
                         ),
                         Expanded(
                           child: CustomTitle(
@@ -369,7 +527,7 @@ class _POSTState extends State<POST> {
                       ],
                     ),
                   ),
-                  PostBox(150, 50, 50, 15, 14),
+                  PostBox(150, 50, 50, 15, 14, 350, 70),
                 ],
               ),
             );
@@ -383,8 +541,14 @@ class _POSTState extends State<POST> {
 
 //-------------------------------------------------------------------------------------- POST BOX --------------------------------------------------------------------------------------------
 
-  Padding PostBox(double outPadding, double inPadding, double TextPadding,
-      double MainFontSize, double SecondayFontSize) {
+  Padding PostBox(
+      double outPadding,
+      double inPadding,
+      double TextPadding,
+      double MainFontSize,
+      double SecondayFontSize,
+      double tagsBoxWidth,
+      double tagBoxWidth) {
     return Padding(
       //AUTHOR + DATE
       padding: EdgeInsets.only(
@@ -402,7 +566,8 @@ class _POSTState extends State<POST> {
           children: [
             AuthorAndDate(
                 inPadding, widget.post.author, widget.post.date, MainFontSize),
-            ContentBox(inPadding, TextPadding, SecondayFontSize),
+            ContentBox(inPadding, TextPadding, SecondayFontSize, tagsBoxWidth,
+                tagBoxWidth),
             CommentsBox(inPadding, TextPadding,
                 SecondayFontSize), //POST TEXT + COMMENTS AND LIKEBUTTON SHAREBUTTON REPORTBUTTON
           ],
@@ -456,8 +621,8 @@ class _POSTState extends State<POST> {
     );
   }
 
-  Padding ContentBox(
-      double interiorPadding, double textPadding, double FontSize) {
+  Padding ContentBox(double interiorPadding, double textPadding,
+      double FontSize, double tagsBoxWidth, double tagBoxWidth) {
     return Padding(
       padding: EdgeInsets.only(
         left: interiorPadding,
@@ -492,35 +657,84 @@ class _POSTState extends State<POST> {
                   alignment: Alignment.topLeft,
                 ),
                 Padding(
-                  padding: EdgeInsets.only(
-                    top: textPadding - 20,
-                  ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      Row(
-                        children: [
-                          Container(
-                              margin: const EdgeInsets.only(top: 10.0),
-                              child: Text(
-                                widget.post.nrLikes.toString(),
-                                style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 13.0,
-                                ),
-                              )),
-                          ButtonLike(30, 30),
-                        ],
-                      ),
-                      ButtonShare(30, 30),
-                      Container(
-                          margin: const EdgeInsets.only(bottom: 4.0),
-                          child: ButtonReport(30, 30)),
-                    ],
-                  ),
-                )
+                    padding: EdgeInsets.only(
+                      top: textPadding - 20,
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: <Widget>[
+                        Container(
+                          padding: EdgeInsets.only(
+                            top: 10,
+                          ),
+                          width: widget.post.tags.length * tagBoxWidth,
+                          constraints: BoxConstraints(maxWidth: tagsBoxWidth),
+                          height: 35,
+                          child: ListView.builder(
+                            shrinkWrap: true,
+                            scrollDirection: Axis.horizontal,
+                            itemCount: widget.post.tags.length,
+                            itemBuilder: (context, index) {
+                              return TagBox(
+                                tagBoxWidth,
+                                35,
+                                widget.post.tags[index],
+                                FontSize - 1,
+                              );
+                            },
+                          ),
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            Row(
+                              children: [
+                                Container(
+                                    margin: const EdgeInsets.only(top: 10.0),
+                                    child: Text(
+                                      widget.post.nrLikes.toString(),
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 13.0,
+                                      ),
+                                    )),
+                                ButtonLike(30, 30),
+                              ],
+                            ),
+                            ButtonShare(30, 30),
+                            Container(
+                                margin: const EdgeInsets.only(bottom: 4.0),
+                                child: ButtonReport(30, 30)),
+                          ],
+                        ),
+                      ],
+                    ))
               ],
             )),
+      ),
+    );
+  }
+
+  Container TagBox(double width, double height, String tag, double fontSize) {
+    return Container(
+      padding: EdgeInsets.only(
+        right: 2,
+        left: 2,
+      ),
+      width: width,
+      height: height,
+      child: Container(
+        child: Center(
+            child: Text(
+          tag,
+          style: TextStyle(
+            fontSize: fontSize,
+          ),
+        )),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.all(Radius.circular(10)),
+          color: Color(0xFFD9F7FF),
+        ),
       ),
     );
   }
@@ -576,24 +790,12 @@ class _POSTState extends State<POST> {
                 shrinkWrap: true,
                 itemCount: widget.post.comments.length,
                 itemBuilder: (context, index) {
-                  if (widget.post.comments.isNotEmpty) {
-                    return CommentBox(
-                      inPadding,
-                      textPadding,
-                      widget.post.comments[index].author,
-                      widget.post.comments[index].content,
-                      widget.post.comments[index].date,
-                      FontSize,
-                    );
-                  } else {
-                    return Text(
-                      "No comments...",
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: FontSize,
-                      ),
-                    );
-                  }
+                  return CommentBox(
+                    inPadding,
+                    textPadding,
+                    FontSize,
+                    widget.post.comments[index],
+                  );
                 },
               ),
             ],
@@ -605,8 +807,8 @@ class _POSTState extends State<POST> {
 
   //-------------------------------------------------------------------------------------- COMMENT BOX --------------------------------------------------------------------------------------------
 
-  Container CommentBox(double inPadding, double textPadding, String author,
-      String content, String date, double FontSize) {
+  Container CommentBox(
+      double inPadding, double textPadding, double FontSize, Comment comment) {
     return Container(
       padding: EdgeInsets.only(
         left: inPadding,
@@ -624,28 +826,42 @@ class _POSTState extends State<POST> {
             ),
             color: Color(0xFFD9F7FF),
           ),
-          child: Column(children: [
-            AuthorAndDate(
-              textPadding,
-              author,
-              date,
-              FontSize + 1,
-            ),
-            Container(
-              padding: EdgeInsets.only(
-                left: textPadding,
-                right: textPadding,
-                bottom: textPadding,
+          child: Column(
+            children: [
+              AuthorAndDate(
+                textPadding,
+                comment.author,
+                comment.date,
+                FontSize + 1,
               ),
-              child: Text(
-                content,
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: FontSize,
+              Container(
+                padding: EdgeInsets.only(
+                  left: textPadding,
+                  right: textPadding,
+                  bottom: 20,
+                ),
+                child: Text(
+                  comment.content,
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: FontSize,
+                  ),
                 ),
               ),
-            )
-          ]),
+              Padding(
+                padding: EdgeInsets.only(
+                  bottom: 10,
+                  right: textPadding,
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    ButtonDeleteComment(30, 30, comment),
+                  ],
+                ),
+              )
+            ],
+          ),
         ),
       ),
     );
@@ -720,6 +936,8 @@ class _POSTState extends State<POST> {
         onPressed: () async {
           final comment = await OpenDialogComment();
           if (comment == null || comment.isEmpty) {
+            commentController.clear();
+
             return;
           }
           // var now = new DateTime.now();
@@ -727,6 +945,7 @@ class _POSTState extends State<POST> {
           // String formattedDate = formatter.format(now);
           setState(() => widget.post
               .addComment(1, 1, widget.post.id, comment, "author", "date", 0));
+          globals.isChanged = true;
           commentController.clear();
         },
       ),
@@ -776,17 +995,28 @@ class _POSTState extends State<POST> {
       child: Ink(
         child: IconButton(
           onPressed: () async {
-            final report = await OpenDialogReport();
-            if (report == null || report.isEmpty) {
+            final title = await OpenDialogReport1();
+            if (title == null || title.isEmpty) {
+              titleReportController.clear();
               return;
+            } else {
+              final motivation = await OpenDialogReport2();
+
+              if (motivation == null || motivation.isEmpty) {
+                titleReportController.clear();
+                motivationReportController.clear();
+                return;
+              }
+
+              setState(() =>
+                  widget.post.addReport(1, 1, 1, title, motivation, "date"));
+              titleReportController.clear();
+              motivationReportController.clear();
             }
+
             // var now = new DateTime.now();
             // var formatter = DateFormat('dd/MM/yyyy');
             // String formattedDate = formatter.format(now);
-            setState(
-                () => widget.post.addReport(1, 1, 1, report, report, "date"));
-            titleReportController.clear();
-            motivationReportController.clear();
           },
           icon: Icon(Icons.report, color: Colors.black),
           iconSize: 28,
@@ -801,7 +1031,7 @@ class _POSTState extends State<POST> {
     );
   }
 
-  Future<String?> OpenDialogReport() => showDialog<String>(
+  Future<String?> OpenDialogReport1() => showDialog<String>(
         context: context,
         builder: (context) => AlertDialog(
           shape: RoundedRectangleBorder(
@@ -813,29 +1043,48 @@ class _POSTState extends State<POST> {
               maxHeight: 400.0,
               maxWidth: 300.0,
             ),
-            child: Column(
-              children: [
-                TextField(
-                  autofocus: true,
-                  keyboardType: TextInputType.multiline,
-                  minLines: 1,
-                  maxLines: 5,
-                  decoration: InputDecoration(
-                    hintText: 'Enter the title here',
-                  ),
-                  controller: titleReportController,
-                ),
-                TextField(
-                  autofocus: true,
-                  keyboardType: TextInputType.multiline,
-                  minLines: 1,
-                  maxLines: 10,
-                  decoration: InputDecoration(
-                    hintText: 'Enter the motivation here',
-                  ),
-                  controller: motivationReportController,
-                ),
-              ],
+            child: TextField(
+              autofocus: true,
+              keyboardType: TextInputType.multiline,
+              minLines: 1,
+              maxLines: 5,
+              decoration: InputDecoration(
+                hintText: 'Enter the title here',
+              ),
+              controller: titleReportController,
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop(titleReportController.text);
+              },
+              child: Text('Next'),
+            ),
+          ],
+        ),
+      );
+  Future<String?> OpenDialogReport2() => showDialog<String>(
+        context: context,
+        builder: (context) => AlertDialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(30),
+          ),
+          title: Text('Type your report'),
+          content: Container(
+            constraints: BoxConstraints(
+              maxHeight: 400.0,
+              maxWidth: 300.0,
+            ),
+            child: TextField(
+              autofocus: true,
+              keyboardType: TextInputType.multiline,
+              minLines: 1,
+              maxLines: 5,
+              decoration: InputDecoration(
+                hintText: 'Enter the motivation here',
+              ),
+              controller: motivationReportController,
             ),
           ),
           actions: [
@@ -848,4 +1097,66 @@ class _POSTState extends State<POST> {
           ],
         ),
       );
+
+//-------------------------------------------------------------------------------------- DELETE COMMENT BUTTON --------------------------------------------------------------------------------------------
+  Container ButtonDeleteComment(double height, double width, Comment comment) {
+    return Container(
+      height: height,
+      width: width,
+      child: Ink(
+        child: IconButton(
+          onPressed: () {
+            setState(
+              () async {
+                final isConfirmed = await _isDeletingDesired();
+                if (isConfirmed == true) {
+                  globals.isChanged = true;
+                  setState(() {
+                    widget.post.removeComment(comment);
+                  });
+                } else {}
+              },
+            );
+          },
+          icon: Icon(Icons.delete, color: Colors.black),
+          hoverColor: Colors.transparent,
+          focusColor: Colors.transparent,
+        ),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.all(Radius.circular(20)),
+          color: Colors.transparent,
+        ),
+      ),
+    );
+  }
+
+  Future<bool> _isDeletingDesired() async {
+    return await showDialog<bool>(
+            context: context,
+            builder: (context) {
+              return AlertDialog(
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(30),
+                ),
+                title: const Text('Are you sure?'),
+                content: const Text(
+                    'If you click yes, your comment will be deleted permanently.'),
+                actions: [
+                  TextButton(
+                    onPressed: () {
+                      Navigator.of(context).pop(true);
+                    },
+                    child: const Text('Yes'),
+                  ),
+                  TextButton(
+                    onPressed: () {
+                      Navigator.of(context).pop(false);
+                    },
+                    child: const Text('Close'),
+                  ),
+                ],
+              );
+            }) ??
+        false;
+  }
 }
