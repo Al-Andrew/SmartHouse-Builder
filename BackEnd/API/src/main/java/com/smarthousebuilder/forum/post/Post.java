@@ -1,28 +1,34 @@
 package com.smarthousebuilder.forum.post;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.smarthousebuilder.forum.comment.Comment;
 import com.smarthousebuilder.forum.report.Report;
+import com.smarthousebuilder.forum.tag.Tag;
 import forum.exceptions.InvalidLength;
 
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @Entity
 @Table(name = "post")
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Post {
 
   //limita de caractere: 10_000 la post-uri
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   protected int id;
+  @Column(name = "id_user")
   protected int id_user;
-  @Column(name = "type")
-  protected String typePost;
+  @Column(name = "title")
   protected String title;
 
   @Column(name = "posted_date")
   protected String date;
+  @Column(name = "content")
   protected String content;
 
   @Transient
@@ -34,12 +40,14 @@ public class Post {
   List<Comment> comments = new ArrayList<>();
   @Transient
   List<Report> reports = new ArrayList<>();
+  @Transient
+  @JsonProperty("tags")
+  Tag tag = new Tag();
 
-  public Post(int id, int id_user, String typePost,
+  public Post(int id, int id_user,
               String title, String date, String content) {
     this.id = id;
     this.id_user = id_user;
-    this.typePost = typePost;
     this.title = title;
     this.date = date;
     this.content = content;
@@ -54,13 +62,13 @@ public class Post {
     return "Post{" +
             "id=" + id +
             ", id_user=" + id_user +
-            ", typePost='" + typePost + '\'' +
             ", title='" + title + '\'' +
             ", date='" + date + '\'' +
             ", content='" + content + '\'' +
             ", author='" + author + '\'' +
             ", comments=" + comments +
             ", reports=" + reports +
+            ", tag=" + tag +
             '}';
   }
 
@@ -101,14 +109,6 @@ public class Post {
 
   public void setId_user(int id_user) {
     this.id_user = id_user;
-  }
-
-  public String getTypePost() {
-    return typePost;
-  }
-
-  public void setTypePost(String typePost) {
-    this.typePost = typePost;
   }
 
   public String getTitle() {
@@ -157,5 +157,13 @@ public class Post {
 
   public void setReports(List<Report> reports) {
     this.reports = reports;
+  }
+
+  public Tag getTag() {
+    return tag;
+  }
+
+  public void setTag(Tag tag) {
+    this.tag = tag;
   }
 }
