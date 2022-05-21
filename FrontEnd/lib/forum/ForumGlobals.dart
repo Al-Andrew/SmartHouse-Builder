@@ -7,3 +7,4 @@ List<Post> posts = [];
 List<Post> myPosts = [];
 late Future<List<Post>> futurePosts;
 late PostsTabel homePageTabel;
+bool isChanged = false;

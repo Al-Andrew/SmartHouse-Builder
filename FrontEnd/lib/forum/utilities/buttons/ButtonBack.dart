@@ -26,8 +26,12 @@ class ButtonBack extends StatelessWidget {
       child: Ink(
         child: IconButton(
           onPressed: () {
-            Navigator.of(context).pop();
-            globals.homePageTabel.createState();
+            if (globals.isChanged) {
+              Navigator.of(context)
+                  .pushNamedAndRemoveUntil('/', (route) => false);
+              globals.isChanged = false;
+            } else
+              Navigator.of(context).pop();
           },
           icon: Icon(Icons.arrow_back),
           hoverColor: Colors.transparent,

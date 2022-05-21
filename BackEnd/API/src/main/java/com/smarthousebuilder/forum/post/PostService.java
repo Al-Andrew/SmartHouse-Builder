@@ -3,6 +3,8 @@ package com.smarthousebuilder.forum.post;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 
@@ -48,5 +50,35 @@ public class PostService {
             post1.setTitle(post.title);
             return postRepository.save(post1);
         });
+    }
+
+    public List<Post> sortPostsByParameter(Integer parameter, List<Post> posts) {
+        if(parameter==1) {
+            Collections.sort(posts, new Comparator<Post>() {
+                @Override
+                public int compare(Post o1, Post o2) {
+                    return o1.date.compareTo(o2.date);
+                }
+            });
+            Collections.reverse(posts);
+        }else
+            if(parameter==2){
+                Collections.sort(posts, new Comparator<Post>() {
+                    @Override
+                    public int compare(Post o1, Post o2) {
+                        return o1.title.compareTo(o2.title);
+                    }
+                });
+            }
+            else
+                if(parameter==3){
+                    Collections.sort(posts, new Comparator<Post>() {
+                        @Override
+                        public int compare(Post o1, Post o2) {
+                            return o1.comments.size()-o2.comments.size();
+                        }
+                    });
+                }
+        return posts;
     }
 }

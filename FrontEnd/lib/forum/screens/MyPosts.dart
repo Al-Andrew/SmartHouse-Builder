@@ -47,6 +47,7 @@ class _MyPostsState extends State<MyPosts> {
   deleteSelectedPosts() async {
     setState(() {
       Post.removePosts(selectedPosts, myPosts);
+      globals.isChanged = true;
     });
   }
 
