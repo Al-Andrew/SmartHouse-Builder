@@ -32,7 +32,13 @@ public class PostService {
     }
 
     public List<Post> getAllPosts(){
-        return postRepository.findAll();
+        List<Post> postsList = postRepository.findAll();
+        Tag tagDummy;
+        for(Post postIndex : postsList){
+            tagDummy = tagRepository.findTagByPostId(postIndex.getId());
+            postIndex.setTag(tagDummy);
+        }
+        return postsList;
     }
 
     public void addNewPost(Post post) {
@@ -66,6 +72,11 @@ public class PostService {
         List<Post> postOptional = postRepository.findPostByUserId(id);
         if (postOptional.isEmpty())
             throw new IllegalStateException("Nu exista acest post cu id-ul" + id);
+        Tag tagDummy;
+        for(Post postIndex : postOptional){
+            tagDummy = tagRepository.findTagByPostId(postIndex.getId());
+            postIndex.setTag(tagDummy);
+        }
         return postOptional;
     }
 
