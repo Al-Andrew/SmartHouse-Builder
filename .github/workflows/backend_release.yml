@@ -1,8 +1,9 @@
 name: main_backend_release
 
-# Run this workflow after each backend deploy
+# Run this workflow every time a commit gets pushed to main
 on:
   workflow_dispatch
+  
 jobs:
     build:
         name: Call Azure Pipeline
