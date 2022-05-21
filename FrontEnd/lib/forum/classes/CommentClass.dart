@@ -54,7 +54,7 @@ class Comment {
     return comments;
   }
 
-  static List<Comment> getComments() {
+  static List<Comment> getLocalComments() {
     return <Comment>[
       Comment(
         id: 1,

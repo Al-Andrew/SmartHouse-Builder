@@ -36,7 +36,7 @@ class _PostsTabelState extends State<PostsTabel> {
   @override
   FutureBuilder build(BuildContext context) {
     return FutureBuilder(
-        future: Post.getPosts(),
+        future: Post.getLocalPosts(),
         builder: (context, snapshot) {
           if (snapshot.data != null) {
             return PostsTableBody(snapshot.data, context);
@@ -149,7 +149,10 @@ class _PostsTabelState extends State<PostsTabel> {
                                   Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                        builder: (context) => POST(post: post)),
+                                        builder: (context) => POST(
+                                              post: post,
+                                              homeRoute: '/',
+                                            )),
                                   );
                                 },
                               ),
