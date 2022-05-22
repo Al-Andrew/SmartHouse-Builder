@@ -39,7 +39,9 @@ class _ForumHomePageState extends State<ForumHomePage> {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
-                        Center(child: CustomSort(height: 230, width: 160)),
+                        Center(
+                            child: CustomSort(
+                                height: 230, width: 160, route: '/')),
                         Column(
                           children: [
                             Container(
@@ -92,7 +94,9 @@ class _ForumHomePageState extends State<ForumHomePage> {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
-                        Center(child: CustomSort(height: 230, width: 160)),
+                        Center(
+                            child: CustomSort(
+                                height: 230, width: 160, route: '/')),
                         Column(
                           children: [
                             Container(
@@ -154,7 +158,11 @@ class _ForumHomePageState extends State<ForumHomePage> {
                                   context: context, width: 160, height: 45),
                               Container(
                                 margin: const EdgeInsets.only(top: 20.0),
-                                child: CustomSort(height: 230, width: 160),
+                                child: CustomSort(
+                                  height: 230,
+                                  width: 160,
+                                  route: '/',
+                                ),
                               ),
                             ],
                           ),

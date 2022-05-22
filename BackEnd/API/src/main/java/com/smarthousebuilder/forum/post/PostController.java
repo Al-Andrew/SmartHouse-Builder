@@ -27,7 +27,7 @@ public class PostController {
     public List<Post> getPostByUserId(@PathVariable Integer Id){
         return postService.getPostByUserId(Id);
     }
-    @GetMapping(path = "/sort/{Parameter}")
+    @PostMapping(path = "/sort/{Parameter}")
     public List<Post> sortPostByParameter(@PathVariable Integer Parameter,@RequestBody List<Post> posts){
         return postService.sortPostsByParameter(Parameter,posts);
     }

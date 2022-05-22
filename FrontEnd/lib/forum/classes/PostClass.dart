@@ -1,7 +1,10 @@
+import 'dart:html';
+
 import './CommentClass.dart';
 import './ReportClass.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import '../ForumGlobals.dart' as globals;
 
 class Post {
   int id;
@@ -45,6 +48,7 @@ class Post {
         'content': content,
         'author': author,
         'date': date,
+        'comments': comments
       };
 
   void addComment(int id, int id_user, int id_post, String content,
@@ -70,6 +74,202 @@ class Post {
     comments.remove(comment);
   }
 
+  static void sortPosts(bool checkedRecent, bool checkedCommented,
+      bool checkedPopular, String route) async {
+    //print('ok');
+    print(checkedCommented);
+    print(checkedPopular);
+    print(checkedRecent);
+    print(route);
+    if (route == '/myposts') {
+      if (checkedRecent == true) {
+        globals.isSorted = true;
+        final response =
+            await http.post(Uri.parse('http://localhost:8070/api/forum/sort/1'),
+                headers: <String, String>{
+                  'Content-Type': 'application/json; charset=UTF-8',
+                },
+                body: json.encode(globals.myPosts));
+        var jsonData = json.decode(response.body);
+        List<Post> posts = [];
+        for (var v in jsonData) {
+          Post postare = Post.fromJson(v);
+
+          int postId = Post.fromJson(v).id;
+          final response2 = await http.get(
+              Uri.parse(
+                'http://localhost:8070/api/forum/comment/$postId',
+              ),
+              headers: {"Access-Control-Allow-Origin": "*"});
+          for (var comment in jsonDecode(response2.body)) {
+            Comment com = Comment.fromJson(comment);
+            //postare.nrComments++;
+            //print(postare.nrComments);
+            postare.comments.add(com);
+          }
+          postare.nrComments = postare.comments.length;
+          posts.add(postare);
+        }
+        globals.myPosts = posts;
+      }
+      if (checkedCommented == true) {
+        globals.isSorted = true;
+        final response =
+            await http.post(Uri.parse('http://localhost:8070/api/forum/sort/3'),
+                headers: <String, String>{
+                  'Content-Type': 'application/json; charset=UTF-8',
+                },
+                body: json.encode(globals.myPosts));
+
+        var jsonData = json.decode(response.body);
+        List<Post> posts = [];
+        for (var v in jsonData) {
+          Post postare = Post.fromJson(v);
+
+          int postId = Post.fromJson(v).id;
+          final response2 = await http.get(
+              Uri.parse(
+                'http://localhost:8070/api/forum/comment/$postId',
+              ),
+              headers: {"Access-Control-Allow-Origin": "*"});
+          for (var comment in jsonDecode(response2.body)) {
+            Comment com = Comment.fromJson(comment);
+            //postare.nrComments++;
+            //print(postare.nrComments);
+            postare.comments.add(com);
+          }
+          postare.nrComments = postare.comments.length;
+          posts.add(postare);
+        }
+        globals.myPosts = posts;
+      }
+      if (checkedPopular == true) {
+        globals.isSorted = true;
+        final response =
+            await http.post(Uri.parse('http://localhost:8070/api/forum/sort/2'),
+                headers: <String, String>{
+                  'Content-Type': 'application/json; charset=UTF-8',
+                },
+                body: json.encode(globals.myPosts));
+
+        var jsonData = json.decode(response.body);
+        List<Post> posts = [];
+        for (var v in jsonData) {
+          Post postare = Post.fromJson(v);
+
+          int postId = Post.fromJson(v).id;
+          final response2 = await http.get(
+              Uri.parse(
+                'http://localhost:8070/api/forum/comment/$postId',
+              ),
+              headers: {"Access-Control-Allow-Origin": "*"});
+          for (var comment in jsonDecode(response2.body)) {
+            Comment com = Comment.fromJson(comment);
+            //postare.nrComments++;
+            //print(postare.nrComments);
+            postare.comments.add(com);
+          }
+          postare.nrComments = postare.comments.length;
+          posts.add(postare);
+        }
+        globals.myPosts = posts;
+      }
+    } else {
+      if (checkedRecent == true) {
+        globals.isSorted = true;
+        final response =
+            await http.post(Uri.parse('http://localhost:8070/api/forum/sort/1'),
+                headers: <String, String>{
+                  'Content-Type': 'application/json; charset=UTF-8',
+                },
+                body: json.encode(globals.posts));
+        var jsonData = json.decode(response.body);
+        List<Post> posts = [];
+        for (var v in jsonData) {
+          Post postare = Post.fromJson(v);
+
+          int postId = Post.fromJson(v).id;
+          final response2 = await http.get(
+              Uri.parse(
+                'http://localhost:8070/api/forum/comment/$postId',
+              ),
+              headers: {"Access-Control-Allow-Origin": "*"});
+          for (var comment in jsonDecode(response2.body)) {
+            Comment com = Comment.fromJson(comment);
+            //postare.nrComments++;
+            //print(postare.nrComments);
+            postare.comments.add(com);
+          }
+          postare.nrComments = postare.comments.length;
+          posts.add(postare);
+        }
+        globals.posts = posts;
+      }
+      if (checkedCommented == true) {
+        globals.isSorted = true;
+        final response =
+            await http.post(Uri.parse('http://localhost:8070/api/forum/sort/3'),
+                headers: <String, String>{
+                  'Content-Type': 'application/json; charset=UTF-8',
+                },
+                body: json.encode(globals.posts));
+
+        var jsonData = json.decode(response.body);
+        List<Post> posts = [];
+        for (var v in jsonData) {
+          Post postare = Post.fromJson(v);
+
+          int postId = Post.fromJson(v).id;
+          final response2 = await http.get(
+              Uri.parse(
+                'http://localhost:8070/api/forum/comment/$postId',
+              ),
+              headers: {"Access-Control-Allow-Origin": "*"});
+          for (var comment in jsonDecode(response2.body)) {
+            Comment com = Comment.fromJson(comment);
+            //postare.nrComments++;
+            //print(postare.nrComments);
+            postare.comments.add(com);
+          }
+          postare.nrComments = postare.comments.length;
+          posts.add(postare);
+        }
+        globals.posts = posts;
+      }
+      if (checkedPopular == true) {
+        globals.isSorted = true;
+        final response =
+            await http.post(Uri.parse('http://localhost:8070/api/forum/sort/2'),
+                headers: <String, String>{
+                  'Content-Type': 'application/json; charset=UTF-8',
+                },
+                body: json.encode(globals.posts));
+
+        var jsonData = json.decode(response.body);
+        List<Post> posts = [];
+        for (var v in jsonData) {
+          Post postare = Post.fromJson(v);
+
+          int postId = Post.fromJson(v).id;
+          final response2 = await http.get(
+              Uri.parse(
+                'http://localhost:8070/api/forum/comment/$postId',
+              ),
+              headers: {"Access-Control-Allow-Origin": "*"});
+          for (var comment in jsonDecode(response2.body)) {
+            Comment com = Comment.fromJson(comment);
+            //postare.nrComments++;
+            //print(postare.nrComments);
+            postare.comments.add(com);
+          }
+          postare.nrComments = postare.comments.length;
+          posts.add(postare);
+        }
+        globals.posts = posts;
+      }
+    }
+  }
+
   void addReport(int id, int id_author, int id_post, String title,
       String motivation, String date) {
     reports.add(new Report(
@@ -85,14 +285,14 @@ class Post {
     print(title);
   }
 
-  static void removePosts(List<Post> selectedPosts, List<Post> myPosts) {
+  static void removePosts(List<Post> selectedPosts) {
     if (selectedPosts.isNotEmpty) {
       List<Post> tmp = [];
       tmp.addAll(selectedPosts);
       for (Post post in tmp) {
         int idCopy = post.id;
         http.delete(Uri.parse('http://localhost:8070/api/forum/$idCopy'));
-        myPosts.remove(post);
+        globals.myPosts.remove(post);
         selectedPosts.remove(post);
       }
     }
@@ -153,11 +353,21 @@ class Post {
 
     var jsonData = json.decode(response.body);
     for (var v in jsonData) {
-      print(v);
-      print('Spatiu');
+      //print(v);
+      //print('Spatiu');
       Post postHere = Post.fromJson(v);
+      int postId = Post.fromJson(v).id;
+      final response2 = await http.get(
+          Uri.parse(
+            'http://localhost:8070/api/forum/comment/$postId',
+          ),
+          headers: {"Access-Control-Allow-Origin": "*"});
+      for (var comment in jsonDecode(response2.body)) {
+        Comment com = Comment.fromJson(comment);
+        postHere.comments.add(com);
+      }
+      postHere.nrComments = postHere.comments.length;
       postHere.nrLikes = 0;
-      postHere.nrComments = 0;
       posts.add(postHere);
     }
 

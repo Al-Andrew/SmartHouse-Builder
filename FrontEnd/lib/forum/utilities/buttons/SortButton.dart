@@ -1,17 +1,27 @@
 import 'dart:html';
+import '../../ForumGlobals.dart' as globals;
 
 import 'package:flutter/material.dart';
 import 'package:homepage/forum/screens/CreatePost.dart';
+import 'package:homepage/forum/classes/PostClass.dart';
 
 class SortButton extends StatelessWidget {
-  const SortButton({
+  SortButton({
     Key? key,
     required this.width,
     required this.height,
+    required this.checkedRecent,
+    required this.checkedPopular,
+    required this.checkedCommented,
+    required this.route,
   }) : super(key: key);
 
   final double width;
   final double height;
+  bool checkedRecent;
+  bool checkedPopular;
+  bool checkedCommented;
+  String route;
 
   @override
   Widget build(BuildContext context) {
@@ -24,7 +34,14 @@ class SortButton extends StatelessWidget {
         color: Color.fromARGB(255, 53, 205, 255),
       ),
       child: ElevatedButton(
-        onPressed: () {},
+        onPressed: () {
+          if (checkedCommented || checkedPopular || checkedRecent) {
+            globals.isChanged = true;
+            globals.isSorted = true;
+            Post.sortPosts(
+                checkedRecent, checkedCommented, checkedPopular, '/myposts');
+          }
+        },
         child: Text(
           "Sort",
           style: TextStyle(

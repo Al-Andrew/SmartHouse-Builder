@@ -36,7 +36,7 @@ class _PostsTabelState extends State<PostsTabel> {
   @override
   FutureBuilder build(BuildContext context) {
     return FutureBuilder(
-        future: Post.getLocalPosts(),
+        future: Post.getPosts(),
         builder: (context, snapshot) {
           if (snapshot.data != null) {
             return PostsTableBody(snapshot.data, context);

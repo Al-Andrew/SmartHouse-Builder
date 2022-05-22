@@ -1,10 +1,8 @@
 library globals;
 
 import 'package:homepage/forum/classes/PostClass.dart';
-import 'package:homepage/forum/utilities/Utilities.dart';
 
+bool isChanged = false;
 List<Post> posts = [];
 List<Post> myPosts = [];
-late Future<List<Post>> futurePosts;
-late PostsTabel homePageTabel;
-bool isChanged = false;
+bool isSorted = false;

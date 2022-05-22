@@ -113,7 +113,7 @@ public class PostService {
                     Collections.sort(posts, new Comparator<Post>() {
                         @Override
                         public int compare(Post o1, Post o2) {
-                            return o1.comments.size()-o2.comments.size();
+                            return o2.comments.size()-o1.comments.size();
                         }
                     });
                 }
