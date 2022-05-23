@@ -1,5 +1,6 @@
 package com.smarthousebuilder.forum.post;
 
+import org.hibernate.annotations.Parameter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -26,6 +27,17 @@ public class PostController {
     @GetMapping(path = "/{Id}")
     public List<Post> getPostByUserId(@PathVariable Integer Id){
         return postService.getPostByUserId(Id);
+    }
+    @PostMapping(path = "/sort/")
+    public List<Post> sortPostByParameter(@RequestParam boolean Popular,@RequestParam boolean Date,@RequestParam boolean Comments,@RequestBody List<Post> posts){
+        List<Post> sortedPosts=posts;
+        if(Comments)
+            sortedPosts=postService.sortPostsByParameter(3,sortedPosts);
+        if(Date)
+            sortedPosts=postService.sortPostsByParameter(1,sortedPosts);
+        if(Popular)
+            sortedPosts=postService.sortPostsByParameter(2,sortedPosts);
+        return sortedPosts;
     }
 
     @PutMapping("/{postId}")

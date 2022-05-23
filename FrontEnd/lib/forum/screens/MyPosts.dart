@@ -17,18 +17,22 @@ class MyPosts extends StatefulWidget {
 }
 
 class _MyPostsState extends State<MyPosts> {
-  List<Post> myPosts = [];
   late List<Post> selectedPosts;
 
   @override
   void initState() {
-    Post.getLocalPosts().then(
-      (value) {
-        setState(() {
-          myPosts.addAll(value);
-        });
-      },
-    );
+    if (globals.isSorted == false) {
+      Post.getMyPosts(1).then(
+        (value) {
+          setState(() {
+            globals.myPosts = value;
+          });
+        },
+      );
+    } else {
+      globals.isSorted = false;
+    }
+
     selectedPosts = [];
     super.initState();
   }
@@ -46,7 +50,7 @@ class _MyPostsState extends State<MyPosts> {
   //functia pentru butonul remove
   deleteSelectedPosts() async {
     setState(() {
-      Post.removePosts(selectedPosts, myPosts);
+      Post.removePosts(selectedPosts);
       globals.isChanged = true;
     });
   }
@@ -90,7 +94,9 @@ class _MyPostsState extends State<MyPosts> {
                   SearchBar(),
                   Container(
                     height: 230,
-                    child: Center(child: CustomSort(height: 230, width: 160)),
+                    child: Center(
+                        child: CustomSort(
+                            height: 230, width: 160, route: '/myposts')),
                   ),
                   Container(
                     child: Center(
@@ -164,7 +170,9 @@ class _MyPostsState extends State<MyPosts> {
                   SearchBar(),
                   Container(
                     height: 230,
-                    child: Center(child: CustomSort(height: 230, width: 160)),
+                    child: Center(
+                        child: CustomSort(
+                            height: 230, width: 160, route: '/myposts')),
                   ),
                   Container(
                     child: Center(
@@ -241,7 +249,11 @@ class _MyPostsState extends State<MyPosts> {
                             children: [
                               Container(
                                 margin: const EdgeInsets.only(top: 10.0),
-                                child: CustomSort(height: 230, width: 160),
+                                child: CustomSort(
+                                  height: 230,
+                                  width: 160,
+                                  route: '/myPosts',
+                                ),
                               ),
                               Container(
                                 margin: const EdgeInsets.only(top: 10.0),
@@ -428,7 +440,7 @@ class _MyPostsState extends State<MyPosts> {
                       )),
                 ),
               ],
-              rows: myPosts
+              rows: globals.myPosts
                   .map(
                     (post) => DataRow(
                       //For checkboxes
