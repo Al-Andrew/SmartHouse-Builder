@@ -31,15 +31,6 @@ class _MyPostsState extends State<MyPosts> {
       );
     } else {
       globals.isSorted = false;
-      /*Post.getPosts().then(
-        (value) {
-          setState(() {
-            // globals.myPosts.clear();
-            globals.myPosts.addAll(value);
-          });
-        },
-      );
-      */
     }
 
     selectedPosts = [];

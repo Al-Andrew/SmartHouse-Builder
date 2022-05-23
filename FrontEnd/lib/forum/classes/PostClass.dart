@@ -1,4 +1,5 @@
 import 'dart:html';
+import 'dart:io';
 
 import './CommentClass.dart';
 import './ReportClass.dart';
@@ -63,7 +64,9 @@ class Post {
     comments.add(comment);
     nrComments = comments.length;
     print(jsonEncode(comment));
-    http.post(Uri.parse('http://localhost:8070/api/forum/comment'),
+    http.post(
+        Uri.parse(
+            'https://smart-house-builder.azurewebsites.net/api/forum/comment'),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
         },
@@ -76,197 +79,71 @@ class Post {
 
   static void sortPosts(bool checkedRecent, bool checkedCommented,
       bool checkedPopular, String route) async {
-    //print('ok');
-    print(checkedCommented);
-    print(checkedPopular);
-    print(checkedRecent);
-    print(route);
+    final queryParameters = {
+      'Date': '$checkedRecent',
+      'Comments': '$checkedCommented',
+      'Popular': '$checkedPopular'
+    };
+
     if (route == '/myposts') {
-      if (checkedRecent == true) {
-        globals.isSorted = true;
-        final response =
-            await http.post(Uri.parse('http://localhost:8070/api/forum/sort/1'),
-                headers: <String, String>{
-                  'Content-Type': 'application/json; charset=UTF-8',
-                },
-                body: json.encode(globals.myPosts));
-        var jsonData = json.decode(response.body);
-        List<Post> posts = [];
-        for (var v in jsonData) {
-          Post postare = Post.fromJson(v);
+      globals.isSorted = true;
+      final uri =
+          Uri.http('localhost:8070', '/api/forum/sort/', queryParameters);
 
-          int postId = Post.fromJson(v).id;
-          final response2 = await http.get(
-              Uri.parse(
-                'http://localhost:8070/api/forum/comment/$postId',
-              ),
-              headers: {"Access-Control-Allow-Origin": "*"});
-          for (var comment in jsonDecode(response2.body)) {
-            Comment com = Comment.fromJson(comment);
-            //postare.nrComments++;
-            //print(postare.nrComments);
-            postare.comments.add(com);
-          }
-          postare.nrComments = postare.comments.length;
-          posts.add(postare);
+      var headers = {
+        HttpHeaders.authorizationHeader: 'Token $String',
+        HttpHeaders.contentTypeHeader: 'application/json',
+      };
+      final response = await http.post(uri,
+          headers: headers, body: json.encode(globals.myPosts));
+      var jsonData = json.decode(response.body);
+      List<Post> posts = [];
+      for (var v in jsonData) {
+        Post postare = Post.fromJson(v);
+
+        int postId = Post.fromJson(v).id;
+        final response2 = await http.get(
+            Uri.parse(
+              'https://smart-house-builder.azurewebsites.net/api/forum/comment/$postId',
+            ),
+            headers: {"Access-Control-Allow-Origin": "*"});
+        for (var comment in jsonDecode(response2.body)) {
+          Comment com = Comment.fromJson(comment);
+          postare.comments.add(com);
         }
-        globals.myPosts = posts;
+        postare.nrComments = postare.comments.length;
+        posts.add(postare);
       }
-      if (checkedCommented == true) {
-        globals.isSorted = true;
-        final response =
-            await http.post(Uri.parse('http://localhost:8070/api/forum/sort/3'),
-                headers: <String, String>{
-                  'Content-Type': 'application/json; charset=UTF-8',
-                },
-                body: json.encode(globals.myPosts));
-
-        var jsonData = json.decode(response.body);
-        List<Post> posts = [];
-        for (var v in jsonData) {
-          Post postare = Post.fromJson(v);
-
-          int postId = Post.fromJson(v).id;
-          final response2 = await http.get(
-              Uri.parse(
-                'http://localhost:8070/api/forum/comment/$postId',
-              ),
-              headers: {"Access-Control-Allow-Origin": "*"});
-          for (var comment in jsonDecode(response2.body)) {
-            Comment com = Comment.fromJson(comment);
-            //postare.nrComments++;
-            //print(postare.nrComments);
-            postare.comments.add(com);
-          }
-          postare.nrComments = postare.comments.length;
-          posts.add(postare);
-        }
-        globals.myPosts = posts;
-      }
-      if (checkedPopular == true) {
-        globals.isSorted = true;
-        final response =
-            await http.post(Uri.parse('http://localhost:8070/api/forum/sort/2'),
-                headers: <String, String>{
-                  'Content-Type': 'application/json; charset=UTF-8',
-                },
-                body: json.encode(globals.myPosts));
-
-        var jsonData = json.decode(response.body);
-        List<Post> posts = [];
-        for (var v in jsonData) {
-          Post postare = Post.fromJson(v);
-
-          int postId = Post.fromJson(v).id;
-          final response2 = await http.get(
-              Uri.parse(
-                'http://localhost:8070/api/forum/comment/$postId',
-              ),
-              headers: {"Access-Control-Allow-Origin": "*"});
-          for (var comment in jsonDecode(response2.body)) {
-            Comment com = Comment.fromJson(comment);
-            //postare.nrComments++;
-            //print(postare.nrComments);
-            postare.comments.add(com);
-          }
-          postare.nrComments = postare.comments.length;
-          posts.add(postare);
-        }
-        globals.myPosts = posts;
-      }
+      globals.myPosts = posts;
     } else {
-      if (checkedRecent == true) {
-        globals.isSorted = true;
-        final response =
-            await http.post(Uri.parse('http://localhost:8070/api/forum/sort/1'),
-                headers: <String, String>{
-                  'Content-Type': 'application/json; charset=UTF-8',
-                },
-                body: json.encode(globals.posts));
-        var jsonData = json.decode(response.body);
-        List<Post> posts = [];
-        for (var v in jsonData) {
-          Post postare = Post.fromJson(v);
+      globals.isSorted = true;
+      final uri =
+          Uri.http('localhost:8070', '/api/forum/sort/', queryParameters);
+      var headers = {
+        HttpHeaders.authorizationHeader: 'Token $String',
+        HttpHeaders.contentTypeHeader: 'application/json',
+      };
+      final response = await http.post(uri,
+          headers: headers, body: json.encode(globals.posts));
+      var jsonData = json.decode(response.body);
+      List<Post> posts = [];
+      for (var v in jsonData) {
+        Post postare = Post.fromJson(v);
 
-          int postId = Post.fromJson(v).id;
-          final response2 = await http.get(
-              Uri.parse(
-                'http://localhost:8070/api/forum/comment/$postId',
-              ),
-              headers: {"Access-Control-Allow-Origin": "*"});
-          for (var comment in jsonDecode(response2.body)) {
-            Comment com = Comment.fromJson(comment);
-            //postare.nrComments++;
-            //print(postare.nrComments);
-            postare.comments.add(com);
-          }
-          postare.nrComments = postare.comments.length;
-          posts.add(postare);
+        int postId = Post.fromJson(v).id;
+        final response2 = await http.get(
+            Uri.parse(
+              'https://smart-house-builder.azurewebsites.net/api/forum/comment/$postId',
+            ),
+            headers: {"Access-Control-Allow-Origin": "*"});
+        for (var comment in jsonDecode(response2.body)) {
+          Comment com = Comment.fromJson(comment);
+          postare.comments.add(com);
         }
-        globals.posts = posts;
+        postare.nrComments = postare.comments.length;
+        posts.add(postare);
       }
-      if (checkedCommented == true) {
-        globals.isSorted = true;
-        final response =
-            await http.post(Uri.parse('http://localhost:8070/api/forum/sort/3'),
-                headers: <String, String>{
-                  'Content-Type': 'application/json; charset=UTF-8',
-                },
-                body: json.encode(globals.posts));
-
-        var jsonData = json.decode(response.body);
-        List<Post> posts = [];
-        for (var v in jsonData) {
-          Post postare = Post.fromJson(v);
-
-          int postId = Post.fromJson(v).id;
-          final response2 = await http.get(
-              Uri.parse(
-                'http://localhost:8070/api/forum/comment/$postId',
-              ),
-              headers: {"Access-Control-Allow-Origin": "*"});
-          for (var comment in jsonDecode(response2.body)) {
-            Comment com = Comment.fromJson(comment);
-            //postare.nrComments++;
-            //print(postare.nrComments);
-            postare.comments.add(com);
-          }
-          postare.nrComments = postare.comments.length;
-          posts.add(postare);
-        }
-        globals.posts = posts;
-      }
-      if (checkedPopular == true) {
-        globals.isSorted = true;
-        final response =
-            await http.post(Uri.parse('http://localhost:8070/api/forum/sort/2'),
-                headers: <String, String>{
-                  'Content-Type': 'application/json; charset=UTF-8',
-                },
-                body: json.encode(globals.posts));
-
-        var jsonData = json.decode(response.body);
-        List<Post> posts = [];
-        for (var v in jsonData) {
-          Post postare = Post.fromJson(v);
-
-          int postId = Post.fromJson(v).id;
-          final response2 = await http.get(
-              Uri.parse(
-                'http://localhost:8070/api/forum/comment/$postId',
-              ),
-              headers: {"Access-Control-Allow-Origin": "*"});
-          for (var comment in jsonDecode(response2.body)) {
-            Comment com = Comment.fromJson(comment);
-            //postare.nrComments++;
-            //print(postare.nrComments);
-            postare.comments.add(com);
-          }
-          postare.nrComments = postare.comments.length;
-          posts.add(postare);
-        }
-        globals.posts = posts;
-      }
+      globals.posts = posts;
     }
   }
 
@@ -291,7 +168,8 @@ class Post {
       tmp.addAll(selectedPosts);
       for (Post post in tmp) {
         int idCopy = post.id;
-        http.delete(Uri.parse('http://localhost:8070/api/forum/$idCopy'));
+        http.delete(Uri.parse(
+            'https://smart-house-builder.azurewebsites.net/api/forum/$idCopy'));
         globals.myPosts.remove(post);
         selectedPosts.remove(post);
       }
@@ -304,12 +182,13 @@ class Post {
 
   static Future<List<Post>> getPosts() async {
     print("1");
-    print(Uri.parse('http://localhost:8070/api/forum'));
+    print(Uri.parse('https://smart-house-builder.azurewebsites.net/api/forum'));
 
-    http.get(Uri.parse('http://localhost:8070/api/forum'));
+    http.get(
+        Uri.parse('https://smart-house-builder.azurewebsites.net/api/forum'));
     final response = await http.get(
         Uri.parse(
-          'http://localhost:8070/api/forum',
+          'https://smart-house-builder.azurewebsites.net/api/forum',
         ),
         headers: {"Access-Control-Allow-Origin": "*"});
     print("2");
@@ -317,16 +196,12 @@ class Post {
 
     var jsonData = json.decode(response.body);
     for (var v in jsonData) {
-      print(v);
-      print('Spatiu');
       Post postare = Post.fromJson(v);
 
       int postId = Post.fromJson(v).id;
-      print("Id post");
-      print(postId);
       final response2 = await http.get(
           Uri.parse(
-            'http://localhost:8070/api/forum/comment/$postId',
+            'https://smart-house-builder.azurewebsites.net/api/forum/comment/$postId',
           ),
           headers: {"Access-Control-Allow-Origin": "*"});
       for (var comment in jsonDecode(response2.body)) {
@@ -346,20 +221,18 @@ class Post {
   static Future<List<Post>> getMyPosts(int userId) async {
     final response = await http.get(
         Uri.parse(
-          'http://localhost:8070/api/forum/$userId',
+          'https://smart-house-builder.azurewebsites.net/api/forum/$userId',
         ),
         headers: {"Access-Control-Allow-Origin": "*"});
     List<Post> posts = [];
 
     var jsonData = json.decode(response.body);
     for (var v in jsonData) {
-      //print(v);
-      //print('Spatiu');
       Post postHere = Post.fromJson(v);
       int postId = Post.fromJson(v).id;
       final response2 = await http.get(
           Uri.parse(
-            'http://localhost:8070/api/forum/comment/$postId',
+            'https://smart-house-builder.azurewebsites.net/api/forum/comment/$postId',
           ),
           headers: {"Access-Control-Allow-Origin": "*"});
       for (var comment in jsonDecode(response2.body)) {
