@@ -87,8 +87,8 @@ class Post {
 
     if (route == '/myposts') {
       globals.isSorted = true;
-      final uri =
-          Uri.http('localhost:8070', '/api/forum/sort/', queryParameters);
+      final uri = Uri.http('smart-house-builder.azurewebsites.net',
+          '/api/forum/sort/', queryParameters);
 
       var headers = {
         HttpHeaders.authorizationHeader: 'Token $String',
@@ -117,8 +117,8 @@ class Post {
       globals.myPosts = posts;
     } else {
       globals.isSorted = true;
-      final uri =
-          Uri.http('localhost:8070', '/api/forum/sort/', queryParameters);
+      final uri = Uri.http('smart-house-builder.azurewebsites.net',
+          '/api/forum/sort/', queryParameters);
       var headers = {
         HttpHeaders.authorizationHeader: 'Token $String',
         HttpHeaders.contentTypeHeader: 'application/json',
