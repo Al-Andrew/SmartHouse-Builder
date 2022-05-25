@@ -3,6 +3,7 @@ import 'dart:io';
 
 import './CommentClass.dart';
 import './ReportClass.dart';
+import './Tags.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import '../ForumGlobals.dart' as globals;
@@ -16,9 +17,9 @@ class Post {
   int nrLikes = 0;
   int nrComments = 0;
   List<String> tags;
-
   List<Comment> comments;
   List<Report> reports;
+  Tags tags_integers;
 
   Post({
     required this.id,
@@ -26,30 +27,33 @@ class Post {
     required this.content,
     required this.author,
     required this.date,
-    required this.tags,
+    required this.tags_integers,
     required this.comments,
     required this.reports,
+    required this.tags,
   });
 
   factory Post.fromJson(dynamic json) {
     return Post(
-        id: json["id"],
+        id: json["id_user"],
         date: json["date"],
         topic: json["title"],
         content: json["content"],
         author: "Marcel",
         tags: [],
         comments: [],
-        reports: []);
+        reports: [],
+        tags_integers: json["tags"]);
   }
 
   Map<String, dynamic> toJson() => {
-        'id': id,
+        'id_user': id,
         'title': topic,
         'content': content,
         'author': author,
         'date': date,
-        'comments': comments
+        'tags': tags_integers,
+        'comments': comments,
       };
 
   void addComment(int id, int id_user, int id_post, String content,
@@ -71,6 +75,45 @@ class Post {
           'Content-Type': 'application/json; charset=UTF-8',
         },
         body: json.encode(comment));
+  }
+
+////factory for posts
+  static void addPost(
+    int id,
+    int id_author,
+    String title,
+    String date,
+    String content,
+    String author,
+    Tags tags,
+  ) {
+    print('AM AJUNS AICI');
+    /////Seeing that we get the info right
+
+    ///---Let's create the object of type Post
+
+    /*here we have a problem because the post from */
+    Post newPost = new Post(
+        id: id,
+        topic: title,
+        content: content,
+        author: author,
+        date: date,
+        comments: <Comment>[],
+        reports: <Report>[],
+        tags_integers: tags,
+        tags: <String>[]);
+    print(newPost);
+    print(jsonEncode(newPost));
+
+    http.post(
+        Uri.parse(
+          'https://smart-house-builder.azurewebsites.net/api/forum',
+        ),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+        body: json.encode(newPost));
   }
 
   void removeComment(Comment comment) {
@@ -258,180 +301,17 @@ class Post {
         author: 'John H.',
         date: '06/04/2022',
         tags: ["Review", "Question", "Setup", "Hardware", "Software"],
+        tags_integers: new Tags(
+            id: 1,
+            flagReview: 1,
+            flagQuestion: 1,
+            flagSetup: 1,
+            flagHard: 1,
+            flagSoft: 1),
         comments: Comment.getLocalComments(),
         reports: Report.getLocalReports(),
       ),
     );
-    posts.add(
-      Post(
-        id: 1,
-        topic: "What do you think about Amazon Alexa?",
-        content:
-            "Hello everyone! I just got started with tehnology and as every beginner..Its kinda hard to get used to the nowadays techonology. I just found out about Alexa and I need some opinions about her. Is she worth it? I mean I saw a lot of very good feedback about her but still I have my doubts. Moreover could I (less than an average man in techonology) get along with her? She could the perfect tool for me but still if I cant use her its still uselessfor your suggestions and answers! Thank you!",
-        author: 'John H.',
-        date: '06/04/2022',
-        tags: ["Review", "Comment"],
-        comments: Comment.getLocalComments(),
-        reports: Report.getLocalReports(),
-      ),
-    );
-    posts.add(
-      Post(
-        id: 1,
-        topic: "What do you think about Amazon Alexa?",
-        content:
-            "Hello everyone! I just got started with tehnology and as every beginner..Its kinda hard to get used to the nowadays techonology. I just found out about Alexa and I need some opinions about her. Is she worth it? I mean I saw a lot of very good feedback about her but still I have my doubts. Moreover could I (less than an average man in techonology) get along with her? She could the perfect tool for me but still if I cant use her its still uselessfor your suggestions and answers! Thank you!",
-        author: 'John H.',
-        date: '06/04/2022',
-        tags: ["Review", "Comment"],
-        comments: Comment.getLocalComments(),
-        reports: Report.getLocalReports(),
-      ),
-    );
-    posts.add(
-      Post(
-        id: 1,
-        topic: "What do you think about Amazon Alexa?",
-        content:
-            "Hello everyone! I just got started with tehnology and as every beginner..Its kinda hard to get used to the nowadays techonology. I just found out about Alexa and I need some opinions about her. Is she worth it? I mean I saw a lot of very good feedback about her but still I have my doubts. Moreover could I (less than an average man in techonology) get along with her? She could the perfect tool for me but still if I cant use her its still uselessfor your suggestions and answers! Thank you!",
-        author: 'John H.',
-        date: '06/04/2022',
-        tags: ["Review", "Comment"],
-        comments: Comment.getLocalComments(),
-        reports: Report.getLocalReports(),
-      ),
-    );
-    posts.add(
-      Post(
-        id: 1,
-        topic: "What do you think about Amazon Alexa?",
-        content:
-            "Hello everyone! I just got started with tehnology and as every beginner..Its kinda hard to get used to the nowadays techonology. I just found out about Alexa and I need some opinions about her. Is she worth it? I mean I saw a lot of very good feedback about her but still I have my doubts. Moreover could I (less than an average man in techonology) get along with her? She could the perfect tool for me but still if I cant use her its still uselessfor your suggestions and answers! Thank you!",
-        author: 'John H.',
-        date: '06/04/2022',
-        tags: ["Review", "Comment"],
-        comments: Comment.getLocalComments(),
-        reports: Report.getLocalReports(),
-      ),
-    );
-    posts.add(
-      Post(
-        id: 1,
-        topic: "What do you think about Amazon Alexa?",
-        content:
-            "Hello everyone! I just got started with tehnology and as every beginner..Its kinda hard to get used to the nowadays techonology. I just found out about Alexa and I need some opinions about her. Is she worth it? I mean I saw a lot of very good feedback about her but still I have my doubts. Moreover could I (less than an average man in techonology) get along with her? She could the perfect tool for me but still if I cant use her its still uselessfor your suggestions and answers! Thank you!",
-        author: 'John H.',
-        date: '06/04/2022',
-        tags: ["Review", "Comment"],
-        comments: Comment.getLocalComments(),
-        reports: Report.getLocalReports(),
-      ),
-    );
-    posts.add(
-      Post(
-        id: 1,
-        topic: "What do you think about Amazon Alexa?",
-        content:
-            "Hello everyone! I just got started with tehnology and as every beginner..Its kinda hard to get used to the nowadays techonology. I just found out about Alexa and I need some opinions about her. Is she worth it? I mean I saw a lot of very good feedback about her but still I have my doubts. Moreover could I (less than an average man in techonology) get along with her? She could the perfect tool for me but still if I cant use her its still uselessfor your suggestions and answers! Thank you!",
-        author: 'John H.',
-        date: '06/04/2022',
-        tags: ["Review", "Comment"],
-        comments: Comment.getLocalComments(),
-        reports: Report.getLocalReports(),
-      ),
-    );
-    posts.add(
-      Post(
-        id: 1,
-        topic: "What do you think about Amazon Alexa?",
-        content:
-            "Hello everyone! I just got started with tehnology and as every beginner..Its kinda hard to get used to the nowadays techonology. I just found out about Alexa and I need some opinions about her. Is she worth it? I mean I saw a lot of very good feedback about her but still I have my doubts. Moreover could I (less than an average man in techonology) get along with her? She could the perfect tool for me but still if I cant use her its still uselessfor your suggestions and answers! Thank you!",
-        author: 'John H.',
-        date: '06/04/2022',
-        tags: ["Review", "Comment"],
-        comments: Comment.getLocalComments(),
-        reports: Report.getLocalReports(),
-      ),
-    );
-    posts.add(
-      Post(
-        id: 1,
-        topic: "What do you think about Amazon Alexa?",
-        content:
-            "Hello everyone! I just got started with tehnology and as every beginner..Its kinda hard to get used to the nowadays techonology. I just found out about Alexa and I need some opinions about her. Is she worth it? I mean I saw a lot of very good feedback about her but still I have my doubts. Moreover could I (less than an average man in techonology) get along with her? She could the perfect tool for me but still if I cant use her its still uselessfor your suggestions and answers! Thank you!",
-        author: 'John H.',
-        date: '06/04/2022',
-        tags: ["Review", "Comment"],
-        comments: Comment.getLocalComments(),
-        reports: Report.getLocalReports(),
-      ),
-    );
-    posts.add(
-      Post(
-        id: 1,
-        topic: "What do you think about Amazon Alexa?",
-        content:
-            "Hello everyone! I just got started with tehnology and as every beginner..Its kinda hard to get used to the nowadays techonology. I just found out about Alexa and I need some opinions about her. Is she worth it? I mean I saw a lot of very good feedback about her but still I have my doubts. Moreover could I (less than an average man in techonology) get along with her? She could the perfect tool for me but still if I cant use her its still uselessfor your suggestions and answers! Thank you!",
-        author: 'John H.',
-        date: '06/04/2022',
-        tags: ["Review", "Comment"],
-        comments: Comment.getLocalComments(),
-        reports: Report.getLocalReports(),
-      ),
-    );
-    posts.add(
-      Post(
-        id: 1,
-        topic: "What do you think about Amazon Alexa?",
-        content:
-            "Hello everyone! I just got started with tehnology and as every beginner..Its kinda hard to get used to the nowadays techonology. I just found out about Alexa and I need some opinions about her. Is she worth it? I mean I saw a lot of very good feedback about her but still I have my doubts. Moreover could I (less than an average man in techonology) get along with her? She could the perfect tool for me but still if I cant use her its still uselessfor your suggestions and answers! Thank you!",
-        author: 'John H.',
-        date: '06/04/2022',
-        tags: ["Review", "Comment"],
-        comments: Comment.getLocalComments(),
-        reports: Report.getLocalReports(),
-      ),
-    );
-    posts.add(
-      Post(
-        id: 1,
-        topic: "What do you think about Amazon Alexa?",
-        content:
-            "Hello everyone! I just got started with tehnology and as every beginner..Its kinda hard to get used to the nowadays techonology. I just found out about Alexa and I need some opinions about her. Is she worth it? I mean I saw a lot of very good feedback about her but still I have my doubts. Moreover could I (less than an average man in techonology) get along with her? She could the perfect tool for me but still if I cant use her its still uselessfor your suggestions and answers! Thank you!",
-        author: 'John H.',
-        date: '06/04/2022',
-        tags: ["Review", "Comment"],
-        comments: Comment.getLocalComments(),
-        reports: Report.getLocalReports(),
-      ),
-    );
-    posts.add(
-      Post(
-        id: 1,
-        topic: "What do you think about Amazon Alexa?",
-        content:
-            "Hello everyone! I just got started with tehnology and as every beginner..Its kinda hard to get used to the nowadays techonology. I just found out about Alexa and I need some opinions about her. Is she worth it? I mean I saw a lot of very good feedback about her but still I have my doubts. Moreover could I (less than an average man in techonology) get along with her? She could the perfect tool for me but still if I cant use her its still uselessfor your suggestions and answers! Thank you!",
-        author: 'John H.',
-        date: '06/04/2022',
-        tags: ["Review", "Comment"],
-        comments: Comment.getLocalComments(),
-        reports: Report.getLocalReports(),
-      ),
-    );
-    posts.add(
-      Post(
-        id: 1,
-        topic: "What do you think about Amazon Alexa?",
-        content:
-            "Hello everyone! I just got started with tehnology and as every beginner..Its kinda hard to get used to the nowadays techonology. I just found out about Alexa and I need some opinions about her. Is she worth it? I mean I saw a lot of very good feedback about her but still I have my doubts. Moreover could I (less than an average man in techonology) get along with her? She could the perfect tool for me but still if I cant use her its still uselessfor your suggestions and answers! Thank you!",
-        author: 'John H.',
-        date: '06/04/2022',
-        tags: ["Review", "Comment"],
-        comments: Comment.getLocalComments(),
-        reports: Report.getLocalReports(),
-      ),
-    );
-
     return posts;
   }
 }

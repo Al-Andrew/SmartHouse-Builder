@@ -119,4 +119,48 @@ public class PostService {
                 }
         return posts;
     }
+    public List<Post> getPostByText(String searchText)
+    {
+        List<Post> postsList=this.getAllPosts();
+        List<Post> response=new ArrayList<>();
+        if(searchText.toLowerCase().equals("setup"))
+        {
+            for(Post currentPost:postsList)
+                if(currentPost.getTag().getSetupFlag()==1)
+                    response.add(currentPost);
+            return response;
+        }
+        else if(searchText.toLowerCase().equals("hardware"))
+        {
+            for(Post currentPost:postsList)
+                if(currentPost.getTag().getHardwareFlag()==1)
+                    response.add(currentPost);
+            return response;
+        }
+        else if(searchText.toLowerCase().equals("software"))
+        {
+            for(Post currentPost:postsList)
+                if(currentPost.getTag().getSoftwareFlag()==1)
+                    response.add(currentPost);
+            return response;
+        }
+        else if(searchText.toLowerCase().equals("review"))
+        {
+            for(Post currentPost:postsList)
+                if(currentPost.getTag().getRewiewFlag()==1)
+                    response.add(currentPost);
+            return response;
+        }
+        else if(searchText.toLowerCase().equals("question"))
+        {
+            for(Post currentPost:postsList)
+                if(currentPost.getTag().getQuestionFlag()==1)
+                    response.add(currentPost);
+            return response;
+        }
+        for(Post currentPost:postsList)
+            if(currentPost.getTitle().toLowerCase().contains(searchText.toLowerCase()))
+                response.add(currentPost);
+        return response;
+    }
 }

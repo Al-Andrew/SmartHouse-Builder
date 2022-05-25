@@ -55,4 +55,8 @@ public class PostController {
     public void deletePost(@PathVariable("postId") Integer postId){
         postService.deletePost(postId);
     }
+    @GetMapping(path = "/search/{searchText}")
+    public List<Post> searchPostByText(@PathVariable String searchText){
+        return postService.getPostByText(searchText);
+    }
 }

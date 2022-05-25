@@ -85,4 +85,24 @@ public class ProductService {
     public List<Product> getByPriceRange(Double lower, Double upper) {
         return  productRepository.findByPriceBetween(lower,upper);
     }
+
+    public List<Product> getByString(String string) {
+
+        boolean exists = productRepository.existsByNameContaining(string);
+
+        if(!exists)
+            throw new IllegalStateException("No product containing in name "+ string);
+
+        return  productRepository.findAllByNameContaining(string);
+    }
+
+    public List<Product> getByRatingRange(Double lower, Double upper) {
+
+        boolean exists = productRepository.existsByRatingBetween(lower,upper);
+
+        if(!exists)
+            throw new IllegalStateException("No product with rating be "+ lower + " and " + upper);
+
+        return productRepository.findAllByRatingBetween(lower, upper);
+    }
 }

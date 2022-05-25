@@ -3,25 +3,24 @@ package com.smarthousebuilder.marketplace.wishlist;
 
 import com.smarthousebuilder.marketplace.product.Product;
 import com.smarthousebuilder.marketplace.product.ProductService;
+import com.smarthousebuilder.marketplace.wishlistItem.WishlistItems;
 import com.smarthousebuilder.wishlistItem.WishlistItemRepository;
 
-import com.smarthousebuilder.wishlistItem.WishlistItems;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.sql.SQLException;
 import java.util.Date;
 import java.util.Optional;
 
 @Service
 public class WishlistService {
 
-    @Autowired
+
     private final WishlistRepository wishlistRepository;
 
-    @Autowired
     private final WishlistItemRepository wishlistItemRepository;
 
-    @Autowired
+
     private final ProductService productService;
 
     public WishlistService(WishlistRepository wishlistRepository, WishlistItemRepository wishlistItemRepository, ProductService productService) {
@@ -32,7 +31,7 @@ public class WishlistService {
 
 
     public boolean existsByUserId(Integer userId) {
-        return wishlistRepository.existsById(userId);
+        return wishlistRepository.existsByUserId(userId);
     }
 
     public void AddFirstTime(Integer userId, Integer productId, String name) {
@@ -92,5 +91,29 @@ public class WishlistService {
             throw  new IllegalStateException("No wishlist for user with id " + wishlistId);
 
         wishlistItemRepository.findAllByWishlistId(wishlistId);
+    }
+
+
+    public void deleteOneFromWishlist(Integer wishlistId, Integer productId) {
+
+        boolean existsWishlist = wishlistRepository.existsById(wishlistId);
+
+        if (!existsWishlist)
+            throw new IllegalStateException("No wishlist with id " + wishlistId);
+
+        boolean existsProductInWishlist = wishlistItemRepository.existsByProductIdAndWishlistId(productId, wishlistId);
+
+        if (!existsProductInWishlist)
+            throw new IllegalStateException("Can't delete product from wishlist that is not in wishlist!");
+
+
+        int numberOfProductsInWishlist = wishlistItemRepository.countAllById(wishlistId);
+
+        if (numberOfProductsInWishlist == 1) {
+            wishlistItemRepository.delete(wishlistItemRepository.getByProductIdAndWishlistId(productId, wishlistId));
+            wishlistRepository.deleteById(wishlistId);
+        } else {
+                wishlistItemRepository.delete(wishlistItemRepository.getByProductIdAndWishlistId(productId, wishlistId));
+        }
     }
 }
