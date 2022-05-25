@@ -3,9 +3,9 @@ package com.smarthousebuilder.marketplace.product;
 import javax.persistence.*;
 
 @Entity
-@Table(name="products")
+@Table(name = "products")
 public class Product {
-    @GeneratedValue()
+    @GeneratedValue
     @Id
     @Column(name = "id")
     private int id;
@@ -22,13 +22,13 @@ public class Product {
     @Column(name = "rating")
     private Double rating;
     @Basic
+    @Column(name = "png_url")
+    private String pngUrl;
+    @Basic
     @Column(name = "forum_link")
     private String forumLink;
     @Basic
-    @Column(name = "png_URL")
-    private String pngUrl;
-    @Basic
-    @Column(name = "product_URL")
+    @Column(name = "product_url")
     private String productUrl;
     @Basic
     @Column(name = "description")
@@ -77,20 +77,20 @@ public class Product {
         this.rating = rating;
     }
 
-    public String getForumLink() {
-        return forumLink;
-    }
-
-    public void setForumLink(String forumLink) {
-        this.forumLink = forumLink;
-    }
-
     public String getPngUrl() {
         return pngUrl;
     }
 
     public void setPngUrl(String pngUrl) {
         this.pngUrl = pngUrl;
+    }
+
+    public String getForumLink() {
+        return forumLink;
+    }
+
+    public void setForumLink(String forumLink) {
+        this.forumLink = forumLink;
     }
 
     public String getProductUrl() {
@@ -129,8 +129,8 @@ public class Product {
         if (name != null ? !name.equals(product.name) : product.name != null) return false;
         if (price != null ? !price.equals(product.price) : product.price != null) return false;
         if (rating != null ? !rating.equals(product.rating) : product.rating != null) return false;
-        if (forumLink != null ? !forumLink.equals(product.forumLink) : product.forumLink != null) return false;
         if (pngUrl != null ? !pngUrl.equals(product.pngUrl) : product.pngUrl != null) return false;
+        if (forumLink != null ? !forumLink.equals(product.forumLink) : product.forumLink != null) return false;
         if (productUrl != null ? !productUrl.equals(product.productUrl) : product.productUrl != null) return false;
         if (description != null ? !description.equals(product.description) : product.description != null)
             return false;
@@ -147,8 +147,8 @@ public class Product {
         result = 31 * result + (name != null ? name.hashCode() : 0);
         result = 31 * result + (price != null ? price.hashCode() : 0);
         result = 31 * result + (rating != null ? rating.hashCode() : 0);
-        result = 31 * result + (forumLink != null ? forumLink.hashCode() : 0);
         result = 31 * result + (pngUrl != null ? pngUrl.hashCode() : 0);
+        result = 31 * result + (forumLink != null ? forumLink.hashCode() : 0);
         result = 31 * result + (productUrl != null ? productUrl.hashCode() : 0);
         result = 31 * result + (description != null ? description.hashCode() : 0);
         result = 31 * result + (specifications != null ? specifications.hashCode() : 0);
