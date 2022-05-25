@@ -18,7 +18,7 @@ public class WishlistController {
                     @RequestParam (value = "wishlistName")String name){
         boolean conditionIfUserHasWishlist = wishlistService.existsByUserId(userId);
 
-        System.out.println(conditionIfUserHasWishlist);
+       
         if(!conditionIfUserHasWishlist){
             wishlistService.AddFirstTime(userId,productId,name);
         }
