@@ -2,15 +2,14 @@ import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.DriverManager;
 import java.sql.SQLException;
-import java.sql.*;
 
 public class DatabaseConnection {
-    private static final String URL = "jdbc:oracle:thin:@localhost:1521:xe";
-    private static final String USER = "PROGAVAN";
-    private static final String PASSWORD = "PROGAVAN";
+    private static final String URL = null;
+    private static final String USER = null;
+    private static final String PASSWORD = null;
     private static Connection conn;
 
-    public static void createconnection() {
+    public static Connection createconnection() {
         //this.dbURL = System.getenv("DB_URL_SECRET");
         //this.user = System.getenv("DB_USER_SECRET");
         //this.pass = System.getenv("DB_PASS_SECRET");
@@ -28,6 +27,7 @@ public class DatabaseConnection {
         } catch (SQLException ex) {
             ex.printStackTrace();
         }
+        return conn;
     }
 
     public static Connection getConnection() {
