@@ -5,8 +5,6 @@ import javax.persistence.*;
 @Entity
 @Table(name = "users")
 public class User {
-    //DE MODIFICAT IN BAZA DE DATE USER CA SA CREASCA ID CU IDENTITY
-    //SI TABELA DIN USERS IN USER
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     protected int id;
