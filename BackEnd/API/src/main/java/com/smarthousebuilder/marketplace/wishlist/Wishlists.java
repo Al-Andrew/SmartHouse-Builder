@@ -1,6 +1,5 @@
 package com.smarthousebuilder.marketplace.wishlist;
 
-import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
 import java.sql.Date;
