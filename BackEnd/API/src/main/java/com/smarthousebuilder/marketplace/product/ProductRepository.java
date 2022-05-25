@@ -23,4 +23,8 @@ public interface ProductRepository extends JpaRepository<Product,Integer> {
     List<Product> findAllByNameContaining(@Param("string") String string);
 
     Boolean existsByNameContaining(@Param("string") String string);
+
+    Boolean existsByRatingBetween(Double lower, Double upper);
+
+    List<Product> findAllByRatingBetween(Double lower, Double upper );
 }
