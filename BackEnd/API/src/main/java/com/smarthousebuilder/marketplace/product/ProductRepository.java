@@ -1,6 +1,8 @@
 package com.smarthousebuilder.marketplace.product;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -17,4 +19,8 @@ public interface ProductRepository extends JpaRepository<Product,Integer> {
     List<Product> getAllByCategoryId(Integer categoryId);
 
     List<Product> findByPriceBetween(Double lower, Double upper);
+
+    List<Product> findAllByNameContaining(@Param("string") String string);
+
+    Boolean existsByNameContaining(@Param("string") String string);
 }
