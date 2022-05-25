@@ -89,9 +89,7 @@ class Post {
   ) {
     print('AM AJUNS AICI');
     /////Seeing that we get the info right
-
     ///---Let's create the object of type Post
-
     /*here we have a problem because the post from */
     Post newPost = new Post(
         id: id,

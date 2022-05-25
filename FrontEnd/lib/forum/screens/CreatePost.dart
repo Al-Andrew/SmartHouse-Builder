@@ -35,7 +35,6 @@ class _CreatePostState extends State<CreatePost> {
       flagSoft: valSoft,
     );
     //////I made my object with the tags
-
     var descField = descriptionField.descriptionController;
     var topicField = topicTextField.textFieldController;
     String topicText = topicField.text;
@@ -51,9 +50,7 @@ class _CreatePostState extends State<CreatePost> {
     print("---------------------------------");
 
     //////----We try to add the object to the DataBase
-
     ////here we have the pop-up...fix the depricated method
-
     RegExp expTopic =
         RegExp((r'[a-zA-Z]{5,}')); //un cuvant cu cel putin 5 litere
     RegExpMatch? matchTopic = expTopic.firstMatch(topicText);
@@ -66,9 +63,7 @@ class _CreatePostState extends State<CreatePost> {
     bool goodDescription = matchDescription?[0] != null;
 
     ///for description
-
     ///let's see what we should now in the code
-
     if (!goodTopic) {
       showDialog(
         context: context,
@@ -158,7 +153,6 @@ class _CreatePostState extends State<CreatePost> {
           builder: (context, constraints) {
             {
               ///--------------Desktop Mode----------------------///
-
               return SingleChildScrollView(
                 child: Column(
                   children: <Widget>[
@@ -338,8 +332,8 @@ class _CreatePostState extends State<CreatePost> {
       ),
     );
   }
-  ////Review
 
+  ////Review
   Widget checkBoxRevi() {
     return Container(
         constraints: BoxConstraints(maxWidth: 200, minWidth: 100),
@@ -370,7 +364,6 @@ class _CreatePostState extends State<CreatePost> {
   }
 
   ////Software
-
   Widget checkBoxSoft() {
     return Container(
         constraints: BoxConstraints(maxWidth: 200, minWidth: 100),
@@ -404,7 +397,6 @@ class _CreatePostState extends State<CreatePost> {
   }
 
   ////Setup
-
   Widget checkBoxSetup() {
     return Container(
       constraints: BoxConstraints(maxWidth: 200, minWidth: 100),
@@ -442,7 +434,6 @@ _class ca sa imi dau seama ca e propriul meu object definit
  */
 
 /////////----Clasa pentru TopicTextField
-
 class TopicTextField extends StatelessWidget {
   TopicTextField({Key? key}) : super(key: key);
   TextEditingController textFieldController = TextEditingController();
@@ -465,8 +456,8 @@ class TopicTextField extends StatelessWidget {
     );
   }
 }
-///////-------Clasa pentru DescriptionField
 
+///////-------Clasa pentru DescriptionField
 class DescriptionField extends StatelessWidget {
   TextEditingController myDescriptionController = TextEditingController();
   TextEditingController get descriptionController {
