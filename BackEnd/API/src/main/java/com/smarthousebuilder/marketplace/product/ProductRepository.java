@@ -15,4 +15,6 @@ public interface ProductRepository extends JpaRepository<Product,Integer> {
     Boolean existsByCategoryId(Integer categoryId);
 
     List<Product> getAllByCategoryId(Integer categoryId);
+
+    List<Product> findByPriceBetween(Double lower, Double upper);
 }

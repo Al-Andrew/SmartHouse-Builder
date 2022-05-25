@@ -1,5 +1,6 @@
 package com.smarthousebuilder.forum.post;
 
+import org.hibernate.annotations.Parameter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -24,9 +25,21 @@ public class PostController {
     }
 
     @GetMapping(path = "/{Id}")
-    public Optional<Post> getPostById(@PathVariable Integer Id){
-        return postService.getPost(Id);
+    public List<Post> getPostByUserId(@PathVariable Integer Id){
+        return postService.getPostByUserId(Id);
     }
+    @PostMapping(path = "/sort/")
+    public List<Post> sortPostByParameter(@RequestParam boolean Popular,@RequestParam boolean Date,@RequestParam boolean Comments,@RequestBody List<Post> posts){
+        List<Post> sortedPosts=posts;
+        if(Comments)
+            sortedPosts=postService.sortPostsByParameter(3,sortedPosts);
+        if(Date)
+            sortedPosts=postService.sortPostsByParameter(1,sortedPosts);
+        if(Popular)
+            sortedPosts=postService.sortPostsByParameter(2,sortedPosts);
+        return sortedPosts;
+    }
+
     @PutMapping("/{postId}")
     public void updatePost(@RequestBody Post post, @PathVariable Integer postId){
         if (post.getTitle() == null || post.getContent() == null) return;
@@ -41,5 +54,9 @@ public class PostController {
     @DeleteMapping( path = "/{postId}")
     public void deletePost(@PathVariable("postId") Integer postId){
         postService.deletePost(postId);
+    }
+    @GetMapping(path = "/search/{searchText}")
+    public List<Post> searchPostByText(@PathVariable String searchText){
+        return postService.getPostByText(searchText);
     }
 }

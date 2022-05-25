@@ -2,6 +2,7 @@ import 'dart:html';
 
 import 'package:flutter/material.dart';
 import 'package:homepage/forum/utilities/Utilities.dart';
+import '../ForumGlobals.dart' as globals;
 
 import 'package:homepage/forum/classes/PostClass.dart';
 
@@ -16,18 +17,22 @@ class MyPosts extends StatefulWidget {
 }
 
 class _MyPostsState extends State<MyPosts> {
-  List<Post> myPosts = <Post>[];
   late List<Post> selectedPosts;
 
   @override
   void initState() {
-    Post.getLocalPosts().then(
-      (value) {
-        setState(() {
-          myPosts.addAll(value);
-        });
-      },
-    );
+    if (globals.isSorted == false) {
+      Post.getMyPosts(1).then(
+        (value) {
+          setState(() {
+            globals.myPosts = value;
+          });
+        },
+      );
+    } else {
+      globals.isSorted = false;
+    }
+
     selectedPosts = [];
     super.initState();
   }
@@ -45,7 +50,8 @@ class _MyPostsState extends State<MyPosts> {
   //functia pentru butonul remove
   deleteSelectedPosts() async {
     setState(() {
-      Post.removePosts(selectedPosts, myPosts);
+      Post.removePosts(selectedPosts);
+      globals.isChanged = true;
     });
   }
 
@@ -70,7 +76,11 @@ class _MyPostsState extends State<MyPosts> {
                         Expanded(
                           flex: 0,
                           child: ButtonBack(
-                              context: context, width: 40, height: 40),
+                            context: context,
+                            width: 40,
+                            height: 40,
+                            route: '/',
+                          ),
                         ),
                         Expanded(
                           child: CustomTitle(
@@ -84,7 +94,9 @@ class _MyPostsState extends State<MyPosts> {
                   SearchBar(),
                   Container(
                     height: 230,
-                    child: Center(child: CustomSort(height: 230, width: 160)),
+                    child: Center(
+                        child: CustomSort(
+                            height: 230, width: 160, route: '/myposts')),
                   ),
                   Container(
                     child: Center(
@@ -140,7 +152,11 @@ class _MyPostsState extends State<MyPosts> {
                         Expanded(
                           flex: 0,
                           child: ButtonBack(
-                              context: context, width: 40, height: 40),
+                            context: context,
+                            width: 40,
+                            height: 40,
+                            route: '/',
+                          ),
                         ),
                         Expanded(
                           child: CustomTitle(
@@ -154,7 +170,9 @@ class _MyPostsState extends State<MyPosts> {
                   SearchBar(),
                   Container(
                     height: 230,
-                    child: Center(child: CustomSort(height: 230, width: 160)),
+                    child: Center(
+                        child: CustomSort(
+                            height: 230, width: 160, route: '/myposts')),
                   ),
                   Container(
                     child: Center(
@@ -205,7 +223,11 @@ class _MyPostsState extends State<MyPosts> {
                         Expanded(
                           flex: 0,
                           child: ButtonBack(
-                              context: context, width: 40, height: 40),
+                            context: context,
+                            width: 40,
+                            height: 40,
+                            route: '/',
+                          ),
                         ),
                         Expanded(
                           child: CustomTitle(
@@ -227,7 +249,11 @@ class _MyPostsState extends State<MyPosts> {
                             children: [
                               Container(
                                 margin: const EdgeInsets.only(top: 10.0),
-                                child: CustomSort(height: 230, width: 160),
+                                child: CustomSort(
+                                  height: 230,
+                                  width: 160,
+                                  route: '/myPosts',
+                                ),
                               ),
                               Container(
                                 margin: const EdgeInsets.only(top: 10.0),
@@ -414,7 +440,7 @@ class _MyPostsState extends State<MyPosts> {
                       )),
                 ),
               ],
-              rows: myPosts
+              rows: globals.myPosts
                   .map(
                     (post) => DataRow(
                       //For checkboxes
@@ -443,7 +469,10 @@ class _MyPostsState extends State<MyPosts> {
                                   Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                        builder: (context) => POST(post: post)),
+                                        builder: (context) => POST(
+                                              post: post,
+                                              homeRoute: '/myposts',
+                                            )),
                                   );
                                 },
                               ),

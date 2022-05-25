@@ -7,7 +7,7 @@ import java.util.Optional;
 
 
 @RestController
-@RequestMapping("/products")
+@RequestMapping("/api/products")
 public class ProductController {
 
     private final ProductService productService;
@@ -36,6 +36,11 @@ public class ProductController {
         return productService.getByCategoryId(categoryId);
     }
 
+    @GetMapping("/price-range")
+    public List<Product> getByPriceRange(@RequestParam (value = "lower") Double lower,@RequestParam (value = "upper") Double upper){
+        return productService.getByPriceRange(lower,upper);
+    }
+
     @PostMapping("/add")
     public void add (@RequestBody Product product){
         productService.addNew(product);
@@ -47,9 +52,8 @@ public class ProductController {
     }
 
     @PutMapping("update/{Id}")
-    public void update(@RequestBody Product product, @PathVariable Integer Id){
+    public void update(@RequestBody Product product, @PathVariable Integer Id){                                                             
         product.setId(Id);
         productService.update(product);
     }
-
 }
