@@ -40,6 +40,10 @@ public class ProductController {
     public List<Product> getByPriceRange(@RequestParam (value = "lower") Double lower,@RequestParam (value = "upper") Double upper){
         return productService.getByPriceRange(lower,upper);
     }
+    @GetMapping("/name")
+    public List<Product> getByPartOfName(@RequestParam (value = "string")String string){
+        return productService.getByString(string);
+    }
 
     @PostMapping("/add")
     public void add (@RequestBody Product product){

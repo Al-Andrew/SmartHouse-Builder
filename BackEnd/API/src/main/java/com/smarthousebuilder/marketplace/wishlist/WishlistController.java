@@ -18,6 +18,7 @@ public class WishlistController {
                     @RequestParam (value = "wishlistName")String name){
         boolean conditionIfUserHasWishlist = wishlistService.existsByUserId(userId);
 
+       
         if(!conditionIfUserHasWishlist){
             wishlistService.AddFirstTime(userId,productId,name);
         }
@@ -30,5 +31,10 @@ public class WishlistController {
     @GetMapping
     public void all(@RequestParam (value = "wishlistId") Integer wishlistId){
         wishlistService.getByWishlistId(wishlistId);
+    }
+
+    @DeleteMapping
+    public void delete(@RequestParam (value = "wishlistId") Integer wishlistId){
+        wishlistService.deleteById(wishlistId);
     }
 }
