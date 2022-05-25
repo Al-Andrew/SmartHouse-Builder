@@ -57,6 +57,10 @@ public class PostController {
     }
     @GetMapping(path = "/search/{searchText}")
     public List<Post> searchPostByText(@PathVariable String searchText){
-        return postService.getPostByText(searchText);
+        return postService.getUserPostByText(-1,searchText);
+    }
+    @GetMapping(path = "/search/{idUser}/{searchText}")
+    public List<Post> searchUserPostByText(@PathVariable Integer idUser,@PathVariable String searchText){
+        return postService.getUserPostByText(idUser,searchText);
     }
 }
