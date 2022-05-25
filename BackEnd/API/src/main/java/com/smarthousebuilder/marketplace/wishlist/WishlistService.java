@@ -8,6 +8,7 @@ import com.smarthousebuilder.wishlistItem.WishlistItemRepository;
 
 import org.springframework.stereotype.Service;
 
+import java.sql.SQLException;
 import java.util.Date;
 import java.util.Optional;
 
@@ -92,7 +93,27 @@ public class WishlistService {
         wishlistItemRepository.findAllByWishlistId(wishlistId);
     }
 
-    public void deleteById(Integer wishlistId) {
-        wishlistRepository.deleteById(wishlistId);
+
+    public void deleteOneFromWishlist(Integer wishlistId, Integer productId) {
+
+        boolean existsWishlist = wishlistRepository.existsById(wishlistId);
+
+        if (!existsWishlist)
+            throw new IllegalStateException("No wishlist with id " + wishlistId);
+
+        boolean existsProductInWishlist = wishlistItemRepository.existsByProductIdAndWishlistId(productId, wishlistId);
+
+        if (!existsProductInWishlist)
+            throw new IllegalStateException("Can't delete product from wishlist that is not in wishlist!");
+
+
+        int numberOfProductsInWishlist = wishlistItemRepository.countAllById(wishlistId);
+
+        if (numberOfProductsInWishlist == 1) {
+            wishlistItemRepository.delete(wishlistItemRepository.getByProductIdAndWishlistId(productId, wishlistId));
+            wishlistRepository.deleteById(wishlistId);
+        } else {
+                wishlistItemRepository.delete(wishlistItemRepository.getByProductIdAndWishlistId(productId, wishlistId));
+        }
     }
 }
