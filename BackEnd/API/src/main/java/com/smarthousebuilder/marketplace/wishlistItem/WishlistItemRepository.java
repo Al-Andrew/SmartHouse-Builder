@@ -10,4 +10,10 @@ public interface WishlistItemRepository extends JpaRepository<WishlistItems,Inte
     Boolean existsByWishlistIdAndAndProductId(Integer wishlistId, Integer productId);
 
     WishlistItems findAllByWishlistId(Integer wishlistId);
+
+    Boolean existsByProductIdAndWishlistId(Integer productId, Integer wishlistId);
+
+    WishlistItems getByProductIdAndWishlistId(Integer productId, Integer wishlistId);
+
+    Integer countAllById(Integer wishlistId);
 }
