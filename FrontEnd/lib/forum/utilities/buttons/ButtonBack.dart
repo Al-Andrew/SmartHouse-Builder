@@ -2,7 +2,9 @@ import 'dart:html';
 
 import 'package:flutter/material.dart';
 import 'package:homepage/forum/classes/PostClass.dart';
+import 'package:homepage/forum/screens/ForumHomePage.dart';
 import '../../ForumGlobals.dart' as globals;
+import '../../screens/MyPosts.dart';
 import '../PostsTable.dart';
 
 class ButtonBack extends StatefulWidget {
@@ -34,15 +36,70 @@ class _ButtonBackState extends State<ButtonBack> {
         child: IconButton(
           onPressed: () {
             if (globals.isChanged) {
-              Navigator.of(context)
-                  .pushNamedAndRemoveUntil(this.widget.route, (route) => false);
               if (this.widget.route == '/myposts') {
+                if (globals.checkedPopularM ||
+                    globals.checkedCommentedM ||
+                    globals.checkedRecentM) {
+                  Post.sortPosts(
+                      globals.checkedRecentM,
+                      globals.checkedCommentedM,
+                      globals.checkedPopularM,
+                      widget.route);
+                  globals.checkedCommentedM = false;
+                  globals.checkedPopularM = false;
+                  globals.checkedRecentM = false;
+                } else {
+                  globals.nrPrefferencesMyPost = 0;
+                }
+                Navigator.of(context).pushAndRemoveUntil(
+                    MaterialPageRoute(builder: (child) => const MyPosts()),
+                    (route) => false);
                 globals.isChanged = true;
               } else {
-                globals.isChanged = false;
+                if (globals.checkedPopularH ||
+                    globals.checkedCommentedH ||
+                    globals.checkedRecentH) {
+                  Post.sortPosts(
+                      globals.checkedRecentH,
+                      globals.checkedCommentedH,
+                      globals.checkedPopularH,
+                      widget.route);
+                  globals.checkedCommentedH = false;
+                  globals.checkedPopularH = false;
+                  globals.checkedRecentH = false;
+                  globals.isChanged = true;
+                } else {
+                  globals.isChanged = false;
+                  globals.nrPrefferencesHomePage = 0;
+                  globals.nrPrefferencesMyPost = 0;
+                }
+
+                Navigator.of(context).pushAndRemoveUntil(
+                    MaterialPageRoute(builder: (child) => ForumHomePage()),
+                    (route) => false);
               }
             } else {
-              Navigator.of(context).pop();
+              if (globals.checkedCommentedM ||
+                  globals.checkedPopularM ||
+                  globals.checkedRecentM) {
+                globals.checkedCommentedM = false;
+                globals.checkedPopularM = false;
+                globals.checkedRecentM = false;
+                globals.nrPrefferencesMyPost = 0;
+                Navigator.of(context).pushAndRemoveUntil(
+                    MaterialPageRoute(builder: (child) => MyPosts()),
+                    (route) => false);
+              } else if (globals.checkedCommentedH ||
+                  globals.checkedPopularH ||
+                  globals.checkedRecentH) {
+                globals.checkedCommentedH = false;
+                globals.checkedPopularH = false;
+                globals.checkedRecentH = false;
+                globals.nrPrefferencesHomePage = 0;
+                Navigator.of(context).pop();
+              } else {
+                Navigator.of(context).pop();
+              }
             }
           },
           icon: Icon(Icons.arrow_back),

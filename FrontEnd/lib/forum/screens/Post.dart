@@ -878,6 +878,7 @@ class _POSTState extends State<POST> {
         child: IconButton(
           onPressed: () {
             setState(() {
+              globals.isChanged = true;
               if (!_isLiked) {
                 _likeIconColor = Colors.red;
                 _isLiked = true;
@@ -927,11 +928,12 @@ class _POSTState extends State<POST> {
   Future share() async {
     final topic = widget.post.topic;
     final content = widget.post.content;
-    final postUrl = window.location.href; //to get the link of current tab, maybe we will implement this in the future
+    final postUrl = window.location
+        .href; //to get the link of current tab, maybe we will implement this in the future
     //We could share the link of the post instead of contet, but our link is the same for all pages :\
     final url = 'https://twitter.com/intent/tweet?text=$topic%0D%0A$content';
     Uri finalUri = Uri.parse(url);
-    if(await canLaunchUrl(finalUri)){
+    if (await canLaunchUrl(finalUri)) {
       await launchUrl(finalUri);
     }
   }

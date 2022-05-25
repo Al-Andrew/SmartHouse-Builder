@@ -29,10 +29,7 @@ class _ForumHomePageState extends State<ForumHomePage> {
             return SingleChildScrollView(
               child: Column(
                 children: <Widget>[
-                  CustomTitle(
-                    text: "Forum",
-                    fontSize: 35,
-                  ),
+                  Title(),
                   SearchBar(),
                   Container(
                     height: 230,
@@ -84,10 +81,7 @@ class _ForumHomePageState extends State<ForumHomePage> {
             return SingleChildScrollView(
               child: Column(
                 children: <Widget>[
-                  CustomTitle(
-                    text: "Forum",
-                    fontSize: 35,
-                  ),
+                  Title(),
                   SearchBar(),
                   Container(
                     height: 230,
@@ -139,10 +133,7 @@ class _ForumHomePageState extends State<ForumHomePage> {
             return SingleChildScrollView(
               child: Column(
                 children: <Widget>[
-                  CustomTitle(
-                    text: "Forum",
-                    fontSize: 35,
-                  ),
+                  Title(),
                   SearchBar(),
                   Container(
                     height: 400,
@@ -190,5 +181,39 @@ class _ForumHomePageState extends State<ForumHomePage> {
         }),
       ),
     );
+  }
+
+  Widget Title() {
+    if (globals.isSorted == true) {
+      return Padding(
+        padding: const EdgeInsets.only(left: 10.0),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Expanded(
+              flex: 0,
+              child: ButtonBack(
+                context: context,
+                width: 40,
+                height: 40,
+                route: '/',
+              ),
+            ),
+            Expanded(
+              child: CustomTitle(
+                text: "Forum",
+                fontSize: 35,
+              ),
+            ),
+          ],
+        ),
+      );
+    } else {
+      return CustomTitle(
+        text: "Forum",
+        fontSize: 35,
+      );
+    }
   }
 }

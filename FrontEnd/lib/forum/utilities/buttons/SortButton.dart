@@ -1,9 +1,14 @@
 import 'dart:html';
+import 'package:homepage/forum/Forum.dart';
+import 'package:homepage/forum/screens/ForumHomePage.dart';
+
 import '../../ForumGlobals.dart' as globals;
 
 import 'package:flutter/material.dart';
 import 'package:homepage/forum/screens/CreatePost.dart';
 import 'package:homepage/forum/classes/PostClass.dart';
+
+import '../../screens/MyPosts.dart';
 
 class SortButton extends StatelessWidget {
   SortButton({
@@ -36,10 +41,44 @@ class SortButton extends StatelessWidget {
       child: ElevatedButton(
         onPressed: () {
           if (checkedCommented || checkedPopular || checkedRecent) {
-            globals.isChanged = true;
-            globals.isSorted = true;
+            if (route == '/') {
+              globals.checkedCommentedH = checkedCommented;
+              globals.checkedPopularH = checkedPopular;
+              globals.checkedRecentH = checkedRecent;
+            } else {
+              globals.checkedCommentedM = checkedCommented;
+              globals.checkedPopularM = checkedPopular;
+              globals.checkedRecentM = checkedRecent;
+            }
             Post.sortPosts(
-                checkedRecent, checkedCommented, checkedPopular, '/myposts');
+                checkedRecent, checkedCommented, checkedPopular, route);
+            // globals.isChanged = true;
+            globals.isSorted = true;
+            if (route == '/') {
+              globals.nrPrefferencesHomePage++;
+              print(globals.nrPrefferencesHomePage);
+              if (globals.nrPrefferencesHomePage == 1) {
+                Navigator.of(context).push(
+                    MaterialPageRoute(builder: (child) => ForumHomePage()));
+              } else {
+                Navigator.of(context).pop();
+                Navigator.of(context).push(
+                  MaterialPageRoute(builder: (child) => ForumHomePage()),
+                );
+              }
+            } else {
+              globals.nrPrefferencesMyPost++;
+
+              if (globals.nrPrefferencesMyPost == 1) {
+                Navigator.of(context).push(
+                    MaterialPageRoute(builder: (child) => const MyPosts()));
+              } else {
+                Navigator.of(context).pop();
+                Navigator.of(context).push(
+                  MaterialPageRoute(builder: (child) => const MyPosts()),
+                );
+              }
+            }
           }
         },
         child: Text(

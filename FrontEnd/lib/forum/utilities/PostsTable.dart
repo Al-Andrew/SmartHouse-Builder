@@ -28,22 +28,35 @@ class PostsTabel extends StatefulWidget {
 }
 
 class _PostsTabelState extends State<PostsTabel> {
+  List<Post> posts = [];
   @override
   void initState() {
+    if (globals.isSorted == false) {
+      Post.getPosts().then(
+        (value) {
+          setState(() {
+            posts = value;
+            globals.posts = value;
+            globals.sortedPosts = value;
+          });
+        },
+      );
+    } else {
+      setState(() {
+        globals.isSorted = false;
+        posts = globals.sortedPosts;
+      });
+    }
     super.initState();
   }
 
   @override
-  FutureBuilder build(BuildContext context) {
-    return FutureBuilder(
-        future: Post.getPosts(),
-        builder: (context, snapshot) {
-          if (snapshot.data != null) {
-            return PostsTableBody(snapshot.data, context);
-          } else {
-            return CircularProgressIndicator();
-          }
-        });
+  Widget build(BuildContext context) {
+    if (posts.length > 0) {
+      return PostsTableBody(posts, context);
+    } else {
+      return CircularProgressIndicator();
+    }
   }
 
   SingleChildScrollView PostsTableBody(List<Post> posts, BuildContext context) {
