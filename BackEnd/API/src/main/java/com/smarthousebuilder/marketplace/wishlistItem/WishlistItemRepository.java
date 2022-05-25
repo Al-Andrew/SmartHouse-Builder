@@ -1,4 +1,4 @@
-package com.smarthousebuilder.wishlistItem;
+package com.smarthousebuilder.marketplace.wishlistItem;
 
 import com.smarthousebuilder.marketplace.wishlistItem.WishlistItems;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -16,4 +16,6 @@ public interface WishlistItemRepository extends JpaRepository<WishlistItems,Inte
     WishlistItems getByProductIdAndWishlistId(Integer productId, Integer wishlistId);
 
     Integer countAllById(Integer wishlistId);
+
+    void deleteAllByWishlistId(Integer wishlistId);
 }
