@@ -4,14 +4,16 @@ import 'package:flutter/material.dart';
 import './buttons/SortButton.dart';
 
 class CustomSort extends StatefulWidget {
-  const CustomSort({
+  CustomSort({
     Key? key,
     required this.height,
     required this.width,
+    required this.route,
   }) : super(key: key);
 
   final double height;
   final double width;
+  String route;
 
   @override
   State<CustomSort> createState() => _CustomSortState();
@@ -52,7 +54,14 @@ class _CustomSortState extends State<CustomSort> {
               CheckedRecent(),
               CheckedPopular(),
               CheckedCommented(),
-              SortButton(width: 100, height: 35),
+              SortButton(
+                width: 100,
+                height: 35,
+                checkedCommented: checkedCommented,
+                checkedPopular: checkedPopular,
+                checkedRecent: checkedRecent,
+                route: widget.route,
+              ),
             ],
           ),
         ],

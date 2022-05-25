@@ -1,6 +1,10 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:homepage/widgets/HomepageBuildSection.dart';
 import 'package:simple_gradient_text/simple_gradient_text.dart';
+import 'package:http/http.dart' as http;
 
 class ContactUs extends StatefulWidget {
   const ContactUs();
@@ -10,6 +14,11 @@ class ContactUs extends StatefulWidget {
 }
 
 class _ContactUsState extends State<ContactUs> {
+  final controllerFirstName = TextEditingController();
+  final controllerLastName = TextEditingController();
+  final controllerEmail = TextEditingController();
+  final controllerMessage = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
@@ -108,7 +117,12 @@ class _ContactUsState extends State<ContactUs> {
                             child: SizedBox(
                               width:
                                   MediaQuery.of(context).size.width * 66 / 400,
-                              child: const NameTextField(),
+                              child: customHintTextField(
+                                  title: "First Name",
+                                  controller: controllerFirstName,
+                                  minLines: 1,
+                                  maxLines: 1,
+                                  lengthOfText: 15),
                             ),
                           ),
                           Container(
@@ -116,7 +130,12 @@ class _ContactUsState extends State<ContactUs> {
                             child: SizedBox(
                               width:
                                   MediaQuery.of(context).size.width * 66 / 400,
-                              child: const LastNameTextField(),
+                              child: customHintTextField(
+                                  title: "Last Name",
+                                  controller: controllerLastName,
+                                  minLines: 1,
+                                  maxLines: 1,
+                                  lengthOfText: 15),
                             ),
                           )
                         ],
@@ -126,7 +145,12 @@ class _ContactUsState extends State<ContactUs> {
                           alignment: Alignment.topLeft,
                           child: SizedBox(
                             width: MediaQuery.of(context).size.width / 3,
-                            child: const MailTextField(),
+                            child: customHintTextField(
+                                title: "Your e-mail address",
+                                controller: controllerEmail,
+                                minLines: 1,
+                                maxLines: 1,
+                                lengthOfText: 40),
                           )),
                       Container(
                           alignment: Alignment.bottomLeft,
@@ -140,7 +164,12 @@ class _ContactUsState extends State<ContactUs> {
                           alignment: Alignment.topLeft,
                           child: SizedBox(
                             width: MediaQuery.of(context).size.width / 3,
-                            child: const MessageTextField(),
+                            child: customHintTextField(
+                                title: "Write down your message!",
+                                controller: controllerMessage,
+                                minLines: 6,
+                                maxLines: 10,
+                                lengthOfText: 400),
                           ))
                     ],
                   ),
@@ -161,7 +190,11 @@ class _ContactUsState extends State<ContactUs> {
                             primary: Colors.white,
                             textStyle: const TextStyle(fontSize: 20),
                           ),
-                          onPressed: () {},
+                          onPressed: () => sendEmail(
+                              firstName: controllerFirstName.text,
+                              lastName: controllerLastName.text,
+                              email: controllerEmail.text,
+                              message: controllerMessage.text),
                           child: GradientText(
                             'SUBMIT',
                             style: const TextStyle(
@@ -188,79 +221,59 @@ class _ContactUsState extends State<ContactUs> {
   }
 }
 
-class NameTextField extends StatefulWidget {
-  const NameTextField();
-  @override
-  State<NameTextField> createState() => _NameFieldState();
-}
-
-class _NameFieldState extends State<NameTextField> {
-  @override
-  Widget build(BuildContext context) {
-    return const TextField(
-      decoration: InputDecoration(
-          fillColor: Color.fromARGB(255, 255, 255, 255),
-          filled: true,
-          hintText: "First Name"),
+Widget customHintTextField(
+        {required String title,
+        required TextEditingController controller,
+        required int minLines,
+        required int maxLines,
+        required int lengthOfText}) =>
+    Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        TextFormField(
+          validator: (value) {
+            if (value == null || value.isEmpty) {
+              return '*Please enter your username/e-mail';
+            }
+            return null;
+          },
+          controller: controller,
+          decoration: InputDecoration(
+              fillColor: const Color.fromARGB(255, 255, 255, 255),
+              filled: true,
+              hintText: title),
+          minLines: minLines,
+          maxLines: maxLines,
+          inputFormatters: [
+            LengthLimitingTextInputFormatter(
+                lengthOfText) //n is maximum number of characters you want in textfield
+          ],
+          keyboardType: TextInputType.multiline,
+        )
+      ],
     );
-  }
-}
 
-class LastNameTextField extends StatefulWidget {
-  const LastNameTextField();
-  @override
-  State<LastNameTextField> createState() => _LastNameFieldState();
-}
-
-class _LastNameFieldState extends State<LastNameTextField> {
-  @override
-  Widget build(BuildContext context) {
-    return const TextField(
-      decoration: InputDecoration(
-          fillColor: Color.fromARGB(255, 255, 255, 255),
-          filled: true,
-          hintText: "Last Name"),
+Widget customFAQTextBox({
+  required String title,
+  required Color color,
+  double height = 50,
+}) =>
+    Container(
+      margin: const EdgeInsets.only(top: 5.0, left: 20.0, right: 20.0),
+      decoration: BoxDecoration(
+        borderRadius: const BorderRadius.all(Radius.circular(7)),
+        color: color,
+      ),
+      height: height,
+      width: 600,
+      alignment: Alignment.center,
+      child: SelectableText(title,
+          textAlign: TextAlign.left,
+          style: const TextStyle(
+            fontFamily: 'BebasNeuePro',
+            fontSize: 30,
+          )),
     );
-  }
-}
-
-class MailTextField extends StatefulWidget {
-  const MailTextField();
-  @override
-  State<MailTextField> createState() => _MailFieldState();
-}
-
-class _MailFieldState extends State<MailTextField> {
-  @override
-  Widget build(BuildContext context) {
-    return const TextField(
-      decoration: InputDecoration(
-          fillColor: Color.fromARGB(255, 255, 255, 255),
-          filled: true,
-          hintText: "Your email address"),
-    );
-  }
-}
-
-class MessageTextField extends StatefulWidget {
-  const MessageTextField();
-  @override
-  State<MessageTextField> createState() => _MessageFieldState();
-}
-
-class _MessageFieldState extends State<MessageTextField> {
-  @override
-  Widget build(BuildContext context) {
-    return const TextField(
-        keyboardType: TextInputType.multiline,
-        decoration: InputDecoration(
-            fillColor: Color.fromARGB(255, 255, 255, 255),
-            filled: true,
-            hintText: "Write down your message!"),
-        minLines: 6,
-        maxLines: 10);
-  }
-}
 
 class FAQ extends StatefulWidget {
   const FAQ();
@@ -282,136 +295,74 @@ class _FAQState extends State<FAQ> {
                     fontFamily: 'BebasNeuePro',
                     fontSize: 50,
                     color: Colors.indigo))),
-        Container(
-          margin: const EdgeInsets.only(top: 50.0, left: 20.0, right: 20.0),
-          decoration: const BoxDecoration(
-            borderRadius: BorderRadius.all(Radius.circular(7)),
-            color: Color.fromARGB(255, 255, 255, 255),
-          ),
-          height: 50,
-          width: 600,
-          alignment: Alignment.center,
-          child: const SelectableText('Intrebare',
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                  fontFamily: 'BebasNeuePro',
-                  fontSize: 30,
-                  fontWeight: FontWeight.bold)),
-        ),
-        Container(
-          margin: const EdgeInsets.only(top: 5.0, left: 20.0, right: 20.0),
-          decoration: const BoxDecoration(
-            borderRadius: BorderRadius.all(Radius.circular(7)),
-            color: Color.fromARGB(100, 255, 255, 255),
-          ),
-          height: 50,
-          width: 600,
-          alignment: Alignment.center,
-          child: const SelectableText('Raspuns',
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                fontFamily: 'BebasNeuePro',
-                fontSize: 30,
-              )),
-        ),
-        Container(
-          margin: const EdgeInsets.only(top: 40.0, left: 20.0, right: 20.0),
-          decoration: const BoxDecoration(
-            borderRadius: BorderRadius.all(Radius.circular(7)),
-            color: Color.fromARGB(255, 255, 255, 255),
-          ),
-          height: 50,
-          width: 600,
-          alignment: Alignment.center,
-          child: const SelectableText('Intrebare',
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                  fontFamily: 'BebasNeuePro',
-                  fontSize: 30,
-                  fontWeight: FontWeight.bold)),
-        ),
-        Container(
-          margin: const EdgeInsets.only(top: 5.0, left: 20.0, right: 20.0),
-          decoration: const BoxDecoration(
-            borderRadius: BorderRadius.all(Radius.circular(7)),
-            color: Color.fromARGB(100, 255, 255, 255),
-          ),
-          height: 50,
-          width: 600,
-          alignment: Alignment.center,
-          child: const SelectableText('Raspuns',
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                fontFamily: 'BebasNeuePro',
-                fontSize: 30,
-              )),
-        ),
-        Container(
-          margin: const EdgeInsets.only(top: 50.0, left: 20.0, right: 20.0),
-          decoration: const BoxDecoration(
-            borderRadius: BorderRadius.all(Radius.circular(7)),
-            color: Color.fromARGB(255, 255, 255, 255),
-          ),
-          height: 50,
-          width: 600,
-          alignment: Alignment.center,
-          child: const SelectableText('Intrebare',
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                  fontFamily: 'BebasNeuePro',
-                  fontSize: 30,
-                  fontWeight: FontWeight.bold)),
-        ),
-        Container(
-          margin: const EdgeInsets.only(top: 5.0, left: 20.0, right: 20.0),
-          decoration: const BoxDecoration(
-            borderRadius: BorderRadius.all(Radius.circular(7)),
-            color: Color.fromARGB(100, 255, 255, 255),
-          ),
-          height: 50,
-          width: 600,
-          alignment: Alignment.center,
-          child: const SelectableText('Raspuns',
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                fontFamily: 'BebasNeuePro',
-                fontSize: 30,
-              )),
-        ),
-        Container(
-          margin: const EdgeInsets.only(top: 40.0, left: 20.0, right: 20.0),
-          decoration: const BoxDecoration(
-            borderRadius: BorderRadius.all(Radius.circular(7)),
-            color: Color.fromARGB(255, 255, 255, 255),
-          ),
-          height: 50,
-          width: 600,
-          alignment: Alignment.center,
-          child: const SelectableText('Intrebare',
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                  fontFamily: 'BebasNeuePro',
-                  fontSize: 30,
-                  fontWeight: FontWeight.bold)),
-        ),
-        Container(
-          margin: const EdgeInsets.only(
-              top: 5.0, left: 20.0, right: 20.0, bottom: 20.0),
-          decoration: const BoxDecoration(
-            borderRadius: BorderRadius.all(Radius.circular(7)),
-            color: Color.fromARGB(100, 255, 255, 255),
-          ),
-          height: 50,
-          width: 600,
-          alignment: Alignment.center,
-          child: const SelectableText('Raspuns',
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                fontFamily: 'BebasNeuePro',
-                fontSize: 30,
-              )),
-        ),
+        customFAQTextBox(
+            title: 'What is SHB?',
+            color: const Color.fromARGB(255, 255, 255, 255)),
+        customFAQTextBox(
+            title:
+                'SHB stands for Smart House Builder, a web app that allows you to create your dream house! You can modify your house layout to your liking and add different kinds of smart devices. Not only that, but you’ll get different suggestions depending the devices’ compatibility.',
+            color: const Color.fromARGB(100, 255, 255, 255),
+            height: 200),
+        const SizedBox(height: 7),
+        customFAQTextBox(
+            title: 'How do I make an account?',
+            color: const Color.fromARGB(255, 255, 255, 255)),
+        customFAQTextBox(
+            title:
+                'By simply clicking on the “Sign Up” button that can be found on the upper right corner.',
+            color: const Color.fromARGB(100, 255, 255, 255),
+            height: 70),
+        const SizedBox(height: 7),
+        customFAQTextBox(
+            title: 'I forgot my password, what can I do?',
+            color: const Color.fromARGB(255, 255, 255, 255)),
+        customFAQTextBox(
+            title:
+                'If you try to log in, but you realize you have forgotten your password, don’t worry! Just click on the “Forgot password?” button, which will lead you to a new page. You will be requested to write your email address that you used to create your account. After that, an email will be sent to you which will contain a new random password. After accessing your account with the new password, go to settings and change that password asap.',
+            color: const Color.fromARGB(100, 255, 255, 255),
+            height: 200),
+        const SizedBox(height: 7),
+        customFAQTextBox(
+            title: 'Can I buy products? How?',
+            color: const Color.fromARGB(255, 255, 255, 255)),
+        customFAQTextBox(
+            title:
+                'There are more ways of purchasing products. The first way is by clicking on the “Marketplace” button, that will lead to the page which contains all the available products. Another way is by starting to create your own house layout. You’ll receive some products suggestions you may use to decorate your house. If there is any product you are interested in, you can click “Add to cart” in order to purchase the product.',
+            color: const Color.fromARGB(100, 255, 255, 255),
+            height: 200),
+        const SizedBox(height: 7),
       ]),
     );
   }
+}
+
+Future sendEmail({
+  required String firstName,
+  required String lastName,
+  required String email,
+  required String message,
+}) async {
+  const serviceId = 'service_1x8n2vo';
+  const templateId = 'template_cvc84e9';
+  const userId = 'fwYzE-ioCHIsk4MrG';
+
+  final url = Uri.parse('https://api.emailjs.com/api/v1.0/email/send');
+  final response = await http.post(
+    url,
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: json.encode({
+      'service_id': serviceId,
+      'template_id': templateId,
+      'user_id': userId,
+      'template_params': {
+        'user_name': firstName + lastName,
+        'user_message': message,
+        'user_email': email,
+      }
+    }),
+  );
+
+  print(response.body);
 }
