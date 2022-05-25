@@ -7,9 +7,19 @@ import 'package:homepage/forum/Forum.dart';
 import 'package:homepage/shb.dart';
 import 'package:homepage/contact_us.dart';
 import 'package:homepage/signup.dart';
+import 'package:flutter/gestures.dart';
 
 void main() {
   runApp(const MyApp());
+}
+
+class MyCustomScrollBehavior extends MaterialScrollBehavior {
+  // Override behavior methods and getters like dragDevices
+  @override
+  Set<PointerDeviceKind> get dragDevices => {
+        PointerDeviceKind.touch,
+        PointerDeviceKind.mouse,
+      };
 }
 
 class MyApp extends StatelessWidget {
@@ -18,6 +28,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      scrollBehavior: MyCustomScrollBehavior(),
       debugShowCheckedModeBanner: false,
       title: 'Smart House Builder',
       theme: ThemeData(
