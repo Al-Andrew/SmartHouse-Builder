@@ -178,7 +178,7 @@ class Post {
       final uri = Uri.http('smart-house-builder.azurewebsites.net',
           '/api/forum/search/$searchedPost');
 
-      final response = await http.post(uri);
+      final response = await http.get(uri);
       var jsonData = json.decode(response.body);
       List<Post> posts = [];
       for (var v in jsonData) {

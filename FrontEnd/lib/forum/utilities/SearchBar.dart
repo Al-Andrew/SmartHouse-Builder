@@ -65,8 +65,12 @@ class _SearchBarState extends State<SearchBar> {
                     icon: Icon(Icons.search, size: 30.0),
                     onPressed: () {
                       if (SearchController.text.isNotEmpty) {
+                        globals.isSorted = false;
                         globals.isSearched = true;
                         if (widget.route == "/") {
+                          globals.checkedCommentedH = false;
+                          globals.checkedPopularH = false;
+                          globals.checkedRecentH = false;
                           globals.nrPrefferencesHomePage++;
                           globals.searchedH = SearchController.text;
                           if (globals.nrPrefferencesHomePage == 1) {
@@ -80,6 +84,9 @@ class _SearchBarState extends State<SearchBar> {
                             );
                           }
                         } else if (widget.route == "/myposts") {
+                          globals.checkedCommentedM = false;
+                          globals.checkedPopularM = false;
+                          globals.checkedRecentM = false;
                           globals.nrPrefferencesMyPost++;
                           globals.searchedM = SearchController.text;
 
