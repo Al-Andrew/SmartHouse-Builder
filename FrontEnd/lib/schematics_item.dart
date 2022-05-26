@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:homepage/builder.dart';
 import 'package:homepage/schematics_item_expanded.dart';
 
 class SchematicItem extends StatelessWidget {
   final String id;
   final String title;
   final String linkImg;
+  var add;
 
-  SchematicItem(this.id, this.title, this.linkImg);
+  SchematicItem(this.id, this.title, this.linkImg, this.add);
 
   @override
   Widget build(BuildContext context) {
@@ -17,7 +19,8 @@ class SchematicItem extends StatelessWidget {
           onPressed: () => showDialog(
             context: context,
             builder: (BuildContext context) {
-              return SchematicItemExpanded(this.id, this.title, this.linkImg);
+              return SchematicItemExpanded(
+                  this.id, this.title, this.linkImg, this.add);
             },
           ),
           onHover: null,
