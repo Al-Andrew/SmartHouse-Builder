@@ -209,12 +209,13 @@ class Post {
     if (route == "/") {
       checkedRecent = globals.checkedRecentH;
       checkedCommented = globals.checkedCommentedH;
-      checkedPopular = globals.checkedRecentH;
+      checkedPopular = globals.checkedPopularH;
     } else {
       checkedRecent = globals.checkedRecentM;
       checkedCommented = globals.checkedCommentedM;
-      checkedPopular = globals.checkedRecentM;
+      checkedPopular = globals.checkedPopularM;
     }
+    print("SORT");
     print(checkedPopular);
     print(checkedRecent);
     print(checkedCommented);

@@ -38,7 +38,7 @@ class _ForumHomePageState extends State<ForumHomePage> {
                       children: [
                         Center(
                             child: CustomSort(
-                                height: 230, width: 160, route: '/')),
+                                height: 230, width: 160, route: "/")),
                         Column(
                           children: [
                             Container(
@@ -90,7 +90,7 @@ class _ForumHomePageState extends State<ForumHomePage> {
                       children: [
                         Center(
                             child: CustomSort(
-                                height: 230, width: 160, route: '/')),
+                                height: 230, width: 160, route: "/")),
                         Column(
                           children: [
                             Container(
@@ -152,7 +152,7 @@ class _ForumHomePageState extends State<ForumHomePage> {
                                 child: CustomSort(
                                   height: 230,
                                   width: 160,
-                                  route: '/',
+                                  route: "/",
                                 ),
                               ),
                             ],

@@ -14,7 +14,7 @@ class CustomSort extends StatefulWidget {
 
   final double height;
   final double width;
-  String route;
+  final String route;
 
   @override
   State<CustomSort> createState() => _CustomSortState();
@@ -25,15 +25,19 @@ class _CustomSortState extends State<CustomSort> {
   bool checkedPopular = false;
   bool checkedCommented = false;
 
-  void _oncheckedRecent(bool newValue) => setState(() {
-        checkedRecent = newValue;
+  @override
+  void initState() {
+    if (widget.route == "/") {
+      checkedRecent = globals.checkedRecentH;
+      checkedPopular = globals.checkedPopularH;
+      checkedCommented = globals.checkedCommentedH;
+    } else {
+      checkedRecent = globals.checkedRecentM;
+      checkedPopular = globals.checkedPopularM;
+      checkedCommented = globals.checkedCommentedM;
+    }
+  }
 
-        if (checkedRecent) {
-          // TODO: Here goes your functionality that remembers the user.
-        } else {
-          // TODO: Forget the user
-        }
-      });
   @override
   Widget build(BuildContext context) {
     return Container(
