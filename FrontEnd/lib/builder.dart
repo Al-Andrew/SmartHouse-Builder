@@ -28,7 +28,6 @@ class BuilderState extends State<BuilderCon> {
     return GameWidget(game: flameContext);
   }
 }
-
 class Builder extends FlameGame with HasTappables, HasDraggables {
   @override
   Future<void>? onLoad() {
@@ -37,7 +36,7 @@ class Builder extends FlameGame with HasTappables, HasDraggables {
     //add(Wall()
     //  ..y = 350
     //  ..x = 400);
-    add(Window());
+    add(Wall());
     return super.onLoad();
   }
 
@@ -51,6 +50,14 @@ class Builder extends FlameGame with HasTappables, HasDraggables {
     propagateToChildren(
       (Tappable child) => child.handleTapUp(pointerId, info),
     );
+  }
+  void AddNewComponent(int id) {
+    //0 = wall 1 = window 2 = door
+    if (id <= 2 && id >= 0) {
+      if (id == 1)
+        add(Wall());
+      else if (id == 2) add(Window());
+    }
   }
 }
 
@@ -251,6 +258,20 @@ class Window extends BaseSchematic {
   }
 }
 
+class Wall extends BaseSchematic {
+  Wall() : super(Vector2(100, 100));
+
+  @override
+  void render(Canvas canvas) {
+    Paint paint = Paint();
+    paint.style = PaintingStyle.fill;
+    paint.color = Colors.red;
+    paint.strokeWidth = 4;
+
+    Rect myRect = Offset.zero & Size(size.x, size.y);
+    canvas.drawRect(myRect, paint);
+  }
+}
 
 //class Window extends PositionComponent with Draggable, Tappable {
 //  @override

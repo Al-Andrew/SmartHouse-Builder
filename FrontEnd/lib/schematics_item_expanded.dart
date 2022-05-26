@@ -1,4 +1,5 @@
 import 'dart:html';
+import 'builder.dart';
 import 'package:flutter/material.dart';
 
 class SchematicItemExpanded extends StatelessWidget {
@@ -21,7 +22,8 @@ class SchematicItemExpanded extends StatelessWidget {
         actions: [
           Expanded(
               child: FloatingActionButton(
-                  onPressed: null, child: Icon(Icons.add))),
+                  onPressed: null, //AddNewComponent(1),
+                  child: Icon(Icons.add))),
           Expanded(
               child: FloatingActionButton(
                   onPressed: Navigator.of(context).pop,
