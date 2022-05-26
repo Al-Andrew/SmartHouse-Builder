@@ -16,20 +16,20 @@ public class AmazonScraper {
         this.url = url;
     }
 
-    public void startScrape(int howManyPages) {
-       mainScrape(howManyPages);
+    public void startScrape(int startPage, int howManyPages) {
+        mainScrape(startPage,howManyPages);
+        productInformationScrape();
     }
 
-    private void mainScrape(int howManyPages){
-        for (int i = 1; i <= howManyPages; i++) {
+    private void mainScrape(int startPage, int howManyPages){
+        for (int i = startPage; i <= howManyPages; i++) {
             this.url.append(i);
             try {
-                final Document document = Jsoup.connect(String.valueOf(url)).userAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/101.0.4951.67 Safari/537.36").timeout(5000).get();
+                final Document document = Jsoup.connect(String.valueOf(url)).userAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/101.0.4951.67 Safari/537.36").get();
 
                 Elements content = document.select("div.s-card-container.s-overflow-hidden.aok-relative.s-expand-height.s-include-content-margin.s-latency-cf-section.s-card-border");
 
                 for (Element e : content) {
-
                     String nameProduct = e.select("img").attr("alt");
                     nameProduct = nameProduct.replaceAll("Sponsored Ad - ", "");
                     String img = e.select("img").attr("src");
@@ -43,26 +43,9 @@ public class AmazonScraper {
         }
     }
 
-    private void priceScrape(){
-        try {
-            for (Product temporary : this.listOfProducts) {
-                Document connectToProduct = Jsoup.connect(temporary.linkToProduct).userAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/101.0.4951.54 Safari/537.36").timeout(5000).get();
-                Elements contents = connectToProduct.select("div.a-box-inner");
 
-                for (Element e : contents) {
-                    Element price = e.select("div.a-section.a-spacing-micro span.a-offscreen").first();
-                    if (price == null)
-                        continue;
-                    temporary.addPrice(price.text());
-                }
-            }
-        } catch (
-                Exception ex) {
-            ex.printStackTrace();
-        }
-    }
     public void oneProductInformationScrape(Product prod) throws IOException {
-        Document connectToProduct = Jsoup.connect(prod.linkToProduct).userAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/101.0.4951.54 Safari/537.36").timeout(5000).get();
+        Document connectToProduct = Jsoup.connect(prod.productUrl).userAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/101.0.4951.67 Safari/537.36").get();
         Elements details = connectToProduct.select("#prodDetails table");
         if (details.outerHtml().equals("")) {
             Elements technicalDetails = connectToProduct.select("table.a-bordered");
@@ -88,10 +71,28 @@ public class AmazonScraper {
             }
         }
     }
+
     private void productInformationScrape(){
         try {
             for (Product temporary : this.listOfProducts) {
-                Document connectToProduct = Jsoup.connect(temporary.linkToProduct).userAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/101.0.4951.54 Safari/537.36").timeout(5000).get();
+                Document connectToProduct = Jsoup.connect(temporary.productUrl).userAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/101.0.4951.54 Safari/537.36").get();
+                Elements contents = connectToProduct.select("div.a-box-inner");
+                for (Element e : contents) {
+                    Element price = e.select("div.a-section.a-spacing-micro span.a-offscreen").first();
+                    if (price == null)
+                        continue;
+                    temporary.addPrice(Float.parseFloat(price.text().replace("$","").replace(",", "")));
+                }
+
+                //String rating = connectToProduct.select("span.a-size-medium.a-color-base").first().text();
+                String description = connectToProduct.select("ul.a-unordered-list.a-vertical.a-spacing-mini li").text();
+
+                temporary.setDescription(description);
+               // System.out.println(temporary.productUrl);
+               // System.out.println(rating.replace(" out of 5", "").replaceAll("[^\\d.]", ""));
+               // temporary.setRating(Float.parseFloat(rating.replace(" out of 5", "").replaceAll("[^\\d.]", "")));
+
+                //TOTO(Razvan): Trebuie facut ratingul !!!!
                 Elements details = connectToProduct.select("#prodDetails table");
                 if(details.outerHtml().equals("")){
                     Elements technicalDetails = connectToProduct.select("table.a-bordered");
@@ -115,7 +116,6 @@ public class AmazonScraper {
                         }
                     }
                 }
-
             }
         } catch (
                 Exception ex) {
