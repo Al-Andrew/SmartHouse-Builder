@@ -74,6 +74,7 @@ class _POSTState extends State<POST> {
                             width: 40,
                             height: 40,
                             route: widget.homeRoute,
+                            from: "/post",
                           ),
                         ),
                         Expanded(
@@ -481,6 +482,7 @@ class _POSTState extends State<POST> {
                             width: 40,
                             height: 40,
                             route: widget.homeRoute,
+                            from: "/post",
                           ),
                         ),
                         Expanded(
@@ -517,6 +519,7 @@ class _POSTState extends State<POST> {
                             width: 40,
                             height: 40,
                             route: widget.homeRoute,
+                            from: "/post",
                           ),
                         ),
                         Expanded(

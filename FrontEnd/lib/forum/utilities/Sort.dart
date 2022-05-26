@@ -2,6 +2,7 @@ import 'dart:html';
 
 import 'package:flutter/material.dart';
 import './buttons/SortButton.dart';
+import '../ForumGlobals.dart' as globals;
 
 class CustomSort extends StatefulWidget {
   CustomSort({
@@ -82,6 +83,11 @@ class _CustomSortState extends State<CustomSort> {
       onChanged: (value) {
         setState(() {
           this.checkedRecent = value!;
+          // if (widget.route == "/") {
+          //   globals.checkedRecentH = value;
+          // } else {
+          //   globals.checkedRecentM = value;
+          // }
         });
       },
       controlAffinity: ListTileControlAffinity.leading, //  <-- leading
@@ -101,6 +107,11 @@ class _CustomSortState extends State<CustomSort> {
       onChanged: (value) {
         setState(() {
           this.checkedCommented = value!;
+          // if (widget.route == "/") {
+          //   globals.checkedCommentedH = value;
+          // } else {
+          //   globals.checkedCommentedM = value;
+          // }
         });
       },
       controlAffinity: ListTileControlAffinity.leading, //  <-- leading
@@ -120,6 +131,11 @@ class _CustomSortState extends State<CustomSort> {
       onChanged: (value) {
         setState(() {
           this.checkedPopular = value!;
+          // if (widget.route == "/") {
+          //   globals.checkedPopularH = value;
+          // } else {
+          //   globals.checkedPopularM = value;
+          // }
         });
       },
       controlAffinity: ListTileControlAffinity.leading, //  <-- leading

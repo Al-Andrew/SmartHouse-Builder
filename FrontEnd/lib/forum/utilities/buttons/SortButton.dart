@@ -41,20 +41,20 @@ class SortButton extends StatelessWidget {
       child: ElevatedButton(
         onPressed: () {
           if (checkedCommented || checkedPopular || checkedRecent) {
-            if (route == '/') {
+            print("1");
+            print(globals.checkedCommentedH);
+            print(globals.checkedPopularH);
+            print(globals.checkedRecentH);
+            globals.isSorted = true;
+            if (route == "/") {
+              print("2");
+
               globals.checkedCommentedH = checkedCommented;
               globals.checkedPopularH = checkedPopular;
               globals.checkedRecentH = checkedRecent;
-            } else {
-              globals.checkedCommentedM = checkedCommented;
-              globals.checkedPopularM = checkedPopular;
-              globals.checkedRecentM = checkedRecent;
-            }
-            Post.sortPosts(
-                checkedRecent, checkedCommented, checkedPopular, route);
-            // globals.isChanged = true;
-            globals.isSorted = true;
-            if (route == '/') {
+              print(globals.checkedCommentedH);
+              print(globals.checkedPopularH);
+              print(globals.checkedRecentH);
               globals.nrPrefferencesHomePage++;
               print(globals.nrPrefferencesHomePage);
               if (globals.nrPrefferencesHomePage == 1) {
@@ -68,7 +68,9 @@ class SortButton extends StatelessWidget {
               }
             } else {
               globals.nrPrefferencesMyPost++;
-
+              globals.checkedCommentedM = checkedCommented;
+              globals.checkedPopularM = checkedPopular;
+              globals.checkedRecentM = checkedRecent;
               if (globals.nrPrefferencesMyPost == 1) {
                 Navigator.of(context).push(
                     MaterialPageRoute(builder: (child) => const MyPosts()));

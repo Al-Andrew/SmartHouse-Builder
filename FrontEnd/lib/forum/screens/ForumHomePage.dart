@@ -30,7 +30,7 @@ class _ForumHomePageState extends State<ForumHomePage> {
               child: Column(
                 children: <Widget>[
                   Title(),
-                  SearchBar(),
+                  SearchBar(route: "/"),
                   Container(
                     height: 230,
                     child: Row(
@@ -82,7 +82,7 @@ class _ForumHomePageState extends State<ForumHomePage> {
               child: Column(
                 children: <Widget>[
                   Title(),
-                  SearchBar(),
+                  SearchBar(route: "/"),
                   Container(
                     height: 230,
                     child: Row(
@@ -134,7 +134,7 @@ class _ForumHomePageState extends State<ForumHomePage> {
               child: Column(
                 children: <Widget>[
                   Title(),
-                  SearchBar(),
+                  SearchBar(route: "/"),
                   Container(
                     height: 400,
                     child: Row(
@@ -184,7 +184,7 @@ class _ForumHomePageState extends State<ForumHomePage> {
   }
 
   Widget Title() {
-    if (globals.isSorted == true) {
+    if (globals.isSorted == true || globals.isSearched) {
       return Padding(
         padding: const EdgeInsets.only(left: 10.0),
         child: Row(
@@ -198,6 +198,7 @@ class _ForumHomePageState extends State<ForumHomePage> {
                 width: 40,
                 height: 40,
                 route: '/',
+                from: '/',
               ),
             ),
             Expanded(

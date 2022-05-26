@@ -31,22 +31,31 @@ class _PostsTabelState extends State<PostsTabel> {
   List<Post> posts = [];
   @override
   void initState() {
-    if (globals.isSorted == false) {
+    if (globals.isSorted == false && globals.isSearched == false) {
       Post.getPosts().then(
         (value) {
           setState(() {
-            posts = value;
             globals.posts = value;
-            globals.sortedPosts = value;
+            posts = globals.posts;
           });
         },
       );
-    } else {
-      setState(() {
-        globals.isSorted = false;
-        posts = globals.sortedPosts;
+    } else if (globals.isSorted == true) {
+      globals.isSorted = false;
+      Post.sortPosts("/").then((value) {
+        setState(() {
+          posts = value;
+        });
+      });
+    } else if (globals.isSearched == true) {
+      globals.isSearched = false;
+      Post.getSearchedPosts('/').then((value) {
+        setState(() {
+          posts = value;
+        });
       });
     }
+
     super.initState();
   }
 
@@ -54,6 +63,15 @@ class _PostsTabelState extends State<PostsTabel> {
   Widget build(BuildContext context) {
     if (posts.length > 0) {
       return PostsTableBody(posts, context);
+    } else if (globals.isSearched == true) {
+      globals.isSearched = false;
+      return Center(
+        child: Container(
+            child: Text(
+          "No post found!",
+          style: TextStyle(fontSize: 20),
+        )),
+      );
     } else {
       return CircularProgressIndicator();
     }

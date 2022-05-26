@@ -1,11 +1,15 @@
 import 'dart:html';
 import 'dart:math';
 import 'package:flutter/material.dart';
+import 'package:homepage/forum/screens/ForumHomePage.dart';
 import 'package:homepage/forum/utilities/Utilities.dart';
 import 'package:homepage/homepage.dart';
 import 'package:homepage/main.dart';
 import 'package:homepage/forum/classes/Tags.dart';
 import 'package:homepage/forum/classes/PostClass.dart';
+import '../ForumGlobals.dart' as globals;
+
+import '../Forum.dart';
 
 class CreatePost extends StatefulWidget {
   const CreatePost({Key? key}) : super(key: key);
@@ -82,15 +86,24 @@ class _CreatePostState extends State<CreatePost> {
       bool yesOrNo = await _isYesOrNo();
       if (yesOrNo) {
         Post.addPost(5, 1, topicText, "05/11/2022", descText, "Marcel", tags);
-        Navigator.of(context).popUntil((route) => route.isFirst);
         Navigator.of(context).pop();
-
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (child) => HomePage(),
-          ),
-        );
+        if (globals.nrPrefferencesHomePage > 0) {
+          if (globals.searchedH.isNotEmpty) {
+            globals.isSearched = true;
+            Navigator.of(context).pushAndRemoveUntil(
+                MaterialPageRoute(builder: (child) => ForumHomePage()),
+                (route) => false);
+          } else {
+            globals.isSorted = true;
+            Navigator.of(context).pushAndRemoveUntil(
+                MaterialPageRoute(builder: (child) => ForumHomePage()),
+                (route) => false);
+          }
+        } else {
+          Navigator.of(context).pushAndRemoveUntil(
+              MaterialPageRoute(builder: (child) => ForumHomePage()),
+              (route) => false);
+        }
 
         ///so we have only the menu
       } else {
@@ -170,7 +183,8 @@ class _CreatePostState extends State<CreatePost> {
                                 context: context,
                                 width: 40,
                                 height: 40,
-                                route: '/'),
+                                route: '/',
+                                from: "/createpost"),
                           ),
                         ),
                       ]),

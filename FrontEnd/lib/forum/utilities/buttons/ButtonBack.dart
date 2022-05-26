@@ -14,12 +14,14 @@ class ButtonBack extends StatefulWidget {
     required this.width,
     required this.height,
     required this.route,
+    required this.from,
   }) : super(key: key);
 
   final BuildContext context;
   final double width;
   final double height;
   final String route;
+  final String from;
 
   @override
   State<ButtonBack> createState() => _ButtonBackState();
@@ -40,11 +42,7 @@ class _ButtonBackState extends State<ButtonBack> {
                 if (globals.checkedPopularM ||
                     globals.checkedCommentedM ||
                     globals.checkedRecentM) {
-                  Post.sortPosts(
-                      globals.checkedRecentM,
-                      globals.checkedCommentedM,
-                      globals.checkedPopularM,
-                      widget.route);
+                  globals.isSorted = true;
                   globals.checkedCommentedM = false;
                   globals.checkedPopularM = false;
                   globals.checkedRecentM = false;
@@ -59,11 +57,7 @@ class _ButtonBackState extends State<ButtonBack> {
                 if (globals.checkedPopularH ||
                     globals.checkedCommentedH ||
                     globals.checkedRecentH) {
-                  Post.sortPosts(
-                      globals.checkedRecentH,
-                      globals.checkedCommentedH,
-                      globals.checkedPopularH,
-                      widget.route);
+                  globals.isSorted = true;
                   globals.checkedCommentedH = false;
                   globals.checkedPopularH = false;
                   globals.checkedRecentH = false;
@@ -73,7 +67,6 @@ class _ButtonBackState extends State<ButtonBack> {
                   globals.nrPrefferencesHomePage = 0;
                   globals.nrPrefferencesMyPost = 0;
                 }
-
                 Navigator.of(context).pushAndRemoveUntil(
                     MaterialPageRoute(builder: (child) => ForumHomePage()),
                     (route) => false);
@@ -81,22 +74,47 @@ class _ButtonBackState extends State<ButtonBack> {
             } else {
               if (globals.checkedCommentedM ||
                   globals.checkedPopularM ||
-                  globals.checkedRecentM) {
-                globals.checkedCommentedM = false;
-                globals.checkedPopularM = false;
-                globals.checkedRecentM = false;
-                globals.nrPrefferencesMyPost = 0;
-                Navigator.of(context).pushAndRemoveUntil(
-                    MaterialPageRoute(builder: (child) => MyPosts()),
-                    (route) => false);
+                  globals.checkedRecentM ||
+                  globals.searchedM.isNotEmpty) {
+                if (widget.from == "/post") {
+                  Navigator.of(context).pop();
+                } else {
+                  globals.checkedCommentedM = false;
+                  globals.checkedPopularM = false;
+                  globals.checkedRecentM = false;
+                  globals.searchedM = "";
+                  globals.isSearched = false;
+                  Navigator.of(context).pushAndRemoveUntil(
+                      MaterialPageRoute(builder: (child) => const MyPosts()),
+                      (route) => false);
+                }
               } else if (globals.checkedCommentedH ||
                   globals.checkedPopularH ||
-                  globals.checkedRecentH) {
-                globals.checkedCommentedH = false;
-                globals.checkedPopularH = false;
-                globals.checkedRecentH = false;
-                globals.nrPrefferencesHomePage = 0;
-                Navigator.of(context).pop();
+                  globals.checkedRecentH ||
+                  globals.searchedH.isNotEmpty) {
+                if (widget.from == "/createpost" || widget.from == "/post") {
+                  Navigator.of(context).pop();
+                } else if (widget.from == "/myposts") {
+                  globals.nrPrefferencesMyPost = 0;
+                  if (globals.searchedH.isNotEmpty) {
+                    globals.isSearched = true;
+                  } else {
+                    globals.isSorted = true;
+                  }
+                  Navigator.of(context).pushAndRemoveUntil(
+                      MaterialPageRoute(builder: (child) => ForumHomePage()),
+                      (route) => false);
+                } else {
+                  globals.checkedCommentedH = false;
+                  globals.checkedPopularH = false;
+                  globals.checkedRecentH = false;
+                  globals.nrPrefferencesHomePage = 0;
+                  globals.searchedH = "";
+                  globals.isSearched = false;
+                  Navigator.of(context).pushAndRemoveUntil(
+                      MaterialPageRoute(builder: (child) => ForumHomePage()),
+                      (route) => false);
+                }
               } else {
                 Navigator.of(context).pop();
               }

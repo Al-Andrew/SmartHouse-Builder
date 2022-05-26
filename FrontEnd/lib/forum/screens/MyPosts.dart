@@ -16,25 +16,40 @@ class MyPosts extends StatefulWidget {
 }
 
 class _MyPostsState extends State<MyPosts> {
+  List<Post> posts = [];
   late List<Post> selectedPosts;
-  String route = '/';
+  String route = "/";
   @override
   void initState() {
-    if (globals.isSorted == false) {
+    if (globals.isSorted == false && globals.isSearched == false) {
       Post.getMyPosts(1).then(
         (value) {
           setState(() {
             globals.myPosts = value;
+            posts = globals.myPosts;
           });
         },
       );
-    } else {
+    } else if (globals.isSorted == true) {
       globals.isSorted = false;
+      Post.sortPosts("/myposts").then((value) {
+        setState(() {
+          posts = value;
+        });
+      });
+    } else if (globals.isSearched == true) {
+      globals.isSearched = false;
+      Post.getSearchedPosts("/myposts").then((value) {
+        setState(() {
+          posts = value;
+        });
+      });
     }
     if (globals.nrPrefferencesMyPost > 0) {
-      route = '/myposts';
+      route = "/myposts";
     }
     selectedPosts = [];
+
     super.initState();
   }
 
@@ -51,7 +66,7 @@ class _MyPostsState extends State<MyPosts> {
   //functia pentru butonul remove
   deleteSelectedPosts() async {
     setState(() {
-      Post.removePosts(selectedPosts);
+      Post.removePosts(selectedPosts, posts);
       globals.isChanged = true;
       globals.checkedCommentedM = false;
       globals.checkedPopularM = false;
@@ -84,6 +99,7 @@ class _MyPostsState extends State<MyPosts> {
                             width: 40,
                             height: 40,
                             route: route,
+                            from: "/myposts",
                           ),
                         ),
                         Expanded(
@@ -95,12 +111,12 @@ class _MyPostsState extends State<MyPosts> {
                       ],
                     ),
                   ),
-                  SearchBar(),
+                  SearchBar(route: "/myposts"),
                   Container(
                     height: 230,
                     child: Center(
                         child: CustomSort(
-                            height: 230, width: 160, route: '/myposts')),
+                            height: 230, width: 160, route: "/myposts")),
                   ),
                   Container(
                     child: Center(
@@ -160,6 +176,7 @@ class _MyPostsState extends State<MyPosts> {
                             width: 40,
                             height: 40,
                             route: route,
+                            from: "/myposts",
                           ),
                         ),
                         Expanded(
@@ -171,12 +188,12 @@ class _MyPostsState extends State<MyPosts> {
                       ],
                     ),
                   ),
-                  SearchBar(),
+                  SearchBar(route: "/myposts"),
                   Container(
                     height: 230,
                     child: Center(
                         child: CustomSort(
-                            height: 230, width: 160, route: '/myposts')),
+                            height: 230, width: 160, route: "/myposts")),
                   ),
                   Container(
                     child: Center(
@@ -231,6 +248,7 @@ class _MyPostsState extends State<MyPosts> {
                             width: 40,
                             height: 40,
                             route: route,
+                            from: "/myposts",
                           ),
                         ),
                         Expanded(
@@ -242,7 +260,7 @@ class _MyPostsState extends State<MyPosts> {
                       ],
                     ),
                   ),
-                  SearchBar(),
+                  SearchBar(route: "/myposts"),
                   Container(
                     height: 400,
                     child: Row(
@@ -256,7 +274,7 @@ class _MyPostsState extends State<MyPosts> {
                                 child: CustomSort(
                                   height: 230,
                                   width: 160,
-                                  route: '/myPosts',
+                                  route: "/myPosts",
                                 ),
                               ),
                               Container(
@@ -445,7 +463,7 @@ class _MyPostsState extends State<MyPosts> {
                         )),
                   ),
                 ],
-                rows: globals.myPosts
+                rows: posts
                     .map(
                       (post) => DataRow(
                         //For checkboxes
@@ -506,7 +524,16 @@ class _MyPostsState extends State<MyPosts> {
           ),
         ),
       );
-    else {
+    else if (globals.isSearched == true) {
+      globals.isSearched = false;
+      return Center(
+        child: Container(
+            child: Text(
+          "No post found!",
+          style: TextStyle(fontSize: 20),
+        )),
+      );
+    } else {
       return CircularProgressIndicator();
     }
   }

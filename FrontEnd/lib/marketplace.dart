@@ -24,8 +24,6 @@ class _MarketplaceState extends State<Marketplace> {
   List<Schematic> _allSchematics = DUMMY_SCHEMATICS;
   List<Product> _favoriteProducts = [];
 
-  
-
   int _selectedIndex = 0;
 
   late List<Widget> _widgetOptions;
@@ -67,7 +65,7 @@ class _MarketplaceState extends State<Marketplace> {
       body: Column(children: [
         Container(
             child: Column(children: [
-          SearchBar(),
+          SearchBar(route: "/marketplace"),
           Center(
             child: TextButton(
                 onPressed: null,

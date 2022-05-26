@@ -8,10 +8,10 @@ int nrPrefferencesHomePage = 0;
 bool isChanged = false;
 List<Post> posts = [];
 List<Post> myPosts = [];
-List<Post> sortedPosts = [];
-List<Post> sortedMyPosts = [];
 
 bool isSearched = false;
+String searchedH = "";
+String searchedM = "";
 
 bool isSorted = false;
 bool checkedPopularM = false;
