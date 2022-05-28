@@ -39,14 +39,31 @@ class BuilderState extends State<BuilderCon> {
 
 class Builder extends FlameGame with HasTappables, HasDraggables {
   @override
+  Color backgroundColor() {
+    return const Color.fromRGBO(245, 245, 245, 1.0);
+  }
+
+  @override
   Future<void>? onLoad() {
-    //add(Window());
-    //add(Window()..y = 350);
-    //add(Wall()
-    //  ..y = 350
-    //  ..x = 400);
     add(Wall());
     return super.onLoad();
+  }
+
+  @override
+  void render(Canvas canvas) {
+    Paint paint = Paint();
+    paint.color = const Color.fromRGBO(220, 220, 220, 0.8);
+    paint.strokeWidth = 1;
+
+    for (int i = 0; i < canvasSize.x; i += 25) {
+      canvas.drawLine(
+          Offset(i as double, 0), Offset(i as double, canvasSize.y), paint);
+    }
+    for (int i = 0; i < canvasSize.y; i += 25) {
+      canvas.drawLine(
+          Offset(0, i as double), Offset(canvasSize.x, i as double), paint);
+    }
+    super.render(canvas);
   }
 
   @override
@@ -116,12 +133,11 @@ class Gizmo extends PositionComponent with Draggable {
     if (schematic.isFocused == false) return;
     Paint paint = Paint();
     paint.style = PaintingStyle.stroke;
-    paint.color = Colors.cyan;
+    paint.color = const Color.fromRGBO(55, 128, 215, 1.0);
 
     Rect selectRect = Offset.zero & Size(size.x, size.y);
     canvas.drawRect(selectRect, paint);
     paint.style = PaintingStyle.fill;
-    paint.color = Colors.blue;
     canvas.drawRect(rs_topLeft, paint);
     canvas.drawRect(rs_midLeft, paint);
     canvas.drawRect(rs_botLeft, paint);
@@ -149,24 +165,20 @@ class Gizmo extends PositionComponent with Draggable {
   bool onDragStart(DragStartInfo info) {
     Vector2 translatedEventPosition =
         this.transform.globalToLocal(info.eventPosition.game);
-
+    //TODO(Al-Andrew): handle all sizing rs separatedly
     if (schematic.isFocused == false) return false;
     if (rs_topMid.contains(translatedEventPosition.toOffset()) ||
         rs_botMid.contains(translatedEventPosition.toOffset())) {
-      print("drag size y");
       dt = dragType.size_y;
     } else if (rs_midLeft.contains(translatedEventPosition.toOffset()) ||
         rs_midRight.contains(translatedEventPosition.toOffset())) {
-      print("drag size x");
       dt = dragType.size_x;
     } else if (rs_topLeft.contains(translatedEventPosition.toOffset()) ||
         rs_botLeft.contains(translatedEventPosition.toOffset()) ||
         rs_topRight.contains(translatedEventPosition.toOffset()) ||
         rs_botRight.contains(translatedEventPosition.toOffset())) {
-      print("drag rotate");
       dt = dragType.rotate;
     } else {
-      print("drag translate");
       dt = dragType.translate;
     }
     dragDeltaPosition = info.eventPosition.game - position;
@@ -186,6 +198,7 @@ class Gizmo extends PositionComponent with Draggable {
       return false;
     }
 
+    //TODO(Al-Andrew): handle all sizing rs separatedly
     if (this.dt == dragType.translate) {
       position.setFrom(event.eventPosition.game - dragDeltaPosition);
     } else if (this.dt == dragType.size_y) {
@@ -251,11 +264,29 @@ class Window extends BaseSchematic {
   void render(Canvas canvas) {
     Paint paint = Paint();
     paint.style = PaintingStyle.fill;
-    paint.color = Colors.red;
-    paint.strokeWidth = 4;
+    paint.color = Colors.black;
+    paint.strokeWidth = 2;
 
-    canvas.drawLine(Offset.zero, Offset(size.x, 0), paint);
-    canvas.drawLine(Offset(0, size.y), Offset(size.x, size.y), paint);
+    canvas.drawLine(
+        Offset(0, paint.strokeWidth), Offset(size.x, paint.strokeWidth), paint);
+    canvas.drawLine(Offset(0, size.y - paint.strokeWidth),
+        Offset(size.x, size.y - paint.strokeWidth), paint);
+    canvas.drawRect(
+        Rect.fromLTWH(
+          0,
+          0,
+          size.x / 4,
+          size.y,
+        ),
+        paint);
+    canvas.drawRect(
+        Rect.fromLTWH(
+          size.x * 0.75,
+          0,
+          size.x / 4,
+          size.y,
+        ),
+        paint);
   }
 }
 
@@ -266,7 +297,7 @@ class Wall extends BaseSchematic {
   void render(Canvas canvas) {
     Paint paint = Paint();
     paint.style = PaintingStyle.fill;
-    paint.color = Colors.red;
+    paint.color = Colors.black;
     paint.strokeWidth = 4;
 
     Rect myRect = Offset.zero & Size(size.x, size.y);
