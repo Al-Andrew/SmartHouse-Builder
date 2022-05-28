@@ -2,6 +2,8 @@ package com.smarthousebuilder.marketplace.wishlist;
 
 import org.springframework.web.bind.annotation.*;
 
+import javax.transaction.Transactional;
+
 @RestController
 @RequestMapping("/api/wishlist")
 public class WishlistController {
@@ -37,5 +39,11 @@ public class WishlistController {
     public void deleteOneItem(@RequestParam (value = "wishlistId") Integer wishlistId,
                               @RequestParam (value = "productId") Integer productId){
         wishlistService.deleteOneFromWishlist(wishlistId,productId);
+    }
+
+    @Transactional
+    @DeleteMapping("/entire")
+    public void deleteWishlist(@RequestParam (value = "wishlistId") Integer wishlistId){
+        wishlistService.deleteWishlist(wishlistId);
     }
 }

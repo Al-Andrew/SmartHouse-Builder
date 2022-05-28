@@ -4,11 +4,10 @@ package com.smarthousebuilder.marketplace.wishlist;
 import com.smarthousebuilder.marketplace.product.Product;
 import com.smarthousebuilder.marketplace.product.ProductService;
 import com.smarthousebuilder.marketplace.wishlistItem.WishlistItems;
-import com.smarthousebuilder.wishlistItem.WishlistItemRepository;
+import com.smarthousebuilder.marketplace.wishlistItem.WishlistItemRepository;
 
 import org.springframework.stereotype.Service;
 
-import java.sql.SQLException;
 import java.util.Date;
 import java.util.Optional;
 
@@ -116,4 +115,15 @@ public class WishlistService {
                 wishlistItemRepository.delete(wishlistItemRepository.getByProductIdAndWishlistId(productId, wishlistId));
         }
     }
-}
+
+    public void deleteWishlist(Integer wishlistId) {
+        boolean existsWishlist = wishlistRepository.existsById(wishlistId);
+
+        if (!existsWishlist)
+            throw new IllegalStateException("No wishlist with id " + wishlistId);
+
+        wishlistItemRepository.deleteAllByWishlistId(wishlistId);
+        wishlistRepository.deleteById(wishlistId);
+        }
+    }
+
