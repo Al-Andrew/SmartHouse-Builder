@@ -29,17 +29,18 @@ public class Product {
 
     //TODO(Razvan): ecosystem sa fie lista!!!
 
-    Product(String name, String linkToPng, String linkToProduct) {
-        Random rand = new Random();
+    Product(String linkToPng, String linkToProduct) {
         this.categoryId = null;
         this.forumLink = "None";
         this.rating = null;
-        this.name = name;
+        this.name = null;
         this.price = null;
         this.pngUrl = linkToPng;
         this.productUrl = linkToProduct;
         this.detailsOfProduct = new HashMap<>();
     }
+
+    Product(){}
 
 
 
