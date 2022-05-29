@@ -4,6 +4,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.transaction.Transactional;
 
+@CrossOrigin
 @RestController
 @RequestMapping("/api/wishlist")
 public class WishlistController {
