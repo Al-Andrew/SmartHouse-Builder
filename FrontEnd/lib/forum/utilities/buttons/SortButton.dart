@@ -48,6 +48,10 @@ class SortButton extends StatelessWidget {
             globals.isSorted = true;
             if (route == "/") {
               print("2");
+              if (globals.searchedH != "") {
+                globals.searchedH == "";
+                globals.isSearched = false;
+              }
 
               globals.checkedCommentedH = checkedCommented;
               globals.checkedPopularH = checkedPopular;
@@ -67,6 +71,10 @@ class SortButton extends StatelessWidget {
                 );
               }
             } else {
+              if (globals.searchedM != "") {
+                globals.searchedM == "";
+                globals.isSearched = false;
+              }
               globals.nrPrefferencesMyPost++;
               globals.checkedCommentedM = checkedCommented;
               globals.checkedPopularM = checkedPopular;

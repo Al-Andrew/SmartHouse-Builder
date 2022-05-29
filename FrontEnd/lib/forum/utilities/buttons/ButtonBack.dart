@@ -39,33 +39,58 @@ class _ButtonBackState extends State<ButtonBack> {
           onPressed: () {
             if (globals.isChanged) {
               if (this.widget.route == '/myposts') {
-                if (globals.checkedPopularM ||
-                    globals.checkedCommentedM ||
-                    globals.checkedRecentM ||
-                    globals.searchedM.isNotEmpty) {
-                  globals.isSorted = true;
+                print("E");
+                if ((globals.checkedPopularM ||
+                        globals.checkedCommentedM ||
+                        globals.checkedRecentM ||
+                        globals.searchedM != "") &&
+                    (widget.from == "/post")) {
+                  if (globals.searchedM != "") {
+                    print("E1");
+                    globals.isSearched = true;
+                  } else {
+                    print("E2");
+
+                    globals.isSorted = true;
+                  }
+                } else {
+                  print("E3");
+
+                  globals.nrPrefferencesMyPost = 0;
                   globals.checkedCommentedM = false;
                   globals.checkedPopularM = false;
                   globals.checkedRecentM = false;
-                } else {
-                  globals.nrPrefferencesMyPost = 0;
+                  globals.searchedM = "";
                 }
                 Navigator.of(context).pushAndRemoveUntil(
                     MaterialPageRoute(builder: (child) => const MyPosts()),
                     (route) => false);
                 globals.isChanged = true;
               } else {
-                if (globals.checkedPopularH ||
-                    globals.checkedCommentedH ||
-                    globals.checkedRecentH ||
-                    globals.searchedH.isNotEmpty) {
-                  globals.isSorted = true;
+                print("D");
+                if ((globals.checkedPopularH ||
+                        globals.checkedCommentedH ||
+                        globals.checkedRecentH ||
+                        globals.searchedH != "") &&
+                    (widget.from == "/post" || widget.from == "/myposts")) {
+                  if (globals.searchedH != "") {
+                    print("D1");
+                    globals.isSearched = true;
+                  } else {
+                    print("D2");
+
+                    globals.isSorted = true;
+                  }
+                  globals.isChanged = true;
+                } else {
+                  print("D3");
+
+                  globals.isChanged = false;
+                  globals.isSearched = false;
+                  globals.searchedH = "";
                   globals.checkedCommentedH = false;
                   globals.checkedPopularH = false;
                   globals.checkedRecentH = false;
-                  globals.isChanged = true;
-                } else {
-                  globals.isChanged = false;
                   globals.nrPrefferencesHomePage = 0;
                   globals.nrPrefferencesMyPost = 0;
                 }
@@ -77,44 +102,40 @@ class _ButtonBackState extends State<ButtonBack> {
               if (globals.checkedCommentedM ||
                   globals.checkedPopularM ||
                   globals.checkedRecentM ||
-                  globals.searchedM.isNotEmpty) {
-                print(globals.searchedM);
+                  globals.searchedM != "") {
                 if (widget.from == "/post") {
+                  print("T1");
+
                   Navigator.of(context).pop();
                 } else {
-                  if (globals.searchedM.isEmpty) {
-                    globals.checkedCommentedM = false;
-                    globals.checkedPopularM = false;
-                    globals.checkedRecentM = false;
-                  } else {
-                    globals.searchedM = "";
-                    globals.isSearched = false;
-                  }
-                  Navigator.of(context).pushAndRemoveUntil(
-                      MaterialPageRoute(builder: (child) => const MyPosts()),
-                      (route) => false);
+                  globals.nrPrefferencesMyPost = 0;
+
+                  globals.checkedCommentedM = false;
+                  globals.checkedPopularM = false;
+                  globals.checkedRecentM = false;
+                  globals.searchedM = "";
+                  globals.isSearched = false;
+
+                  print("T2");
+                  Navigator.of(context).pop();
+                  Navigator.of(context).pop();
+                  Navigator.of(context).push(
+                    MaterialPageRoute(builder: (child) => const MyPosts()),
+                  );
                 }
               } else if (globals.checkedCommentedH ||
                   globals.checkedPopularH ||
                   globals.checkedRecentH ||
-                  globals.searchedH.isNotEmpty) {
+                  globals.searchedH != "") {
                 print(globals.searchedH);
-                if (widget.from == "/createpost" || widget.from == "/post") {
-                  Navigator.of(context).pop();
-                } else if (widget.from == "/myposts") {
-                  print("3000");
+                if (widget.from == "/createpost" ||
+                    widget.from == "/post" ||
+                    widget.from == "/myposts") {
+                  print("T3");
 
-                  globals.nrPrefferencesMyPost = 0;
-                  if (globals.searchedH.isNotEmpty) {
-                    globals.isSearched = true;
-                  } else {
-                    globals.isSorted = true;
-                  }
-                  Navigator.of(context).pushAndRemoveUntil(
-                      MaterialPageRoute(builder: (child) => ForumHomePage()),
-                      (route) => false);
+                  Navigator.of(context).pop();
                 } else {
-                  print("4000");
+                  print("T4");
                   globals.checkedCommentedH = false;
                   globals.checkedPopularH = false;
                   globals.checkedRecentH = false;
@@ -127,7 +148,7 @@ class _ButtonBackState extends State<ButtonBack> {
                       (route) => false);
                 }
               } else {
-                print("3000");
+                print("T5");
 
                 Navigator.of(context).pop();
               }

@@ -91,9 +91,13 @@ class _SearchBarState extends State<SearchBar> {
                           globals.searchedM = SearchController.text;
 
                           if (globals.nrPrefferencesMyPost == 1) {
+                            print("1");
+
                             Navigator.of(context).push(MaterialPageRoute(
                                 builder: (child) => const MyPosts()));
                           } else {
+                            print("2");
+
                             Navigator.of(context).pop();
                             Navigator.of(context).push(
                               MaterialPageRoute(

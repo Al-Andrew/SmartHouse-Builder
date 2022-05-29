@@ -198,7 +198,7 @@ class _ForumHomePageState extends State<ForumHomePage> {
                 width: 40,
                 height: 40,
                 route: '/',
-                from: '/',
+                from: "/",
               ),
             ),
             Expanded(

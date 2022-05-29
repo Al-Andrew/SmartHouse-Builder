@@ -88,12 +88,14 @@ class _CreatePostState extends State<CreatePost> {
         Post.addPost(5, 1, topicText, "05/11/2022", descText, "Marcel", tags);
         Navigator.of(context).pop();
         if (globals.nrPrefferencesHomePage > 0) {
-          if (globals.searchedH.isNotEmpty) {
+          if (globals.searchedH != "") {
+            globals.isChanged = true;
             globals.isSearched = true;
             Navigator.of(context).pushAndRemoveUntil(
                 MaterialPageRoute(builder: (child) => ForumHomePage()),
                 (route) => false);
           } else {
+            globals.isChanged = true;
             globals.isSorted = true;
             Navigator.of(context).pushAndRemoveUntil(
                 MaterialPageRoute(builder: (child) => ForumHomePage()),
