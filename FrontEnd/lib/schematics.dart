@@ -19,7 +19,7 @@ class _AllSchematicsState extends State<AllSchematics> {
       physics: AlwaysScrollableScrollPhysics(),
       children: widget._allSchematics
           .map((schData) => SchematicItem(
-              schData.id, schData.title, schData.linkImg))
+              schData.id, schData.title, schData.linkImg, schData.addFn))
           .toList(),
     );
   }
