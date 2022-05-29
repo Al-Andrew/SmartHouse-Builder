@@ -17,7 +17,7 @@ class Tags {
 
   factory Tags.fromJson(dynamic json) {
     return Tags(
-      id: json["id"],
+      id: 0,
       flagReview: json["setupFlag"],
       flagQuestion: json["hardwareFlag"],
       flagSetup: json["softwareFlag"],
@@ -25,6 +25,8 @@ class Tags {
       flagSoft: json["questionFlag"],
     );
   }
+
+  get tags => null;
 
   Map<String, dynamic> toJson() => {
         'id': id,

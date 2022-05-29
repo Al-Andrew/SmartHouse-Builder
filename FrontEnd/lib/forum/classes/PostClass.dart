@@ -55,6 +55,28 @@ class Post {
         'tags': tags_integers,
         'comments': comments,
       };
+  static void setTags(Post post) {
+    if (post.tags_integers.flagHard == 1) {
+      print("hard");
+      post.tags.add("Hardware");
+    }
+    if (post.tags_integers.flagQuestion == 1) {
+      print("ques");
+      post.tags.add("Question");
+    }
+    if (post.tags_integers.flagReview == 1) {
+      print("rev");
+      post.tags.add("Review");
+    }
+    if (post.tags_integers.flagSetup == 1) {
+      print("set");
+      post.tags.add("Setup");
+    }
+    if (post.tags_integers.flagSoft == 1) {
+      print("soft");
+      post.tags.add("Software");
+    }
+  }
 
   void addComment(int id, int id_user, int id_post, String content,
       String author, String date, int nrLikes) {
@@ -89,9 +111,7 @@ class Post {
   ) {
     print('AM AJUNS AICI');
     /////Seeing that we get the info right
-
     ///---Let's create the object of type Post
-
     /*here we have a problem because the post from */
     Post newPost = new Post(
         id: id,
@@ -120,8 +140,85 @@ class Post {
     comments.remove(comment);
   }
 
-  static void sortPosts(bool checkedRecent, bool checkedCommented,
-      bool checkedPopular, String route) async {
+  static Future<List<Post>> getSearchedPosts(String route) async {
+    String searchedPost;
+    if (route == '/') {
+      searchedPost = globals.searchedH;
+    } else {
+      searchedPost = globals.searchedM;
+    }
+    print(searchedPost);
+    if (route == '/myposts') {
+      globals.isSearched = true;
+      final uri = Uri.http('smart-house-builder.azurewebsites.net',
+          '/api/forum/search/$searchedPost');
+
+      final response = await http.get(uri);
+      var jsonData = json.decode(response.body);
+      List<Post> posts = [];
+      for (var v in jsonData) {
+        Post postare = Post.fromJson(v);
+
+        int postId = Post.fromJson(v).id;
+        final response2 = await http.get(
+            Uri.parse(
+              'https://smart-house-builder.azurewebsites.net/api/forum/comment/$postId',
+            ),
+            headers: {"Access-Control-Allow-Origin": "*"});
+        for (var comment in jsonDecode(response2.body)) {
+          Comment com = Comment.fromJson(comment);
+          postare.comments.add(com);
+        }
+        postare.nrComments = postare.comments.length;
+        posts.add(postare);
+      }
+      return posts;
+    } else {
+      globals.isSearched = true;
+      final uri = Uri.http('smart-house-builder.azurewebsites.net',
+          '/api/forum/search/$searchedPost');
+
+      final response = await http.get(uri);
+      var jsonData = json.decode(response.body);
+      List<Post> posts = [];
+      for (var v in jsonData) {
+        Post postare = Post.fromJson(v);
+
+        int postId = Post.fromJson(v).id;
+        final response2 = await http.get(
+            Uri.parse(
+              'https://smart-house-builder.azurewebsites.net/api/forum/comment/$postId',
+            ),
+            headers: {"Access-Control-Allow-Origin": "*"});
+        for (var comment in jsonDecode(response2.body)) {
+          Comment com = Comment.fromJson(comment);
+          postare.comments.add(com);
+        }
+        postare.nrComments = postare.comments.length;
+        Post.setTags(postare);
+        posts.add(postare);
+      }
+      return posts;
+    }
+  }
+
+  static Future<List<Post>> sortPosts(String route) async {
+    bool checkedRecent;
+    bool checkedCommented;
+    bool checkedPopular;
+    if (route == "/") {
+      checkedRecent = globals.checkedRecentH;
+      checkedCommented = globals.checkedCommentedH;
+      checkedPopular = globals.checkedPopularH;
+    } else {
+      checkedRecent = globals.checkedRecentM;
+      checkedCommented = globals.checkedCommentedM;
+      checkedPopular = globals.checkedPopularM;
+    }
+    print("SORT");
+    print(checkedPopular);
+    print(checkedRecent);
+    print(checkedCommented);
     final queryParameters = {
       'Date': '$checkedRecent',
       'Comments': '$checkedCommented',
@@ -155,9 +252,10 @@ class Post {
           postare.comments.add(com);
         }
         postare.nrComments = postare.comments.length;
+        Post.setTags(postare);
         posts.add(postare);
       }
-      globals.myPosts = posts;
+      return posts;
     } else {
       globals.isSorted = true;
       final uri = Uri.http('smart-house-builder.azurewebsites.net',
@@ -184,9 +282,11 @@ class Post {
           postare.comments.add(com);
         }
         postare.nrComments = postare.comments.length;
+        Post.setTags(postare);
+
         posts.add(postare);
       }
-      globals.posts = posts;
+      return posts;
     }
   }
 
@@ -205,7 +305,7 @@ class Post {
     print(title);
   }
 
-  static void removePosts(List<Post> selectedPosts) {
+  static void removePosts(List<Post> selectedPosts, List<Post> posts) {
     if (selectedPosts.isNotEmpty) {
       List<Post> tmp = [];
       tmp.addAll(selectedPosts);
@@ -214,6 +314,7 @@ class Post {
         http.delete(Uri.parse(
             'https://smart-house-builder.azurewebsites.net/api/forum/$idCopy'));
         globals.myPosts.remove(post);
+        posts.remove(post);
         selectedPosts.remove(post);
       }
     }
@@ -254,6 +355,8 @@ class Post {
         postare.comments.add(com);
       }
       postare.nrComments = postare.comments.length;
+      Post.setTags(postare);
+
       postare.nrLikes = 0;
       posts.add(postare);
     }
@@ -284,6 +387,8 @@ class Post {
       }
       postHere.nrComments = postHere.comments.length;
       postHere.nrLikes = 0;
+      Post.setTags(postHere);
+
       posts.add(postHere);
     }
 
@@ -296,6 +401,31 @@ class Post {
       Post(
         id: 1,
         topic: "What do you think about Amazon Alexa?",
+        content:
+            "Hello everyone! I just got started with tehnology and as every beginner..Its kinda hard to get used to the nowadays techonology. I just found out about Alexa and I need some opinions about her. Is she worth it? I mean I saw a lot of very good feedback about her but still I have my doubts. Moreover could I (less than an average man in techonology) get along with her? She could the perfect tool for me but still if I cant use her its still uselessfor your suggestions and answers! Thank you!",
+        author: 'John H.',
+        date: '06/04/2022',
+        tags: ["Review", "Question", "Setup", "Hardware", "Software"],
+        tags_integers: new Tags(
+            id: 1,
+            flagReview: 1,
+            flagQuestion: 1,
+            flagSetup: 1,
+            flagHard: 1,
+            flagSoft: 1),
+        comments: Comment.getLocalComments(),
+        reports: Report.getLocalReports(),
+      ),
+    );
+    return posts;
+  }
+
+  static List<Post> getLocalPosts1() {
+    List<Post> posts = [];
+    posts.add(
+      Post(
+        id: 1,
+        topic: "AAAAAAAA?",
         content:
             "Hello everyone! I just got started with tehnology and as every beginner..Its kinda hard to get used to the nowadays techonology. I just found out about Alexa and I need some opinions about her. Is she worth it? I mean I saw a lot of very good feedback about her but still I have my doubts. Moreover could I (less than an average man in techonology) get along with her? She could the perfect tool for me but still if I cant use her its still uselessfor your suggestions and answers! Thank you!",
         author: 'John H.',

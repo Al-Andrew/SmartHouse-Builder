@@ -107,7 +107,7 @@ class _MarketplaceState extends State<Marketplace> {
       body: Column(children: [
         Container(
             child: Column(children: [
-          SearchBar(),
+          SearchBar(route: "/marketplace"),
           Center(
             child: TextButton(
                 onPressed: null,

@@ -1,9 +1,14 @@
 import 'dart:html';
+import 'package:homepage/forum/Forum.dart';
+import 'package:homepage/forum/screens/ForumHomePage.dart';
+
 import '../../ForumGlobals.dart' as globals;
 
 import 'package:flutter/material.dart';
 import 'package:homepage/forum/screens/CreatePost.dart';
 import 'package:homepage/forum/classes/PostClass.dart';
+
+import '../../screens/MyPosts.dart';
 
 class SortButton extends StatelessWidget {
   SortButton({
@@ -36,10 +41,54 @@ class SortButton extends StatelessWidget {
       child: ElevatedButton(
         onPressed: () {
           if (checkedCommented || checkedPopular || checkedRecent) {
-            globals.isChanged = true;
+            print("1");
+            print(globals.checkedCommentedH);
+            print(globals.checkedPopularH);
+            print(globals.checkedRecentH);
             globals.isSorted = true;
-            Post.sortPosts(
-                checkedRecent, checkedCommented, checkedPopular, '/myposts');
+            if (route == "/") {
+              print("2");
+              if (globals.searchedH != "") {
+                globals.searchedH == "";
+                globals.isSearched = false;
+              }
+
+              globals.checkedCommentedH = checkedCommented;
+              globals.checkedPopularH = checkedPopular;
+              globals.checkedRecentH = checkedRecent;
+              print(globals.checkedCommentedH);
+              print(globals.checkedPopularH);
+              print(globals.checkedRecentH);
+              globals.nrPrefferencesHomePage++;
+              print(globals.nrPrefferencesHomePage);
+              if (globals.nrPrefferencesHomePage == 1) {
+                Navigator.of(context).push(
+                    MaterialPageRoute(builder: (child) => ForumHomePage()));
+              } else {
+                Navigator.of(context).pop();
+                Navigator.of(context).push(
+                  MaterialPageRoute(builder: (child) => ForumHomePage()),
+                );
+              }
+            } else {
+              if (globals.searchedM != "") {
+                globals.searchedM == "";
+                globals.isSearched = false;
+              }
+              globals.nrPrefferencesMyPost++;
+              globals.checkedCommentedM = checkedCommented;
+              globals.checkedPopularM = checkedPopular;
+              globals.checkedRecentM = checkedRecent;
+              if (globals.nrPrefferencesMyPost == 1) {
+                Navigator.of(context).push(
+                    MaterialPageRoute(builder: (child) => const MyPosts()));
+              } else {
+                Navigator.of(context).pop();
+                Navigator.of(context).push(
+                  MaterialPageRoute(builder: (child) => const MyPosts()),
+                );
+              }
+            }
           }
         },
         child: Text(

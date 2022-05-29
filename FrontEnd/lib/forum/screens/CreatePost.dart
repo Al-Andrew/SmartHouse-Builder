@@ -1,11 +1,15 @@
 import 'dart:html';
 import 'dart:math';
 import 'package:flutter/material.dart';
+import 'package:homepage/forum/screens/ForumHomePage.dart';
 import 'package:homepage/forum/utilities/Utilities.dart';
 import 'package:homepage/homepage.dart';
 import 'package:homepage/main.dart';
 import 'package:homepage/forum/classes/Tags.dart';
 import 'package:homepage/forum/classes/PostClass.dart';
+import '../ForumGlobals.dart' as globals;
+
+import '../Forum.dart';
 
 class CreatePost extends StatefulWidget {
   const CreatePost({Key? key}) : super(key: key);
@@ -35,7 +39,6 @@ class _CreatePostState extends State<CreatePost> {
       flagSoft: valSoft,
     );
     //////I made my object with the tags
-
     var descField = descriptionField.descriptionController;
     var topicField = topicTextField.textFieldController;
     String topicText = topicField.text;
@@ -51,9 +54,7 @@ class _CreatePostState extends State<CreatePost> {
     print("---------------------------------");
 
     //////----We try to add the object to the DataBase
-
     ////here we have the pop-up...fix the depricated method
-
     RegExp expTopic =
         RegExp((r'[a-zA-Z]{5,}')); //un cuvant cu cel putin 5 litere
     RegExpMatch? matchTopic = expTopic.firstMatch(topicText);
@@ -66,9 +67,7 @@ class _CreatePostState extends State<CreatePost> {
     bool goodDescription = matchDescription?[0] != null;
 
     ///for description
-
     ///let's see what we should now in the code
-
     if (!goodTopic) {
       showDialog(
         context: context,
@@ -87,15 +86,26 @@ class _CreatePostState extends State<CreatePost> {
       bool yesOrNo = await _isYesOrNo();
       if (yesOrNo) {
         Post.addPost(5, 1, topicText, "05/11/2022", descText, "Marcel", tags);
-        Navigator.of(context).popUntil((route) => route.isFirst);
         Navigator.of(context).pop();
-
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (child) => HomePage(),
-          ),
-        );
+        if (globals.nrPrefferencesHomePage > 0) {
+          if (globals.searchedH != "") {
+            globals.isChanged = true;
+            globals.isSearched = true;
+            Navigator.of(context).pushAndRemoveUntil(
+                MaterialPageRoute(builder: (child) => ForumHomePage()),
+                (route) => false);
+          } else {
+            globals.isChanged = true;
+            globals.isSorted = true;
+            Navigator.of(context).pushAndRemoveUntil(
+                MaterialPageRoute(builder: (child) => ForumHomePage()),
+                (route) => false);
+          }
+        } else {
+          Navigator.of(context).pushAndRemoveUntil(
+              MaterialPageRoute(builder: (child) => ForumHomePage()),
+              (route) => false);
+        }
 
         ///so we have only the menu
       } else {
@@ -158,7 +168,6 @@ class _CreatePostState extends State<CreatePost> {
           builder: (context, constraints) {
             {
               ///--------------Desktop Mode----------------------///
-
               return SingleChildScrollView(
                 child: Column(
                   children: <Widget>[
@@ -176,7 +185,8 @@ class _CreatePostState extends State<CreatePost> {
                                 context: context,
                                 width: 40,
                                 height: 40,
-                                route: '/'),
+                                route: '/',
+                                from: "/createpost"),
                           ),
                         ),
                       ]),
@@ -338,8 +348,8 @@ class _CreatePostState extends State<CreatePost> {
       ),
     );
   }
-  ////Review
 
+  ////Review
   Widget checkBoxRevi() {
     return Container(
         constraints: BoxConstraints(maxWidth: 200, minWidth: 100),
@@ -370,7 +380,6 @@ class _CreatePostState extends State<CreatePost> {
   }
 
   ////Software
-
   Widget checkBoxSoft() {
     return Container(
         constraints: BoxConstraints(maxWidth: 200, minWidth: 100),
@@ -404,7 +413,6 @@ class _CreatePostState extends State<CreatePost> {
   }
 
   ////Setup
-
   Widget checkBoxSetup() {
     return Container(
       constraints: BoxConstraints(maxWidth: 200, minWidth: 100),
@@ -442,7 +450,6 @@ _class ca sa imi dau seama ca e propriul meu object definit
  */
 
 /////////----Clasa pentru TopicTextField
-
 class TopicTextField extends StatelessWidget {
   TopicTextField({Key? key}) : super(key: key);
   TextEditingController textFieldController = TextEditingController();
@@ -465,8 +472,8 @@ class TopicTextField extends StatelessWidget {
     );
   }
 }
-///////-------Clasa pentru DescriptionField
 
+///////-------Clasa pentru DescriptionField
 class DescriptionField extends StatelessWidget {
   TextEditingController myDescriptionController = TextEditingController();
   TextEditingController get descriptionController {
