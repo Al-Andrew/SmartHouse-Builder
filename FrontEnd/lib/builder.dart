@@ -10,6 +10,7 @@ import 'package:flame/game.dart';
 import 'package:flame/input.dart';
 import 'package:flame/palette.dart';
 import 'package:flutter/material.dart' hide Draggable;
+import 'package:flutter/services.dart';
 
 //import 'package:flutter/cupertino.dart';
 
@@ -37,7 +38,8 @@ class BuilderState extends State<BuilderCon> {
   }
 }
 
-class Builder extends FlameGame with HasTappables, HasDraggables {
+class Builder extends FlameGame
+    with HasTappables, HasDraggables, KeyboardEvents {
   @override
   Color backgroundColor() {
     return const Color.fromRGBO(245, 245, 245, 1.0);
@@ -76,6 +78,31 @@ class Builder extends FlameGame with HasTappables, HasDraggables {
     propagateToChildren(
       (Tappable child) => child.handleTapUp(pointerId, info),
     );
+  }
+
+  @override
+  KeyEventResult onKeyEvent(
+      RawKeyEvent event, Set<LogicalKeyboardKey> keysPressed) {
+    final isKeyDown = event is RawKeyDownEvent;
+    final isDelete = keysPressed.contains(LogicalKeyboardKey.delete);
+    print("keyEvent");
+    if (isDelete && isKeyDown) {
+      for (var child in this.children) {
+        if (child is! BaseSchematic) continue;
+
+        BaseSchematic c = child as BaseSchematic;
+        if (!c.isFocused) continue;
+
+        remove(c.gizmoRef);
+        remove(c);
+      }
+    }
+    final isSpace = keysPressed.contains(LogicalKeyboardKey.space);
+    if (isSpace && isKeyDown) {
+      BuilderState.AddNewWall();
+    }
+
+    return KeyEventResult.ignored;
   }
 }
 
@@ -165,6 +192,7 @@ class Gizmo extends PositionComponent with Draggable {
   bool onDragStart(DragStartInfo info) {
     Vector2 translatedEventPosition =
         this.transform.globalToLocal(info.eventPosition.game);
+    //TODO(Al-Andrew): The transformations should be more intuitive
     //TODO(Al-Andrew): handle all sizing rs separatedly
     if (schematic.isFocused == false) return false;
     if (rs_topMid.contains(translatedEventPosition.toOffset()) ||
@@ -230,13 +258,16 @@ class BaseSchematic extends PositionComponent with Tappable {
   @override
   bool debugMode = false;
   bool isFocused = false;
+  late Gizmo gizmoRef;
 
   BaseSchematic(Vector2? position)
-      : super(position: position ?? Vector2(100, 100), size: Vector2(100, 10));
+      : super(
+            position: position ?? Vector2(100, 100), size: Vector2(100, 12.5));
 
   @override
   Future<void>? onLoad() {
-    parent?.add(Gizmo(this));
+    gizmoRef = Gizmo(this);
+    parent?.add(gizmoRef);
     return super.onLoad();
   }
 
