@@ -1,7 +1,7 @@
 // ignore_for_file: non_constant_identifier_names
 
 import 'dart:io';
-import 'dart:math' as math;
+import 'dart:math';
 
 import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
@@ -28,6 +28,7 @@ class BuilderState extends State<BuilderCon> {
     return GameWidget(game: flameContext);
   }
 }
+
 class Builder extends FlameGame with HasTappables, HasDraggables {
   @override
   Future<void>? onLoad() {
@@ -51,6 +52,7 @@ class Builder extends FlameGame with HasTappables, HasDraggables {
       (Tappable child) => child.handleTapUp(pointerId, info),
     );
   }
+
   void AddNewComponent(int id) {
     //0 = wall 1 = window 2 = door
     if (id <= 2 && id >= 0) {
@@ -188,9 +190,17 @@ class Gizmo extends PositionComponent with Draggable {
     if (this.dt == dragType.translate) {
       position.setFrom(event.eventPosition.game - dragDeltaPosition);
     } else if (this.dt == dragType.size_y) {
-      size.setFrom(Vector2(size.x, startSizeY - translatedEventPosition.y));
+      if (startSizeY - translatedEventPosition.y < 0)
+        size.setFrom(
+            Vector2(size.x, -(startSizeY - translatedEventPosition.y)));
+      else
+        size.setFrom(Vector2(size.x, startSizeY - translatedEventPosition.y));
     } else if (this.dt == dragType.size_x) {
-      size.setFrom(Vector2(startSizeX - translatedEventPosition.x, size.y));
+      if (startSizeX - translatedEventPosition.x < 0)
+        size.setFrom(
+            Vector2(-(startSizeX - translatedEventPosition.x), size.y));
+      else
+        size.setFrom(Vector2(startSizeX - translatedEventPosition.x, size.y));
     } else if (this.dt == dragType.rotate) {
       this.transform.angle = startAngle - translatedEventPosition.y / 108;
     }
