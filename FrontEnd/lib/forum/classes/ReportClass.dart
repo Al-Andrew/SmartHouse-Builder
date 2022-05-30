@@ -39,7 +39,7 @@ class Report {
   static Future<List<Report>> getReports() async {
     final response = await http.get(
         Uri.parse(
-          'http://localhost:8070/api/forum',
+          'https://smart-house-builder.azurewebsites.net/api/forum',
         ),
         headers: {"Access-Control-Allow-Origin": "*"});
     List<Report> reports = [];

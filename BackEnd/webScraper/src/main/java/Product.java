@@ -1,80 +1,107 @@
 
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.Map;
-import java.util.List;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
-public class Product extends AllProducts{
+import java.util.*;
+
+public class Product {
+    @JsonProperty
+    Integer categoryId;
+    @JsonProperty
+    String forumLink;
+    @JsonProperty
     String name;
-    String price;
-    String linkToProduct;
-    String linkToPng;
-
+    @JsonProperty
+    Float price;
+    @JsonProperty
+    Float rating;
+    @JsonProperty
+    String productUrl;
+    @JsonProperty
+    String pngUrl;
+    @JsonProperty
+    String description;
+    @JsonProperty("specifications")
+    String specifications;
+    @JsonIgnore
     Map<String, String> detailsOfProduct;
-    String sizeOfProduct;
-    String ecosystem;
 
 
-    Product(String name, String linkToPng, String linkToProduct){
-        this.name = name;
-        this.price = "Out of Stock";
-        this.linkToPng = linkToPng;
-        this.linkToProduct = linkToProduct;
-        this.ecosystem = "None";
+    //TODO(Razvan): ecosystem sa fie lista!!!
+
+    Product(String linkToPng, String linkToProduct) {
+        this.categoryId = null;
+        this.forumLink = "None";
+        this.rating = null;
+        this.name = null;
+        this.price = null;
+        this.pngUrl = linkToPng;
+        this.productUrl = linkToProduct;
         this.detailsOfProduct = new HashMap<>();
     }
 
+    Product(){}
 
-    void addPrice(String price){
-        this.price = price;
+
+
+    public Integer getCategoryId() {
+        return categoryId;
     }
 
-    public String getName() {
-        return name;
+    public String getForumLink() {
+        return forumLink;
     }
 
-    public String getPrice() {
-        return price;
+    public Float getRating() {
+        return rating;
     }
 
-    public String getLinkToProduct() {
-        return linkToProduct;
+    public String getDescription() {
+        return description;
     }
 
-    public String getLinkToPng() {
-        return linkToPng;
+    public Map<String, String> getDetailsOfProduct() {
+        return detailsOfProduct;
     }
 
-    public String getSize() {
-        return sizeOfProduct;
+
+    public void setCategoryId(Integer categoryId) {
+        this.categoryId = categoryId;
     }
 
-    public void setEcosystem(String ecosystem) {
-        this.ecosystem = ecosystem;
+    public void setForumLink(String forumLink) {
+        this.forumLink = forumLink;
     }
 
     public void setName(String name) {
         this.name = name;
     }
 
-    public void setPrice(String price) {
+    public void setPrice(Float price) {
         this.price = price;
     }
 
-    public void setLinkToProduct(String linkToProduct) {
-        this.linkToProduct = linkToProduct;
+    public void setRating(Float rating) {
+        this.rating = rating;
+    }
+
+    public void setProductUrl(String productUrl) {
+        this.productUrl = productUrl;
+    }
+
+    public void setPngUrl(String pngUrl) {
+        this.pngUrl = pngUrl;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 
 
-    public void setLinkToPng(String linkToPng) {
-        this.linkToPng = linkToPng;
+    public void addPrice(Float price){
+        this.price = price;
     }
-
-    public void setSize(String size) {
-        sizeOfProduct = size;
-    }
-
-    public String ecosystems(String name){
+    public String ecosystems(String name) {
         List<String> a = new LinkedList<>();
         String ecfinal = "";
         a.add("Control4");
@@ -87,32 +114,34 @@ public class Product extends AllProducts{
         a.add("Google Asistant");
         a.add("Google Home");
         a.add("SmartThings");
-        for(int i = 0; i < a.size(); i++){
-            if(name.contains(a.get(i))){
-                if(ecfinal.equals("")){
+        for (int i = 0; i < a.size(); i++) {
+            if (name.contains(a.get(i))) {
+                if (ecfinal.equals("")) {
                     ecfinal = a.get(i);
-                }
-                else{
+                } else {
                     ecfinal = ecfinal + ", " + a.get(i);
                 }
             }
         }
-        if(ecfinal.equals(""))
+        if (ecfinal.equals(""))
             return "None";
         else
             return ecfinal;
     }
 
+
     @Override
     public String toString() {
         return "Product{" +
-                "name='" + name + '\'' +
-                ", price='" + price + '\'' +
-                ", ecosystem='" + ecosystem + '\'' +
-                ", linkToProduct='" + linkToProduct + '\'' +
-                ", linkToPng='" + linkToPng + '\'' +
+                "categoryId=" + categoryId +
+                ", forumLink='" + forumLink + '\'' +
+                ", name='" + name + '\'' +
+                ", price=" + price +
+                ", rating=" + rating +
+                ", productUrl='" + productUrl + '\'' +
+                ", pngUrl='" + pngUrl + '\'' +
+                ", description='" + description + '\'' +
                 ", detailsOfProduct=" + detailsOfProduct +
-                ", sizeOfProduct='" + sizeOfProduct + '\'' +
                 '}';
     }
 }

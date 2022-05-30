@@ -8,7 +8,6 @@ import 'package:homepage/forum/classes/PostClass.dart';
 
 import 'Post.dart';
 
-//ButtonBack(context: context, width: 20, height: 20),
 class MyPosts extends StatefulWidget {
   const MyPosts({Key? key}) : super(key: key);
 
@@ -17,19 +16,40 @@ class MyPosts extends StatefulWidget {
 }
 
 class _MyPostsState extends State<MyPosts> {
-  List<Post> myPosts = [];
+  List<Post> posts = [];
   late List<Post> selectedPosts;
-
+  String route = "/";
   @override
   void initState() {
-    Post.getLocalPosts().then(
-      (value) {
+    if (globals.isSorted == false && globals.isSearched == false) {
+      Post.getLocalPosts().then(
+        (value) {
+          setState(() {
+            globals.myPosts = value;
+            posts = globals.myPosts;
+          });
+        },
+      );
+    } else if (globals.isSorted == true) {
+      globals.isSorted = false;
+      Post.sortPosts("/myposts").then((value) {
         setState(() {
-          myPosts.addAll(value);
+          posts = value;
         });
-      },
-    );
+      });
+    } else if (globals.isSearched == true) {
+      globals.isSearched = false;
+      Post.getSearchedPosts("/myposts").then((value) {
+        setState(() {
+          posts = value;
+        });
+      });
+    }
+    if (globals.nrPrefferencesMyPost > 0) {
+      route = "/myposts";
+    }
     selectedPosts = [];
+
     super.initState();
   }
 
@@ -46,8 +66,11 @@ class _MyPostsState extends State<MyPosts> {
   //functia pentru butonul remove
   deleteSelectedPosts() async {
     setState(() {
-      Post.removePosts(selectedPosts, myPosts);
+      Post.removePosts(selectedPosts, posts);
       globals.isChanged = true;
+      globals.checkedCommentedM = false;
+      globals.checkedPopularM = false;
+      globals.checkedRecentM = false;
     });
   }
 
@@ -75,7 +98,8 @@ class _MyPostsState extends State<MyPosts> {
                             context: context,
                             width: 40,
                             height: 40,
-                            route: '/',
+                            route: route,
+                            from: "/myposts",
                           ),
                         ),
                         Expanded(
@@ -87,10 +111,12 @@ class _MyPostsState extends State<MyPosts> {
                       ],
                     ),
                   ),
-                  SearchBar(),
+                  SearchBar(route: "/myposts"),
                   Container(
                     height: 230,
-                    child: Center(child: CustomSort(height: 230, width: 160)),
+                    child: Center(
+                        child: CustomSort(
+                            height: 230, width: 160, route: "/myposts")),
                   ),
                   Container(
                     child: Center(
@@ -149,7 +175,8 @@ class _MyPostsState extends State<MyPosts> {
                             context: context,
                             width: 40,
                             height: 40,
-                            route: '/',
+                            route: route,
+                            from: "/myposts",
                           ),
                         ),
                         Expanded(
@@ -161,10 +188,12 @@ class _MyPostsState extends State<MyPosts> {
                       ],
                     ),
                   ),
-                  SearchBar(),
+                  SearchBar(route: "/myposts"),
                   Container(
                     height: 230,
-                    child: Center(child: CustomSort(height: 230, width: 160)),
+                    child: Center(
+                        child: CustomSort(
+                            height: 230, width: 160, route: "/myposts")),
                   ),
                   Container(
                     child: Center(
@@ -218,7 +247,8 @@ class _MyPostsState extends State<MyPosts> {
                             context: context,
                             width: 40,
                             height: 40,
-                            route: '/',
+                            route: route,
+                            from: "/myposts",
                           ),
                         ),
                         Expanded(
@@ -230,7 +260,7 @@ class _MyPostsState extends State<MyPosts> {
                       ],
                     ),
                   ),
-                  SearchBar(),
+                  SearchBar(route: "/myposts"),
                   Container(
                     height: 400,
                     child: Row(
@@ -241,7 +271,11 @@ class _MyPostsState extends State<MyPosts> {
                             children: [
                               Container(
                                 margin: const EdgeInsets.only(top: 10.0),
-                                child: CustomSort(height: 230, width: 160),
+                                child: CustomSort(
+                                  height: 230,
+                                  width: 160,
+                                  route: "/myPosts",
+                                ),
                               ),
                               Container(
                                 margin: const EdgeInsets.only(top: 10.0),
@@ -363,131 +397,144 @@ class _MyPostsState extends State<MyPosts> {
   }
 // ------------------------------------------------------------------------MY POSTS TABLE
 
-  SingleChildScrollView MyPostsTable(
+  Widget MyPostsTable(
       double spaceBetweenColumns, double fontSize, double topicWidth) {
-    return SingleChildScrollView(
-      child: Center(
-        child: SingleChildScrollView(
-          scrollDirection: Axis.horizontal,
-          child: DataTable(
-              columnSpacing: spaceBetweenColumns,
-              columns: [
-                DataColumn(
-                  numeric: false,
-                  label: SizedBox(
-                    width: 50,
-                    child: Center(
-                      child: Text('ID',
-                          style: TextStyle(
-                            fontSize: fontSize,
-                            fontWeight: FontWeight.w400,
-                          )),
+    if (globals.myPosts.length > 0)
+      return SingleChildScrollView(
+        child: Center(
+          child: SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: DataTable(
+                columnSpacing: spaceBetweenColumns,
+                columns: [
+                  DataColumn(
+                    numeric: false,
+                    label: SizedBox(
+                      width: 50,
+                      child: Center(
+                        child: Text('ID',
+                            style: TextStyle(
+                              fontSize: fontSize,
+                              fontWeight: FontWeight.w400,
+                            )),
+                      ),
                     ),
                   ),
-                ),
-                DataColumn(
-                  numeric: false,
-                  label: SizedBox(
-                    width: topicWidth,
-                    child: Center(
-                      child: Text('TOPIC',
-                          style: TextStyle(
-                            fontSize: fontSize,
-                            fontWeight: FontWeight.w400,
-                          )),
+                  DataColumn(
+                    numeric: false,
+                    label: SizedBox(
+                      width: topicWidth,
+                      child: Center(
+                        child: Text('TOPIC',
+                            style: TextStyle(
+                              fontSize: fontSize,
+                              fontWeight: FontWeight.w400,
+                            )),
+                      ),
                     ),
                   ),
-                ),
-                DataColumn(
-                  numeric: false,
-                  label: SizedBox(
-                    width: 70,
-                    child: Center(
-                      child: Text('DATE',
-                          style: TextStyle(
-                            fontSize: fontSize,
-                            fontWeight: FontWeight.w400,
-                          )),
+                  DataColumn(
+                    numeric: false,
+                    label: SizedBox(
+                      width: 70,
+                      child: Center(
+                        child: Text('DATE',
+                            style: TextStyle(
+                              fontSize: fontSize,
+                              fontWeight: FontWeight.w400,
+                            )),
+                      ),
                     ),
                   ),
-                ),
-                DataColumn(
-                  numeric: false,
-                  label: Text('LIKES',
-                      style: TextStyle(
-                        fontSize: fontSize,
-                        fontWeight: FontWeight.w400,
-                      )),
-                ),
-                DataColumn(
-                  numeric: false,
-                  label: Text('COMMENTS',
-                      style: TextStyle(
-                        fontSize: fontSize,
-                        fontWeight: FontWeight.w400,
-                      )),
-                ),
-              ],
-              rows: myPosts
-                  .map(
-                    (post) => DataRow(
-                      //For checkboxes
-                      selected: selectedPosts.contains(post),
-                      onSelectChanged: (b) {
-                        onSelectedRow(b!, post);
-                      },
-                      cells: [
-                        DataCell(
-                          Center(
-                            child: Center(child: Text(post.id.toString())),
+                  DataColumn(
+                    numeric: false,
+                    label: Text('LIKES',
+                        style: TextStyle(
+                          fontSize: fontSize,
+                          fontWeight: FontWeight.w400,
+                        )),
+                  ),
+                  DataColumn(
+                    numeric: false,
+                    label: Text('COMMENTS',
+                        style: TextStyle(
+                          fontSize: fontSize,
+                          fontWeight: FontWeight.w400,
+                        )),
+                  ),
+                ],
+                rows: posts
+                    .map(
+                      (post) => DataRow(
+                        //For checkboxes
+                        selected: selectedPosts.contains(post),
+                        onSelectChanged: (b) {
+                          onSelectedRow(b!, post);
+                        },
+                        cells: [
+                          DataCell(
+                            Center(
+                              child: Center(child: Text(post.id.toString())),
+                            ),
                           ),
-                        ),
-                        DataCell(
-                          SizedBox(
-                            width: topicWidth,
-                            child: Center(
-                              child: TextButton(
-                                child: Text(
-                                  post.topic,
-                                  style: TextStyle(
-                                    color: Colors.black,
+                          DataCell(
+                            SizedBox(
+                              width: topicWidth,
+                              child: Center(
+                                child: TextButton(
+                                  child: Text(
+                                    post.topic,
+                                    style: TextStyle(
+                                      color: Colors.black,
+                                    ),
                                   ),
+                                  onPressed: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => POST(
+                                                post: post,
+                                                homeRoute: '/myposts',
+                                              )),
+                                    );
+                                  },
                                 ),
-                                onPressed: () {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) => POST(
-                                              post: post,
-                                              homeRoute: '/myposts',
-                                            )),
-                                  );
-                                },
                               ),
                             ),
                           ),
-                        ),
-                        DataCell(
-                          Center(
-                            child: Text(post.date),
+                          DataCell(
+                            Center(
+                              child: Text(post.date),
+                            ),
                           ),
-                        ),
-                        DataCell(
-                          Center(
-                            child: Text(post.nrLikes.toString()),
+                          DataCell(
+                            Center(
+                              child: Text(post.nrLikes.toString()),
+                            ),
                           ),
-                        ),
-                        DataCell(
-                          Center(
-                            child: Text(post.nrComments.toString()),
+                          DataCell(
+                            Center(
+                              child: Text(post.nrComments.toString()),
+                            ),
                           ),
-                        ),
-                      ],
-                    ),
-                  )
-                  .toList()),
+                        ],
+                      ),
+                    )
+                    .toList()),
+          ),
         ),
-      ),
-    );
+      );
+    else if (globals.isSearched == true) {
+      globals.isSearched = false;
+      return Center(
+        child: Container(
+            child: Text(
+          "No post found!",
+          style: TextStyle(fontSize: 20),
+        )),
+      );
+    } else {
+      return CircularProgressIndicator();
+    }
   }
 }

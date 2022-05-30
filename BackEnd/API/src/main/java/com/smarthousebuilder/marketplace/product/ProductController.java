@@ -5,7 +5,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Optional;
 
-
+@CrossOrigin
 @RestController
 @RequestMapping("/api/products")
 public class ProductController {
@@ -39,6 +39,15 @@ public class ProductController {
     @GetMapping("/price-range")
     public List<Product> getByPriceRange(@RequestParam (value = "lower") Double lower,@RequestParam (value = "upper") Double upper){
         return productService.getByPriceRange(lower,upper);
+    }
+    @GetMapping("/name")
+    public List<Product> getByPartOfName(@RequestParam (value = "string")String string){
+        return productService.getByString(string);
+    }
+    @GetMapping("/rating")
+    public List<Product> getByRatingRange(@RequestParam (value = "lower") Double lower,
+                                          @RequestParam (value = "upper") Double upper){
+        return productService.getByRatingRange(lower,upper);
     }
 
     @PostMapping("/add")

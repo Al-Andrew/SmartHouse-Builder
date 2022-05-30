@@ -1,12 +1,14 @@
 import 'dart:html';
+import 'builder.dart';
 import 'package:flutter/material.dart';
 
 class SchematicItemExpanded extends StatelessWidget {
   final String id;
   final String title;
   final String linkImg;
+  var add;
 
-  SchematicItemExpanded(this.id, this.title, this.linkImg);
+  SchematicItemExpanded(this.id, this.title, this.linkImg, this.add);
 
   @override
   Widget build(BuildContext context) {
@@ -20,8 +22,8 @@ class SchematicItemExpanded extends StatelessWidget {
         // actionsPadding: EdgeInsetsGeometry.infinity,
         actions: [
           Expanded(
-              child: FloatingActionButton(
-                  onPressed: null, child: Icon(Icons.add))),
+              child:
+                  FloatingActionButton(onPressed: add, child: Icon(Icons.add))),
           Expanded(
               child: FloatingActionButton(
                   onPressed: Navigator.of(context).pop,

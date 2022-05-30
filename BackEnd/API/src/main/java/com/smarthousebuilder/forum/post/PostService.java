@@ -10,6 +10,8 @@ import com.smarthousebuilder.forum.user.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -86,5 +88,94 @@ public class PostService {
             post1.setTitle(post.title);
             return postRepository.save(post1);
         });
+    }
+
+    public List<Post> sortPostsByParameter(Integer parameter, List<Post> posts) {
+        if(parameter==1) {
+            Collections.sort(posts, new Comparator<Post>() {
+                @Override
+                public int compare(Post o1, Post o2) {
+                    return o1.date.compareTo(o2.date);
+                }
+            });
+            Collections.reverse(posts);
+        }else
+            if(parameter==2){
+                Collections.sort(posts, new Comparator<Post>() {
+                    @Override
+                    public int compare(Post o1, Post o2) {
+                        return o1.title.compareTo(o2.title);
+                    }
+                });
+            }
+            else
+                if(parameter==3){
+                    Collections.sort(posts, new Comparator<Post>() {
+                        @Override
+                        public int compare(Post o1, Post o2) {
+                            return o2.comments.size()-o1.comments.size();
+                        }
+                    });
+                }
+        return posts;
+    }
+    public List<Post> getUserPostByText(Integer idUser,String searchText)
+    {
+        List<Post> postsList;
+        if(idUser==-1)
+            postsList = postRepository.findAll();
+        else
+            postsList = postRepository.findPostByUserId(idUser);
+
+        Tag tagDummy;
+        for(Post postIndex : postsList){
+            tagDummy = tagRepository.findTagByPostId(postIndex.getId());
+            postIndex.setTag(tagDummy);
+        }
+        List<Post> response=new ArrayList<>();
+        if(searchText.toLowerCase().equals("setup"))
+        {
+            for(Post currentPost:postsList)
+                if(currentPost.getTag()!=null)
+                    if(currentPost.getTag().getSetupFlag()==1)
+                        response.add(currentPost);
+            return response;
+        }
+        else if(searchText.toLowerCase().equals("hardware"))
+        {
+            for(Post currentPost:postsList)
+                if(currentPost.getTag()!=null)
+                    if(currentPost.getTag().getHardwareFlag()==1)
+                        response.add(currentPost);
+            return response;
+        }
+        else if(searchText.toLowerCase().equals("software"))
+        {
+            for(Post currentPost:postsList)
+                if(currentPost.getTag()!=null)
+                    if(currentPost.getTag().getSoftwareFlag()==1)
+                        response.add(currentPost);
+            return response;
+        }
+        else if(searchText.toLowerCase().equals("review"))
+        {
+            for(Post currentPost:postsList)
+                if(currentPost.getTag()!=null)
+                    if(currentPost.getTag().getRewiewFlag()==1)
+                        response.add(currentPost);
+            return response;
+        }
+        else if(searchText.toLowerCase().equals("question"))
+        {
+            for(Post currentPost:postsList)
+                if(currentPost.getTag()!=null)
+                    if(currentPost.getTag().getQuestionFlag()==1)
+                        response.add(currentPost);
+            return response;
+        }
+        for(Post currentPost:postsList)
+            if(currentPost.getTitle().toLowerCase().contains(searchText.toLowerCase()))
+                response.add(currentPost);
+        return response;
     }
 }

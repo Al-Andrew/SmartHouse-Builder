@@ -2,6 +2,7 @@ import 'dart:html';
 
 import 'package:flutter/material.dart';
 import 'package:homepage/forum/screens/MyPosts.dart';
+import '../../ForumGlobals.dart' as globals;
 
 class ButtonMyPosts extends StatelessWidget {
   const ButtonMyPosts({
