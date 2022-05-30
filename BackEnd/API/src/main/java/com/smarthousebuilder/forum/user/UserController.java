@@ -24,10 +24,16 @@ public class UserController {
     public List<User> getAllUsers(){
         return userService.getAllUsers();
     }
-    @PostMapping
-    public void registerNewUser(@RequestBody User user){
-        userService.addNewUser(user);
+    @PostMapping(path = "/register")
+    public int registerNewUser(@RequestBody User user){
+        return userService.addNewUser(user);
     }
+
+    @PostMapping(path = "/login")
+    public int loginUser(@RequestBody User user){
+        return userService.checkUser(user);
+    }
+
     @DeleteMapping(path = "/{userId}")
     public void deleteUser(@PathVariable("userId") Integer userId){
         userService.deleteUser(userId);
