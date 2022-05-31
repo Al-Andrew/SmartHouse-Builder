@@ -1,6 +1,9 @@
 // import 'dart:ffi';
 
+import 'dart:html';
+
 import 'package:flutter/material.dart';
+import 'package:homepage/marketplace.dart';
 import 'package:homepage/product_item_expanded.dart';
 
 class ProductItem extends StatelessWidget {
@@ -9,8 +12,17 @@ class ProductItem extends StatelessWidget {
   final double pret;
   final String linkImg;
   final String description;
+  final int id;
+  bool? favorited;
 
-  ProductItem(this.title, this.pret, this.linkImg, this.description);
+  void Function()? c;
+
+  ProductItem(this.title, this.pret, this.linkImg, this.description, this.id) {
+    c = () {
+      Marketplace.state.ToggleFavorite(id);
+    };
+    favorited = false;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -57,12 +69,15 @@ class ProductItem extends StatelessWidget {
                   return "ERR";
                 })())),
               ),
-              const Flexible(
+              Flexible(
                   child: Center(
                 child: IconButton(
-                  onPressed: null,
+                  onPressed: () {
+                    favorited = !favorited!;
+                    c!();
+                  },
                   icon: Icon(Icons.favorite),
-                  color: Colors.red,
+                  color: favorited! ? Colors.red : Colors.grey,
                 ),
               ))
             ],

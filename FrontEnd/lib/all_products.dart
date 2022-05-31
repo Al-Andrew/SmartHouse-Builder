@@ -75,7 +75,7 @@ class _AllProductsState extends State<AllProducts> {
             physics: AlwaysScrollableScrollPhysics(),
             children: displayedProducts
                 .map((proData) => ProductItem(proData.name, proData.price,
-                    proData.pngUrl, proData.description))
+                    proData.pngUrl, proData.description, proData.id))
                 .toList(),
           ),
           if (loading) ...[
