@@ -17,13 +17,16 @@ import 'package:http/http.dart' as http;
 import 'forum/utilities/Utilities.dart';
 
 class Marketplace extends StatefulWidget {
+  static late MarketplaceState state;
+
   Marketplace();
 
   @override
-  State<Marketplace> createState() => _MarketplaceState();
+  // ignore: no_logic_in_create_state
+  State<Marketplace> createState() => state = MarketplaceState();
 }
 
-class _MarketplaceState extends State<Marketplace> {
+class MarketplaceState extends State<Marketplace> {
   List<Product> _allProducts = [];
   // List<Schematic> _allSchematics = DUMMY_SCHEMATICS;
   List<Product> _favoriteProducts = [];
@@ -85,20 +88,21 @@ class _MarketplaceState extends State<Marketplace> {
     }
   }
 
-  // void ToggleFavorite(int ProductId) {
-  //   final ExistingIndex =
-  //       _favoriteProducts.indexWhere((Product) => Product.id == ProductId);
-  //   if (ExistingIndex >= 0) {
-  //     setState(() {
-  //       _favoriteProducts.removeAt(ExistingIndex);
-  //     });
-  //   } else {
-  //     setState(() {
-  //       _allProducts
-  //           .add(_allProducts.firstWhere((Product) => Product.id == ProductId));
-  //     });
-  //   }
-  // }
+  void ToggleFavorite(int ProductId) {
+    print("Hello world");
+    final ExistingIndex =
+        _favoriteProducts.indexWhere((Product) => Product.id == ProductId);
+    if (ExistingIndex >= 0) {
+      setState(() {
+        _favoriteProducts.removeAt(ExistingIndex);
+      });
+    } else {
+      setState(() {
+        _allProducts
+            .add(_allProducts.firstWhere((Product) => Product.id == ProductId));
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {

@@ -73,7 +73,7 @@ class _FavProductsState extends State<FavProducts> {
             physics: AlwaysScrollableScrollPhysics(),
             children: displayedProducts
                 .map((proData) => ProductItem(proData.name, proData.price,
-                    proData.pngUrl, proData.description))
+                    proData.pngUrl, proData.description, proData.id))
                 .toList(),
           ),
           if (loading) ...[
