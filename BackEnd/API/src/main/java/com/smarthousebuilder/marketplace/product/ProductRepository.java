@@ -27,4 +27,7 @@ public interface ProductRepository extends JpaRepository<Product,Integer> {
     Boolean existsByRatingBetween(Double lower, Double upper);
 
     List<Product> findAllByRatingBetween(Double lower, Double upper );
+
+    @Query("SELECT p from Product p")
+    List<Product> findAllProducts();
 }
