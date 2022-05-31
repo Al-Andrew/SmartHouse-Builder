@@ -1,4 +1,4 @@
-package com.smarthousebuilder.forum.user;
+ package com.smarthousebuilder.forum.user;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -45,7 +45,7 @@ public class UserService {
     //FOR LOGIN
     public int checkUser(User user) {
         Optional<User> userOptional;
-       // if (user.getEmailUser()==null) return -5;
+        // if (user.getEmailUser()==null) return -5;
         if (user.getEmailUser() == null) {
             userOptional = userRepository.findUserByName(user.getNameUser());
             if (userOptional.isEmpty()) {
