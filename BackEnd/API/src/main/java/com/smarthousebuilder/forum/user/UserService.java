@@ -14,28 +14,59 @@ public class UserService {
     public UserService(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
-    public User getUserById(Integer userId){
+
+    public User getUserById(Integer userId) {
         User user = userRepository.findUserById(userId);
         return user;
     }
-    public List<User> getAllUsers(){
+
+    public List<User> getAllUsers() {
         List<User> usersList = userRepository.findAll();
         return usersList;
     }
 
-    public void addNewUser(User user) {
-        Optional<User> userOptional= userRepository.findUserByNameAndEmail(user.getNameUser(),user.getEmailUser());
-        if(userOptional.isPresent())
-            throw new IllegalStateException("User already exists!");
+    //FOR REGISTER
+    public int addNewUser(User user) {
+        Optional<User> userOptional;
+
+        userOptional = userRepository.findUserByName(user.getNameUser());
+        if (userOptional.isEmpty()) {
+            return -1;
+        }
+        userOptional = userRepository.findUserByEmail(user.getEmailUser());
+        if (userOptional.isEmpty()) {
+            return -2;
+        }
+
         userRepository.save(user);
+        return user.getId();
+    }
+
+    //FOR LOGIN
+    public int checkUser(User user) {
+        Optional<User> userOptional;
+       // if (user.getEmailUser()==null) return -5;
+        if (user.getEmailUser() == null) {
+            userOptional = userRepository.findUserByName(user.getNameUser());
+            if (userOptional.isEmpty()) {
+                return -1;
+            }
+            return userOptional.get().id;
+        } else {
+            userOptional = userRepository.findUserByEmail(user.getEmailUser());
+            if (userOptional.isEmpty()) {
+                return -2;
+            }
+            return userOptional.get().id;
+        }
+
     }
 
     public void deleteUser(Integer userId) {
         boolean exists = userRepository.existsById(userId);
-        if(!exists){
+        if (!exists) {
             throw new IllegalStateException("User with id " + userId + " does not exist");
         }
         userRepository.deleteById(userId);
-
     }
 }
