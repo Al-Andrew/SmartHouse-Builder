@@ -100,23 +100,23 @@ public class PostService {
             });
             Collections.reverse(posts);
         }else
-            if(parameter==2){
-                Collections.sort(posts, new Comparator<Post>() {
-                    @Override
-                    public int compare(Post o1, Post o2) {
-                        return o1.title.compareTo(o2.title);
-                    }
-                });
-            }
-            else
-                if(parameter==3){
-                    Collections.sort(posts, new Comparator<Post>() {
-                        @Override
-                        public int compare(Post o1, Post o2) {
-                            return o2.comments.size()-o1.comments.size();
-                        }
-                    });
+        if(parameter==2){
+            Collections.sort(posts, new Comparator<Post>() {
+                @Override
+                public int compare(Post o1, Post o2) {
+                    return o1.title.compareTo(o2.title);
                 }
+            });
+        }
+        else
+        if(parameter==3){
+            Collections.sort(posts, new Comparator<Post>() {
+                @Override
+                public int compare(Post o1, Post o2) {
+                    return o2.comments.size()-o1.comments.size();
+                }
+            });
+        }
         return posts;
     }
     public List<Post> getUserPostByText(Integer idUser,String searchText)
@@ -161,7 +161,7 @@ public class PostService {
         {
             for(Post currentPost:postsList)
                 if(currentPost.getTag()!=null)
-                    if(currentPost.getTag().getRewiewFlag()==1)
+                    if(currentPost.getTag().getReviewFlag()==1)
                         response.add(currentPost);
             return response;
         }
