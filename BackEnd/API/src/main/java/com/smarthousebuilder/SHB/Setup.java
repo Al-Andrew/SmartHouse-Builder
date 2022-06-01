@@ -7,7 +7,7 @@ import javax.persistence.*;
 
 @Entity
 public class Setup {
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue
     @Id
     @Column(name = "id")
     private int id;
@@ -19,7 +19,6 @@ public class Setup {
     private Integer userId;
     @Basic
     @Column(name = "components")
-    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String components;
 
     public int getId() {
