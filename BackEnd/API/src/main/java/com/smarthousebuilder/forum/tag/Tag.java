@@ -16,7 +16,7 @@ public class Tag {
     @Column(name = "id_post")
     protected int id;
     @Column(name = "review")
-    @JsonProperty("rewiewFlag")
+    @JsonProperty("reviewFlag")
     protected int reviewFlag;
     @Column(name = "question")
     @JsonProperty("questionFlag")
@@ -61,12 +61,12 @@ public class Tag {
         this.id = id;
     }
 
-    public int getRewiewFlag() {
+    public int getReviewFlag() {
         return reviewFlag;
     }
 
-    public void setRewiewFlag(int rewiewFlag) {
-        this.reviewFlag = rewiewFlag;
+    public void setReviewFlag(int reviewFlag) {
+        this.reviewFlag = reviewFlag;
     }
 
     public int getQuestionFlag() {

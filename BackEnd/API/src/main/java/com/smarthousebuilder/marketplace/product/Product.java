@@ -1,6 +1,14 @@
 package com.smarthousebuilder.marketplace.product;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import javax.persistence.*;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Entity
 @Table(name = "products")
@@ -36,6 +44,9 @@ public class Product {
     @Basic
     @Column(name = "specifications")
     private String specifications;
+
+
+
 
     public int getId() {
         return id;
@@ -153,5 +164,13 @@ public class Product {
         result = 31 * result + (description != null ? description.hashCode() : 0);
         result = 31 * result + (specifications != null ? specifications.hashCode() : 0);
         return result;
+    }
+
+    public List<String> getEcosystems() throws JsonProcessingException {
+        ObjectMapper mapper = new ObjectMapper();
+        Map<String, String> specs = new HashMap<>();
+        specs = mapper.readValue(this.specifications, specs.getClass());
+        String ecosystems = specs.get("ecosystem");
+        return Arrays.asList(ecosystems.split(", "));
     }
 }

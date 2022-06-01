@@ -29,11 +29,8 @@ class _ForumHomePageState extends State<ForumHomePage> {
             return SingleChildScrollView(
               child: Column(
                 children: <Widget>[
-                  CustomTitle(
-                    text: "Forum",
-                    fontSize: 35,
-                  ),
-                  SearchBar(),
+                  Title(),
+                  SearchBar(route: "/"),
                   Container(
                     height: 230,
                     child: Row(
@@ -41,7 +38,7 @@ class _ForumHomePageState extends State<ForumHomePage> {
                       children: [
                         Center(
                             child: CustomSort(
-                                height: 230, width: 160, route: '/')),
+                                height: 230, width: 160, route: "/")),
                         Column(
                           children: [
                             Container(
@@ -84,11 +81,8 @@ class _ForumHomePageState extends State<ForumHomePage> {
             return SingleChildScrollView(
               child: Column(
                 children: <Widget>[
-                  CustomTitle(
-                    text: "Forum",
-                    fontSize: 35,
-                  ),
-                  SearchBar(),
+                  Title(),
+                  SearchBar(route: "/"),
                   Container(
                     height: 230,
                     child: Row(
@@ -96,7 +90,7 @@ class _ForumHomePageState extends State<ForumHomePage> {
                       children: [
                         Center(
                             child: CustomSort(
-                                height: 230, width: 160, route: '/')),
+                                height: 230, width: 160, route: "/")),
                         Column(
                           children: [
                             Container(
@@ -139,11 +133,8 @@ class _ForumHomePageState extends State<ForumHomePage> {
             return SingleChildScrollView(
               child: Column(
                 children: <Widget>[
-                  CustomTitle(
-                    text: "Forum",
-                    fontSize: 35,
-                  ),
-                  SearchBar(),
+                  Title(),
+                  SearchBar(route: "/"),
                   Container(
                     height: 400,
                     child: Row(
@@ -161,7 +152,7 @@ class _ForumHomePageState extends State<ForumHomePage> {
                                 child: CustomSort(
                                   height: 230,
                                   width: 160,
-                                  route: '/',
+                                  route: "/",
                                 ),
                               ),
                             ],
@@ -190,5 +181,40 @@ class _ForumHomePageState extends State<ForumHomePage> {
         }),
       ),
     );
+  }
+
+  Widget Title() {
+    if (globals.isSorted == true || globals.isSearched) {
+      return Padding(
+        padding: const EdgeInsets.only(left: 10.0),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Expanded(
+              flex: 0,
+              child: ButtonBack(
+                context: context,
+                width: 40,
+                height: 40,
+                route: '/',
+                from: "/",
+              ),
+            ),
+            Expanded(
+              child: CustomTitle(
+                text: "Forum",
+                fontSize: 35,
+              ),
+            ),
+          ],
+        ),
+      );
+    } else {
+      return CustomTitle(
+        text: "Forum",
+        fontSize: 35,
+      );
+    }
   }
 }

@@ -14,7 +14,8 @@ class FavProducts extends StatefulWidget {
   State<FavProducts> createState() => _FavProductsState();
 }
 
-class _FavProductsState extends State<FavProducts> {final ScrollController _scrollController = ScrollController();
+class _FavProductsState extends State<FavProducts> {
+  final ScrollController _scrollController = ScrollController();
   bool loading = false;
   bool allLoaded = false;
   List<Product> displayedProducts = [];
@@ -65,26 +66,26 @@ class _FavProductsState extends State<FavProducts> {final ScrollController _scro
     if (displayedProducts.isNotEmpty) {
       return Stack(
         alignment: Alignment.center,
-
         children: [
           ListView(
             controller: _scrollController,
             shrinkWrap: true,
             physics: AlwaysScrollableScrollPhysics(),
             children: displayedProducts
-                .map((proData) => ProductItem(
-                    proData.id, proData.title, proData.pret, proData.linkImg))
+                .map((proData) => ProductItem(proData.name, proData.price,
+                    proData.pngUrl, proData.description))
                 .toList(),
           ),
-          if (loading)...[
-          Positioned(
+          if (loading) ...[
+            Positioned(
               // left: 0,
               bottom: 0,
               child: Container(
-                  child:  Center(child: CircularProgressIndicator()),
-                  height: 80,
-                ),
-              )]
+                child: Center(child: CircularProgressIndicator()),
+                height: 80,
+              ),
+            )
+          ]
         ],
       );
     } else {

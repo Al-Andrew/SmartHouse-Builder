@@ -10,6 +10,7 @@ import 'package:flame/game.dart';
 import 'package:flame/input.dart';
 import 'package:flame/palette.dart';
 import 'package:flutter/material.dart' hide Draggable;
+import 'package:flutter/services.dart';
 
 //import 'package:flutter/cupertino.dart';
 
@@ -21,7 +22,15 @@ class BuilderCon extends StatefulWidget {
 }
 
 class BuilderState extends State<BuilderCon> {
-  var flameContext = Builder();
+  static var flameContext = Builder();
+
+  static void AddNewWall() {
+    flameContext.add(Wall());
+  }
+
+  static void AddNewWindow() {
+    flameContext.add(Window());
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -29,16 +38,34 @@ class BuilderState extends State<BuilderCon> {
   }
 }
 
-class Builder extends FlameGame with HasTappables, HasDraggables {
+class Builder extends FlameGame
+    with HasTappables, HasDraggables, KeyboardEvents {
+  @override
+  Color backgroundColor() {
+    return const Color.fromRGBO(245, 245, 245, 1.0);
+  }
+
   @override
   Future<void>? onLoad() {
-    //add(Window());
-    //add(Window()..y = 350);
-    //add(Wall()
-    //  ..y = 350
-    //  ..x = 400);
     add(Wall());
     return super.onLoad();
+  }
+
+  @override
+  void render(Canvas canvas) {
+    Paint paint = Paint();
+    paint.color = const Color.fromRGBO(220, 220, 220, 0.8);
+    paint.strokeWidth = 1;
+
+    for (int i = 0; i < canvasSize.x; i += 25) {
+      canvas.drawLine(
+          Offset(i as double, 0), Offset(i as double, canvasSize.y), paint);
+    }
+    for (int i = 0; i < canvasSize.y; i += 25) {
+      canvas.drawLine(
+          Offset(0, i as double), Offset(canvasSize.x, i as double), paint);
+    }
+    super.render(canvas);
   }
 
   @override
@@ -53,13 +80,29 @@ class Builder extends FlameGame with HasTappables, HasDraggables {
     );
   }
 
-  void AddNewComponent(int id) {
-    //0 = wall 1 = window 2 = door
-    if (id <= 2 && id >= 0) {
-      if (id == 1)
-        add(Wall());
-      else if (id == 2) add(Window());
+  @override
+  KeyEventResult onKeyEvent(
+      RawKeyEvent event, Set<LogicalKeyboardKey> keysPressed) {
+    final isKeyDown = event is RawKeyDownEvent;
+    final isDelete = keysPressed.contains(LogicalKeyboardKey.delete);
+    print("keyEvent");
+    if (isDelete && isKeyDown) {
+      for (var child in this.children) {
+        if (child is! BaseSchematic) continue;
+
+        BaseSchematic c = child as BaseSchematic;
+        if (!c.isFocused) continue;
+
+        remove(c.gizmoRef);
+        remove(c);
+      }
     }
+    final isSpace = keysPressed.contains(LogicalKeyboardKey.space);
+    if (isSpace && isKeyDown) {
+      BuilderState.AddNewWall();
+    }
+
+    return KeyEventResult.ignored;
   }
 }
 
@@ -117,12 +160,11 @@ class Gizmo extends PositionComponent with Draggable {
     if (schematic.isFocused == false) return;
     Paint paint = Paint();
     paint.style = PaintingStyle.stroke;
-    paint.color = Colors.cyan;
+    paint.color = const Color.fromRGBO(55, 128, 215, 1.0);
 
     Rect selectRect = Offset.zero & Size(size.x, size.y);
     canvas.drawRect(selectRect, paint);
     paint.style = PaintingStyle.fill;
-    paint.color = Colors.blue;
     canvas.drawRect(rs_topLeft, paint);
     canvas.drawRect(rs_midLeft, paint);
     canvas.drawRect(rs_botLeft, paint);
@@ -150,24 +192,21 @@ class Gizmo extends PositionComponent with Draggable {
   bool onDragStart(DragStartInfo info) {
     Vector2 translatedEventPosition =
         this.transform.globalToLocal(info.eventPosition.game);
-
+    //TODO(Al-Andrew): The transformations should be more intuitive
+    //TODO(Al-Andrew): handle all sizing rs separatedly
     if (schematic.isFocused == false) return false;
     if (rs_topMid.contains(translatedEventPosition.toOffset()) ||
         rs_botMid.contains(translatedEventPosition.toOffset())) {
-      print("drag size y");
       dt = dragType.size_y;
     } else if (rs_midLeft.contains(translatedEventPosition.toOffset()) ||
         rs_midRight.contains(translatedEventPosition.toOffset())) {
-      print("drag size x");
       dt = dragType.size_x;
     } else if (rs_topLeft.contains(translatedEventPosition.toOffset()) ||
         rs_botLeft.contains(translatedEventPosition.toOffset()) ||
         rs_topRight.contains(translatedEventPosition.toOffset()) ||
         rs_botRight.contains(translatedEventPosition.toOffset())) {
-      print("drag rotate");
       dt = dragType.rotate;
     } else {
-      print("drag translate");
       dt = dragType.translate;
     }
     dragDeltaPosition = info.eventPosition.game - position;
@@ -187,6 +226,7 @@ class Gizmo extends PositionComponent with Draggable {
       return false;
     }
 
+    //TODO(Al-Andrew): handle all sizing rs separatedly
     if (this.dt == dragType.translate) {
       position.setFrom(event.eventPosition.game - dragDeltaPosition);
     } else if (this.dt == dragType.size_y) {
@@ -226,13 +266,16 @@ class BaseSchematic extends PositionComponent with Tappable {
   @override
   bool debugMode = false;
   bool isFocused = false;
+  late Gizmo gizmoRef;
 
   BaseSchematic(Vector2? position)
-      : super(position: position ?? Vector2(100, 100), size: Vector2(100, 10));
+      : super(
+            position: position ?? Vector2(100, 100), size: Vector2(100, 12.5));
 
   @override
   Future<void>? onLoad() {
-    parent?.add(Gizmo(this));
+    gizmoRef = Gizmo(this);
+    parent?.add(gizmoRef);
     return super.onLoad();
   }
 
@@ -260,11 +303,29 @@ class Window extends BaseSchematic {
   void render(Canvas canvas) {
     Paint paint = Paint();
     paint.style = PaintingStyle.fill;
-    paint.color = Colors.red;
-    paint.strokeWidth = 4;
+    paint.color = Colors.black;
+    paint.strokeWidth = 2;
 
-    canvas.drawLine(Offset.zero, Offset(size.x, 0), paint);
-    canvas.drawLine(Offset(0, size.y), Offset(size.x, size.y), paint);
+    canvas.drawLine(
+        Offset(0, paint.strokeWidth), Offset(size.x, paint.strokeWidth), paint);
+    canvas.drawLine(Offset(0, size.y - paint.strokeWidth),
+        Offset(size.x, size.y - paint.strokeWidth), paint);
+    canvas.drawRect(
+        Rect.fromLTWH(
+          0,
+          0,
+          size.x / 4,
+          size.y,
+        ),
+        paint);
+    canvas.drawRect(
+        Rect.fromLTWH(
+          size.x * 0.75,
+          0,
+          size.x / 4,
+          size.y,
+        ),
+        paint);
   }
 }
 
@@ -275,164 +336,10 @@ class Wall extends BaseSchematic {
   void render(Canvas canvas) {
     Paint paint = Paint();
     paint.style = PaintingStyle.fill;
-    paint.color = Colors.red;
+    paint.color = Colors.black;
     paint.strokeWidth = 4;
 
     Rect myRect = Offset.zero & Size(size.x, size.y);
     canvas.drawRect(myRect, paint);
   }
 }
-
-//class Window extends PositionComponent with Draggable, Tappable {
-//  @override
-//  bool debugMode = false;
-//
-//  Window({Vector2? position})
-//      : super(
-//          position: position ?? Vector2(100, 200),
-//          size: Vector2(200, 20),
-//        );
-//
-//  Vector2? dragDeltaPosition;
-//  bool get isDragging => dragDeltaPosition != null;
-//
-//  @override
-//  void update(double dt) {
-//    super.update(dt);
-//    debugColor = isDragging ? Colors.greenAccent : Colors.purple;
-//  }
-//
-//  @override
-//  bool onDragStart(DragStartInfo info) {
-//    dragDeltaPosition = info.eventPosition.game - position;
-//    return false;
-//  }
-//
-//  @override
-//  bool onDragUpdate(DragUpdateInfo event) {
-//    final dragDeltaPosition = this.dragDeltaPosition;
-//    if (dragDeltaPosition == null) {
-//      return false;
-//    }
-//
-//    position.setFrom(event.eventPosition.game - dragDeltaPosition);
-//    return false;
-//  }
-//
-//  @override
-//  bool onDragEnd(_) {
-//    dragDeltaPosition = null;
-//    return false;
-//  }
-//
-//  @override
-//  bool onDragCancel() {
-//    dragDeltaPosition = null;
-//    return false;
-//  }
-//
-//  @override
-//  void render(Canvas canvas) {
-//    Paint paint = Paint();
-//    paint.style = PaintingStyle.fill;
-//    paint.color = Colors.red;
-//    paint.strokeWidth = 4;
-//
-//    canvas.drawLine(Offset.zero, Offset(size.x, 0), paint);
-//    canvas.drawLine(Offset(0, size.y), Offset(size.x, size.y), paint);
-//  }
-//
-//  @override
-//  bool onTapUp(TapUpInfo info) {
-//    print("asdasd");
-//    var swp = size.x;
-//    size.x = size.y;
-//    size.y = swp;
-//    return true;
-//  }
-//
-//  @override
-//  bool handleTapUp(int pointerId, TapUpInfo info) {
-//    if (containsPoint(info.eventPosition.widget)) {
-//      return onTapUp(info);
-//    }
-//    return false;
-//  }
-//}
-//
-//class Wall extends PositionComponent with Draggable, Tappable {
-//  @override
-//  bool debugMode = false;
-//  Wall({Vector2? position})
-//      : super(
-//          position: position ?? Vector2(100, 200),
-//          size: Vector2(200, 24),
-//        );
-//
-//  Vector2? dragDeltaPosition;
-//  bool get isDragging => dragDeltaPosition != null;
-//
-//  @override
-//  void update(double dt) {
-//    super.update(dt);
-//    debugColor = isDragging ? Colors.greenAccent : Colors.purple;
-//  }
-//
-//  @override
-//  bool onDragStart(DragStartInfo info) {
-//    dragDeltaPosition = info.eventPosition.game - position;
-//    return false;
-//  }
-//
-//  @override
-//  bool onDragUpdate(DragUpdateInfo event) {
-//    final dragDeltaPosition = this.dragDeltaPosition;
-//    if (dragDeltaPosition == null) {
-//      return false;
-//    }
-//
-//    position.setFrom(event.eventPosition.game - dragDeltaPosition);
-//    return false;
-//  }
-//
-//  @override
-//  bool onDragEnd(_) {
-//    dragDeltaPosition = null;
-//    return false;
-//  }
-//
-//  @override
-//  bool onDragCancel() {
-//    dragDeltaPosition = null;
-//    return false;
-//  }
-//
-//  @override
-//  void render(Canvas canvas) {
-//    Paint paint = Paint();
-//    paint.style = PaintingStyle.fill;
-//    paint.color = Colors.red;
-//
-//    //print("Position" + this.position.toString());
-//    Rect myRect = Offset.zero & Size(size.x, size.y);
-//    canvas.drawRect(myRect, paint);
-//  }
-//
-//  @override
-//  bool onTapUp(TapUpInfo info) {
-//    print("asdasd");
-//    var swp = size.x;
-//    size.x = size.y;
-//    size.y = swp;
-//    return true;
-//  }
-//
-//  @override
-//  bool handleTapUp(int pointerId, TapUpInfo info) {
-//    if (containsPoint(info.eventPosition.widget)) {
-//      return onTapUp(info);
-//    }
-//    return false;
-//  }
-//}
-//

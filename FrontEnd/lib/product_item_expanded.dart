@@ -1,13 +1,15 @@
+// import 'dart:ffi';
 import 'dart:html';
 import 'package:flutter/material.dart';
 
 class ProductItemExpanded extends StatelessWidget {
-  final String id;
+  // final String id;
   final String title;
-  final int pret;
+  final double pret;
   final String linkImg;
+  final String description;
 
-  ProductItemExpanded(this.id, this.title, this.pret, this.linkImg);
+  ProductItemExpanded(this.title, this.pret, this.linkImg, this.description);
 
   @override
   Widget build(BuildContext context) {
@@ -86,7 +88,7 @@ class ProductItemExpanded extends StatelessWidget {
                         child: Image.network(linkImg),
                       ),
                     ),
-                    const Expanded(child: Text('\ndescriere\n')),
+                    Expanded(child: Text('\n$description\n')),
                   ],
                 )))));
     // TextButton(
