@@ -77,6 +77,8 @@ class Builder extends FlameGame
 
   @override
   Future<void>? onLoad() {
+    add(Door());
+    add(SmartObject());
     return super.onLoad();
   }
 
@@ -459,5 +461,56 @@ class Wall extends BaseSchematic {
 
     Rect myRect = Offset.zero & Size(size.x, size.y);
     canvas.drawRect(myRect, paint);
+  }
+}
+
+class Door extends BaseSchematic {
+  Door() : super(Vector2(100, 100));
+
+  @override
+  String getType() {
+    return "Door";
+  }
+
+  @override
+  void render(Canvas canvas) {
+    Paint paint = Paint();
+    paint.style = PaintingStyle.stroke;
+    paint.color = Colors.black;
+    paint.strokeWidth = 6;
+
+    final arc1 = Path();
+    arc1.moveTo(0, 0.95 * size.y);
+    arc1.arcToPoint(
+      Offset(size.x, 0),
+      radius: Radius.circular(100),
+    );
+
+    canvas.drawLine(Offset(size.x, size.y), Offset(size.x, 0), paint);
+    canvas.drawPath(arc1, paint);
+  }
+}
+
+class SmartObject extends BaseSchematic {
+  SmartObject() : super(Vector2(100, 200));
+
+  @override
+  String getType() {
+    return "SmartObject";
+  }
+
+  @override
+  void render(Canvas canvas) {
+    Paint paint = Paint();
+    paint.style = PaintingStyle.stroke;
+    paint.color = Colors.black;
+    paint.strokeWidth = 2;
+
+    Rect myRect = Offset(0.4 * size.x, 0) & Size(0.2 * size.x, size.y);
+    canvas.drawRect(myRect, paint);
+    canvas.drawLine(
+        Offset(0.4 * size.x, size.y), Offset(0.6 * size.x, 0), paint);
+    canvas.drawLine(
+        Offset(0.6 * size.x, size.y), Offset(0.4 * size.x, 0), paint);
   }
 }
