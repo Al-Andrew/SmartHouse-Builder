@@ -78,7 +78,12 @@ class Builder extends FlameGame
   @override
   Future<void>? onLoad() {
     add(Door());
-    add(SmartObject());
+    add(SmartDevice());
+    add(Thermostat());
+    add(Display());
+    add(Lock());
+    add(TV());
+    add(Speakers());
     return super.onLoad();
   }
 
@@ -491,12 +496,12 @@ class Door extends BaseSchematic {
   }
 }
 
-class SmartObject extends BaseSchematic {
-  SmartObject() : super(Vector2(100, 200));
+class SmartDevice extends BaseSchematic {
+  SmartDevice() : super(Vector2(100, 200));
 
   @override
   String getType() {
-    return "SmartObject";
+    return "SmartDevice";
   }
 
   @override
@@ -512,5 +517,178 @@ class SmartObject extends BaseSchematic {
         Offset(0.4 * size.x, size.y), Offset(0.6 * size.x, 0), paint);
     canvas.drawLine(
         Offset(0.6 * size.x, size.y), Offset(0.4 * size.x, 0), paint);
+  }
+}
+
+class Lighting extends SmartDevice {
+  @override
+  String getType() {
+    return "Lighting";
+  }
+
+  @override
+  void render(Canvas canvas) {
+    Paint paint = Paint();
+    paint.style = PaintingStyle.stroke;
+    paint.color = Colors.black;
+    paint.strokeWidth = 2;
+
+    canvas.drawCircle(Offset(size.x * 0.5, size.y * 0.5), size.x * 0.3, paint);
+    canvas.drawLine(Offset(size.x * 0.8, size.y * 0.8),
+        Offset(size.x * 0.2, size.y * 0.2), paint);
+    canvas.drawLine(Offset(size.x * 0.2, size.y * 0.8),
+        Offset(size.x * 0.8, size.y * 0.2), paint);
+  }
+}
+
+class Hub extends SmartDevice {
+  @override
+  String getType() {
+    return "Hub";
+  }
+
+  @override
+  void render(Canvas canvas) {
+    Paint paint = Paint();
+    paint.style = PaintingStyle.stroke;
+    paint.color = Colors.black;
+    paint.strokeWidth = 2;
+
+    canvas.drawCircle(Offset(size.x * 0.5, size.y * 0.5), size.x * 0.25, paint);
+    canvas.drawLine(Offset(0.4 * size.x, 0.1 * size.y),
+        Offset(0.4 * size.x, 0.9 * size.y), paint);
+    canvas.drawLine(Offset(size.x * 0.6, size.y * 0.1),
+        Offset(size.x * 0.6, size.y * 0.9), paint);
+    canvas.drawLine(Offset(size.x * 0.4, size.y * 0.4),
+        Offset(size.x * 0.6, size.y * 0.4), paint);
+  }
+}
+
+class Camera extends SmartDevice {
+  @override
+  String getType() {
+    return "Camera";
+  }
+
+  @override
+  void render(Canvas canvas) {
+    Paint paint = Paint();
+    paint.style = PaintingStyle.stroke;
+    paint.color = Colors.black;
+    paint.strokeWidth = 2;
+    Paint paint2 = Paint();
+    paint2.color = Colors.black;
+    paint2.style = PaintingStyle.fill;
+
+    canvas.drawCircle(
+        Offset(size.x * 0.5, size.y * 0.5), size.x * 0.05, paint2);
+    canvas.drawCircle(Offset(size.x * 0.5, size.y * 0.5), size.x * 0.15, paint);
+    Rect myRect = Offset(0.4 * size.x, 0) & Size(0.2 * size.x, size.y);
+    canvas.drawRect(myRect, paint);
+  }
+}
+
+class Thermostat extends SmartDevice {
+  @override
+  String getType() {
+    return "Thermostat";
+  }
+
+  @override
+  void render(Canvas canvas) {
+    Paint paint = Paint();
+    paint.style = PaintingStyle.stroke;
+    paint.color = Colors.black;
+    paint.strokeWidth = 2;
+
+    canvas.drawCircle(Offset(size.x * 0.5, size.y * 0.5), size.x * 0.2, paint);
+    canvas.drawLine(
+        Offset(0.5 * size.x, 0), Offset(0.5 * size.x, 1.5 * size.y), paint);
+    canvas.drawLine(Offset(size.x * 0.4, 0), Offset(size.x * 0.6, 0), paint);
+  }
+}
+
+class Display extends SmartDevice {
+  @override
+  String getType() {
+    return "Display";
+  }
+
+  @override
+  void render(Canvas canvas) {
+    Paint paint = Paint();
+    paint.style = PaintingStyle.stroke;
+    paint.color = Colors.black;
+    paint.strokeWidth = 2;
+
+    canvas.drawCircle(Offset(size.x * 0.5, size.y * 0.5), size.x * 0.15, paint);
+    Rect myRect = Offset(0.4 * size.x, 0) & Size(0.2 * size.x, size.y);
+    canvas.drawRect(myRect, paint);
+  }
+}
+
+class Lock extends SmartDevice {
+  @override
+  String getType() {
+    return "Lock";
+  }
+
+  @override
+  void render(Canvas canvas) {
+    Paint paint = Paint();
+    paint.style = PaintingStyle.stroke;
+    paint.color = Colors.black;
+    paint.strokeWidth = 2;
+
+    canvas.drawCircle(Offset(size.x * 0.5, size.y * 0.5), size.x * 0.15, paint);
+    canvas.drawLine(Offset(size.x * 0.45, size.y * 1.2),
+        Offset(size.x * 0.55, size.y * 1.2), paint);
+    canvas.drawLine(
+        Offset(size.x * 0.45, size.y * 1.2), Offset(size.x * 0.45, 0), paint);
+  }
+}
+
+class TV extends SmartDevice {
+  @override
+  String getType() {
+    return "TV";
+  }
+
+  @override
+  void render(Canvas canvas) {
+    Paint paint = Paint();
+    paint.style = PaintingStyle.stroke;
+    paint.color = Colors.black;
+    paint.strokeWidth = 2;
+
+    canvas.drawCircle(Offset(size.x * 0.5, size.y * 0.5), size.x * 0.2, paint);
+    Rect myRect = Offset(0.4 * size.x, 0) & Size(0.2 * size.x, size.y);
+    canvas.drawRect(myRect, paint);
+    canvas.drawLine(Offset(0.5 * size.x, size.y),
+        Offset(0.4 * size.x, size.y * 1.5), paint);
+    canvas.drawLine(Offset(0.5 * size.x, size.y),
+        Offset(0.6 * size.x, size.y * 1.5), paint);
+  }
+}
+
+class Speakers extends SmartDevice {
+  @override
+  String getType() {
+    return "Speakers";
+  }
+
+  @override
+  void render(Canvas canvas) {
+    Paint paint = Paint();
+    paint.style = PaintingStyle.stroke;
+    paint.color = Colors.black;
+    paint.strokeWidth = 2;
+
+    canvas.drawCircle(Offset(size.x * 0.5, size.y * 0.5), size.x * 0.2, paint);
+    Rect myRect =
+        Offset(0.45 * size.x, -0.3 * size.y) & Size(0.1 * size.x, size.y * 1.5);
+    canvas.drawRect(myRect, paint);
+    canvas.drawCircle(Offset(size.x * 0.5, size.y * 0.7), size.x * 0.03, paint);
+    canvas.drawCircle(Offset(size.x * 0.5, 0.2 * size.y), size.x * 0.02, paint);
   }
 }
