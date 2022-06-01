@@ -24,7 +24,7 @@ class Product {
     this.pngUrl = './assets/error.png',
     this.forumLink = 'null',
     this.productUrl = 'null',
-    this.description = 'descriere',
+    this.description = 'descrierea produsului',
     this.specifications = 'null',
   });
   // this.favorite = false;

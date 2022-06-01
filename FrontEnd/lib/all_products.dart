@@ -65,7 +65,7 @@ class _AllProductsState extends State<AllProducts> {
 
   @override
   Widget build(BuildContext context) {
-    if (displayedProducts.isNotEmpty) {
+    if (widget._allProducts.isNotEmpty) {
       return Stack(
         alignment: Alignment.center,
         children: [
@@ -73,21 +73,21 @@ class _AllProductsState extends State<AllProducts> {
             controller: _scrollController,
             shrinkWrap: true,
             physics: AlwaysScrollableScrollPhysics(),
-            children: displayedProducts
+            children: widget._allProducts
                 .map((proData) => ProductItem(proData.name, proData.price,
-                    proData.pngUrl, proData.description))
+                    proData.pngUrl, proData.description, proData.id))
                 .toList(),
           ),
-          if (loading) ...[
-            Positioned(
-              // left: 0,
-              bottom: 0,
-              child: Container(
-                child: Center(child: CircularProgressIndicator()),
-                height: 80,
-              ),
-            )
-          ]
+          //   if (loading) ...[
+          //     Positioned(
+          //       // left: 0,
+          //       bottom: 0,
+          //       child: Container(
+          //         child: Center(child: CircularProgressIndicator()),
+          //         height: 80,
+          //       ),
+          //     )
+          //   ]
         ],
       );
     } else {

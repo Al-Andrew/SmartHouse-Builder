@@ -35,7 +35,7 @@ public class WishlistService {
         return wishlistRepository.existsByUserId(userId);
     }
 
-    public void AddFirstTime(Integer userId, Integer productId, String name) {
+    public void AddFirstTime(Integer userId, Integer productId) {
 
         Wishlists wishlists = new Wishlists();
 
@@ -44,7 +44,6 @@ public class WishlistService {
         Date date = new Date();
         java.sql.Date sDate = new java.sql.Date(date.getTime());
 
-        wishlists.setName(name);
         wishlists.setUserId(userId);
         wishlists.setCreateDate(sDate);
         wishlistRepository.save(wishlists);
@@ -58,7 +57,7 @@ public class WishlistService {
 
     }
 
-    public Integer AddToExisting(Integer userId, Integer productId, String name) {
+    public Integer AddToExisting(Integer userId, Integer productId) {
         Wishlists wishlists = wishlistRepository.findByUserId(userId);
         Optional<Product> p = productService.getById(productId);
 
