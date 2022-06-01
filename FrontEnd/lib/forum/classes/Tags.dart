@@ -16,14 +16,15 @@ class Tags {
   });
 
   factory Tags.fromJson(dynamic json) {
-    return Tags(
+    Tags tag = new Tags(
       id: 0,
-      flagReview: json["setupFlag"],
-      flagQuestion: json["hardwareFlag"],
-      flagSetup: json["softwareFlag"],
-      flagHard: json["reviewFlag"],
-      flagSoft: json["questionFlag"],
+      flagReview: (json["rewiewFlag"] != null) ? json["rewiewFlag"] : 0,
+      flagQuestion: (json["questionFlag"] != null) ? json["questionFlag"] : 0,
+      flagSetup: (json["setupFlag"] != null) ? json["setupFlag"] : 0,
+      flagHard: (json["hardwareFlag"] != null) ? json["hardwareFlag"] : 0,
+      flagSoft: (json["softwareFlag"] != null) ? json["softwareFlag"] : 0,
     );
+    return tag;
   }
 
   get tags => null;

@@ -22,7 +22,7 @@ class _MyPostsState extends State<MyPosts> {
   @override
   void initState() {
     if (globals.isSorted == false && globals.isSearched == false) {
-      Post.getLocalPosts().then(
+      Post.getMyPosts(1).then(
         (value) {
           setState(() {
             globals.myPosts = value;
