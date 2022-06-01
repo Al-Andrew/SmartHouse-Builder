@@ -40,6 +40,8 @@ dependencies:
   url_launcher: ^6.1.2
   simple_gradient_text: ^1.2.2
   flame: ^1.1.1
+  flutter_cors: ^1.3.2
+  control_style: ^0.0.2
 
 dev_dependencies:
   flutter_test:
@@ -87,6 +89,10 @@ flutter:
       fonts:
         - asset: fonts/BebasNeuePro-Regular.ttf
           weight: 500
+    - family: BebasNeueProBold
+      fonts:
+        - asset: fonts/BebasNeuePro-SemiExpBold.ttf
+          weight: 200
   #   - family: Trajan Pro
   #     fonts:
   #       - asset: fonts/TrajanPro.ttf
