@@ -9,10 +9,7 @@ import com.smarthousebuilder.forum.tag.TagRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 @Service
 public class PostService {
@@ -173,5 +170,13 @@ public class PostService {
             if(currentPost.getTitle().toLowerCase().contains(searchText.toLowerCase()))
                 response.add(currentPost);
         return response;
+    }
+
+    public void modifyLikes(Integer idPost, Integer nbLikes) {
+        Optional<Post> optionalPost = postRepository.findPostById(idPost);
+        if (optionalPost.isEmpty()) throw new IllegalStateException("Post does not exist!");
+        Post postCopy = optionalPost.get();
+        postCopy.setNumberLikes(nbLikes);
+        postRepository.save(postCopy);
     }
 }

@@ -30,6 +30,8 @@ public class Post {
   protected String date;
   @Column(name = "content")
   protected String content;
+  @Column(name = "nb_likes")
+  protected int numberLikes;
 
   @Transient
   protected String author;
@@ -45,12 +47,13 @@ public class Post {
   Tag tag = new Tag();
 
   public Post(int id, int id_user,
-              String title, String date, String content) {
+              String title, String date, String content, int numberLikes) {
     this.id = id;
     this.id_user = id_user;
     this.title = title;
     this.date = date;
     this.content = content;
+    this.numberLikes = numberLikes;
   }
 
   public Post() {
@@ -165,5 +168,13 @@ public class Post {
 
   public void setTag(Tag tag) {
     this.tag = tag;
+  }
+
+  public int getNumberLikes() {
+    return numberLikes;
+  }
+
+  public void setNumberLikes(int numberLikes) {
+    this.numberLikes = numberLikes;
   }
 }
