@@ -14,9 +14,9 @@ public interface ProductRepository extends JpaRepository<Product,Integer> {
 
     Product getByName(String name);
 
-    Boolean existsByCategoryId(Integer categoryId);
+    Boolean existsByCategory(String category);
 
-    List<Product> getAllByCategoryId(Integer categoryId);
+    List<Product> getAllByCategory(String category);
 
     List<Product> findByPriceBetween(Double lower, Double upper);
 

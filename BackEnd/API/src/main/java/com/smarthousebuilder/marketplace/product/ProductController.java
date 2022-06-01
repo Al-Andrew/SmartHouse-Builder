@@ -32,8 +32,8 @@ public class ProductController {
     }
 
     @GetMapping("/category")
-    public List<Product> getByCategory(@RequestParam (value = "categoryId") Integer categoryId){
-        return productService.getByCategoryId(categoryId);
+    public List<Product> getByCategory(@RequestParam (value = "category") String category){
+        return productService.getByCategory(category);
     }
 
     @GetMapping("/price-range")
