@@ -1,13 +1,16 @@
+// import 'dart:ffi';
+
 import 'package:flutter/material.dart';
 import 'package:homepage/product_item_expanded.dart';
 
 class ProductItem extends StatelessWidget {
-  final String id;
+  // final String id;
   final String title;
-  final int pret;
+  final double pret;
   final String linkImg;
+  final String description;
 
-  ProductItem(this.id, this.title, this.pret, this.linkImg);
+  ProductItem(this.title, this.pret, this.linkImg, this.description);
 
   @override
   Widget build(BuildContext context) {
@@ -20,7 +23,7 @@ class ProductItem extends StatelessWidget {
                 context: context,
                 builder: (BuildContext context) {
                   return ProductItemExpanded(
-                      this.id, this.title, this.pret, this.linkImg);
+                      this.title, this.pret, this.linkImg, this.description);
                 });
           },
           style:
@@ -30,14 +33,14 @@ class ProductItem extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Expanded(
+              Flexible(
                 child: Container(
                   width: x,
                   height: x,
                   child: Image.network(linkImg),
                 ),
               ),
-              Expanded(
+              Flexible(
                 child: Text(
                   title,
                   softWrap: true,
@@ -45,7 +48,7 @@ class ProductItem extends StatelessWidget {
                   overflow: TextOverflow.ellipsis,
                 ),
               ),
-              Expanded(
+              Flexible(
                 child: Center(child: Text((() {
                   if (pret != 0) {
                     return "\$$pret";
@@ -54,7 +57,7 @@ class ProductItem extends StatelessWidget {
                   return "ERR";
                 })())),
               ),
-              const Expanded(
+              const Flexible(
                   child: Center(
                 child: IconButton(
                   onPressed: null,

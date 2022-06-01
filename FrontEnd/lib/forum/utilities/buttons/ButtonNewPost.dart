@@ -34,7 +34,9 @@ class ButtonNewPost extends StatelessWidget {
         onPressed: () {
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => const CreatePost()),
+            MaterialPageRoute(
+              builder: (context) => const CreatePost(),
+            ),
           );
         },
         label: Text(

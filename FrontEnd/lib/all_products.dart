@@ -30,7 +30,8 @@ class _AllProductsState extends State<AllProducts> {
     });
     await Future.delayed(Duration(milliseconds: 500));
     List<Product> newProducts = [];
-    for (int i = widget.index; i <= widget.index + 10; i++) {
+
+    for (int i = widget.index; i < widget.index + 10; i++) {
       newProducts.add(widget._allProducts.elementAt(i));
     }
     widget.index = widget.index + 10;
@@ -67,26 +68,26 @@ class _AllProductsState extends State<AllProducts> {
     if (displayedProducts.isNotEmpty) {
       return Stack(
         alignment: Alignment.center,
-
         children: [
           ListView(
             controller: _scrollController,
             shrinkWrap: true,
             physics: AlwaysScrollableScrollPhysics(),
             children: displayedProducts
-                .map((proData) => ProductItem(
-                    proData.id, proData.title, proData.pret, proData.linkImg))
+                .map((proData) => ProductItem(proData.name, proData.price,
+                    proData.pngUrl, proData.description))
                 .toList(),
           ),
-          if (loading)...[
-          Positioned(
+          if (loading) ...[
+            Positioned(
               // left: 0,
               bottom: 0,
               child: Container(
-                  child:  Center(child: CircularProgressIndicator()),
-                  height: 80,
-                ),
-              )]
+                child: Center(child: CircularProgressIndicator()),
+                height: 80,
+              ),
+            )
+          ]
         ],
       );
     } else {

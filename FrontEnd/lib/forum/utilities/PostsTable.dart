@@ -28,22 +28,53 @@ class PostsTabel extends StatefulWidget {
 }
 
 class _PostsTabelState extends State<PostsTabel> {
+  List<Post> posts = [];
   @override
   void initState() {
+    if (globals.isSorted == false && globals.isSearched == false) {
+      Post.getPosts().then(
+        (value) {
+          setState(() {
+            globals.posts = value;
+            posts = globals.posts;
+          });
+        },
+      );
+    } else if (globals.isSorted == true) {
+      globals.isSorted = false;
+      Post.sortPosts("/").then((value) {
+        setState(() {
+          posts = value;
+        });
+      });
+    } else if (globals.isSearched == true) {
+      globals.isSearched = false;
+      Post.getSearchedPosts('/').then((value) {
+        setState(() {
+          posts = value;
+        });
+      });
+    }
+
     super.initState();
   }
 
   @override
-  FutureBuilder build(BuildContext context) {
-    return FutureBuilder(
-        future: Post.getPosts(),
-        builder: (context, snapshot) {
-          if (snapshot.data != null) {
-            return PostsTableBody(snapshot.data, context);
-          } else {
-            return CircularProgressIndicator();
-          }
-        });
+  Widget build(BuildContext context) {
+    if (posts.length > 0) {
+      return PostsTableBody(posts, context);
+    } else if (globals.isSearched == true) {
+      globals.isSearched = false;
+      return Center(
+        child: Container(
+            child: Text(
+          "No post found!",
+          style: TextStyle(fontSize: 20),
+        )),
+      );
+    } else {
+      return CircularProgressIndicator();
+    }
   }
 
   SingleChildScrollView PostsTableBody(List<Post> posts, BuildContext context) {
