@@ -32,10 +32,7 @@ public class WishlistController {
         }
     }
 
-    @GetMapping
-    public void all(@RequestParam (value = "wishlistId") Integer wishlistId){
-        wishlistService.getByWishlistId(wishlistId);
-    }
+   
 
     @GetMapping("/userId")
     public List<Optional<Product>> getAllProductsFromUserId(@RequestParam (value = "userId")Integer userId){
