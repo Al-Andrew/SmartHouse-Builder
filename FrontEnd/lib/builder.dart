@@ -14,6 +14,10 @@ import 'package:flutter/services.dart';
 
 //import 'package:flutter/cupertino.dart';
 
+class Setup {
+  List<BaseSchematic> components = [];
+}
+
 class BuilderCon extends StatefulWidget {
   @override
   State<StatefulWidget> createState() {
@@ -23,13 +27,18 @@ class BuilderCon extends StatefulWidget {
 
 class BuilderState extends State<BuilderCon> {
   static var flameContext = Builder();
+  static var setup = Setup();
 
   static void AddNewWall() {
-    flameContext.add(Wall());
+    var lewall = Wall();
+    flameContext.add(lewall);
+    setup.components.add(lewall);
   }
 
   static void AddNewWindow() {
-    flameContext.add(Window());
+    var win = Window();
+    flameContext.add(win);
+    setup.components.add(win);
   }
 
   @override
@@ -47,7 +56,6 @@ class Builder extends FlameGame
 
   @override
   Future<void>? onLoad() {
-    add(Wall());
     return super.onLoad();
   }
 
@@ -95,11 +103,19 @@ class Builder extends FlameGame
 
         remove(c.gizmoRef);
         remove(c);
+        BuilderState.setup.components.remove(c);
       }
     }
     final isSpace = keysPressed.contains(LogicalKeyboardKey.space);
     if (isSpace && isKeyDown) {
       BuilderState.AddNewWall();
+    }
+    final isB = keysPressed.contains(LogicalKeyboardKey.keyB);
+    if (isB && isKeyDown) {
+      var componentsJSON = BuilderState.setup.components.map((e) {
+        return e.toJson();
+      });
+      print(componentsJSON.toString());
     }
 
     return KeyEventResult.ignored;
@@ -254,7 +270,7 @@ class Gizmo extends PositionComponent with Draggable {
   }
 }
 
-class BaseSchematic extends PositionComponent with Tappable {
+abstract class BaseSchematic extends PositionComponent with Tappable {
   @override
   bool debugMode = false;
   bool isFocused = false;
@@ -284,12 +300,37 @@ class BaseSchematic extends PositionComponent with Tappable {
     return true;
   }
 
+  Map<String, dynamic> toJson() {
+    return <String, dynamic>{
+      'type': getType(),
+      'size': size,
+      'transform': _transformToJson(transform),
+      'anchor': anchor
+    };
+  }
+
   @override
   void render(Canvas canvas);
+
+  String getType();
+}
+
+Map<String, dynamic> _transformToJson(Transform2D t) {
+  return <String, dynamic>{
+    'position': t.position,
+    'scale': t.scale,
+    'angle': t.angle,
+    'offset': t.offset
+  };
 }
 
 class Window extends BaseSchematic {
   Window() : super(Vector2(100, 100));
+
+  @override
+  String getType() {
+    return "Window";
+  }
 
   @override
   void render(Canvas canvas) {
@@ -323,6 +364,11 @@ class Window extends BaseSchematic {
 
 class Wall extends BaseSchematic {
   Wall() : super(Vector2(100, 100));
+
+  @override
+  String getType() {
+    return "Wall";
+  }
 
   @override
   void render(Canvas canvas) {
