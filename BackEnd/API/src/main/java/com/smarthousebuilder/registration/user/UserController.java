@@ -1,4 +1,4 @@
-package com.smarthousebuilder.forum.user;
+package com.smarthousebuilder.registration.user;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -28,7 +28,14 @@ public class UserController {
     public int registerNewUser(@RequestBody User user){
         return userService.addNewUser(user);
     }
-
+    @PutMapping(path = "/changePass")
+    public int changeOldPassword(@RequestParam Integer userId, @RequestParam String oldPass, @RequestParam String newPass){
+        return userService.changePassword(userId, oldPass, newPass);
+    }
+    @PutMapping(path = "/changeEmail")
+    public int changeOldEmail(@RequestParam Integer userId, @RequestParam String oldEmail, @RequestParam String newEmail){
+        return userService.changeEmail(userId, oldEmail, newEmail);
+    }
     @PostMapping(path = "/login")
     public int loginUser(@RequestBody User user){
         return userService.checkUser(user);
