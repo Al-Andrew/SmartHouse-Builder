@@ -50,7 +50,7 @@ public class UserService {
             if (userOptional.isEmpty()) {
                 return -1;
             }
-            userOptional = userRepository.findUserByPassword(user.getPassUser());
+            userOptional = userRepository.findUserByPasswordAndAndId(user.getPassUser(), user.getId());
             if (userOptional.isEmpty()){
                 return -3;
             }
@@ -60,7 +60,7 @@ public class UserService {
             if (userOptional.isEmpty()) {
                 return -2;
             }
-            userOptional = userRepository.findUserByPassword(user.getPassUser());
+            userOptional = userRepository.findUserByPasswordAndAndId(user.getPassUser(), user.getId());
             if (userOptional.isEmpty()){
                 return -3;
             }
