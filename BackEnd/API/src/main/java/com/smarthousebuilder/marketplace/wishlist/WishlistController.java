@@ -20,16 +20,15 @@ public class WishlistController {
 
 
     @PostMapping
-    public void add(@RequestParam (value = "userId") Integer userId,@RequestParam(value = "productId")Integer productId,
-                    @RequestParam (value = "wishlistName")String name){
+    public void add(@RequestParam (value = "userId") Integer userId,@RequestParam(value = "productId")Integer productId){
         boolean conditionIfUserHasWishlist = wishlistService.existsByUserId(userId);
 
         if(!conditionIfUserHasWishlist){
-            wishlistService.AddFirstTime(userId,productId,name);
+            wishlistService.AddFirstTime(userId,productId);
         }
         else
         {
-            wishlistService.AddToExisting(userId,productId,name);
+            wishlistService.AddToExisting(userId,productId);
         }
     }
 
