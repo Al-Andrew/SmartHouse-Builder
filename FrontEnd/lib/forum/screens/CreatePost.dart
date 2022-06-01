@@ -85,7 +85,8 @@ class _CreatePostState extends State<CreatePost> {
     } else {
       bool yesOrNo = await _isYesOrNo();
       if (yesOrNo) {
-        Post.addPost(5, 1, topicText, "05/11/2022", descText, "Marcel", tags);
+        Post.addPost(globals.posts.length + 2, 1, topicText, "05/11/2022",
+            descText, "Marcel", tags);
         Navigator.of(context).pop();
         if (globals.nrPrefferencesHomePage > 0) {
           if (globals.searchedH != "") {

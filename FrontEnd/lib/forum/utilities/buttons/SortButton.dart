@@ -41,13 +41,8 @@ class SortButton extends StatelessWidget {
       child: ElevatedButton(
         onPressed: () {
           if (checkedCommented || checkedPopular || checkedRecent) {
-            print("1");
-            print(globals.checkedCommentedH);
-            print(globals.checkedPopularH);
-            print(globals.checkedRecentH);
             globals.isSorted = true;
             if (route == "/") {
-              print("2");
               if (globals.searchedH != "") {
                 globals.searchedH == "";
                 globals.isSearched = false;
@@ -56,11 +51,7 @@ class SortButton extends StatelessWidget {
               globals.checkedCommentedH = checkedCommented;
               globals.checkedPopularH = checkedPopular;
               globals.checkedRecentH = checkedRecent;
-              print(globals.checkedCommentedH);
-              print(globals.checkedPopularH);
-              print(globals.checkedRecentH);
               globals.nrPrefferencesHomePage++;
-              print(globals.nrPrefferencesHomePage);
               if (globals.nrPrefferencesHomePage == 1) {
                 Navigator.of(context).push(
                     MaterialPageRoute(builder: (child) => ForumHomePage()));
