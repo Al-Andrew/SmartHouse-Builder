@@ -10,7 +10,7 @@ import java.util.stream.Collectors;
 @Entity
 @Table(name = "products")
 public class Product {
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
     @Column(name = "id")
     private int id;
