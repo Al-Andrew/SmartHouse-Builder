@@ -41,6 +41,7 @@ public class PostService {
 //
 //        post.setAuthor(userCopy.getNameUser());
 //        System.out.println(post);
+
         System.out.println(post.getTag());
         post = postRepository.save(post);
         Tag tagCopy = post.getTag();
