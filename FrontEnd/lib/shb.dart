@@ -50,6 +50,8 @@ class _SHBState extends State<SHB> {
                             style: TextStyle(color: Colors.black),
                           ),
                           style: ButtonStyle(
+                              backgroundColor:
+                                  MaterialStateProperty.all(Colors.white),
                               elevation: MaterialStateProperty.all(1))),
                       Padding(
                           padding: EdgeInsets.only(
@@ -62,6 +64,8 @@ class _SHBState extends State<SHB> {
                             style: TextStyle(color: Colors.black),
                           ),
                           style: ButtonStyle(
+                              backgroundColor:
+                                  MaterialStateProperty.all(Colors.white),
                               elevation: MaterialStateProperty.all(1))),
                     ],
                   ),

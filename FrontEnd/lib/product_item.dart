@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:homepage/marketplace.dart';
 import 'package:homepage/product_item_expanded.dart';
 
-class ProductItem extends StatelessWidget {
+class ProductItem extends StatefulWidget {
   // final String id;
   final String title;
   final double pret;
@@ -25,6 +25,17 @@ class ProductItem extends StatelessWidget {
   }
 
   @override
+  State<ProductItem> createState() => _ProductItemState();
+}
+
+class _ProductItemState extends State<ProductItem> {
+  @override
+  void initState() {
+    widget.favorited = Marketplace.state.IsItFavorite(widget.id);
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     double x = MediaQuery.of(context).size.width * 30 / 100 * 15 / 100;
     return Container(
@@ -34,8 +45,8 @@ class ProductItem extends StatelessWidget {
             showDialog(
                 context: context,
                 builder: (BuildContext context) {
-                  return ProductItemExpanded(
-                      this.title, this.pret, this.linkImg, this.description);
+                  return ProductItemExpanded(widget.title, widget.pret,
+                      widget.linkImg, widget.description, widget.id);
                 });
           },
           style:
@@ -49,12 +60,12 @@ class ProductItem extends StatelessWidget {
                 child: Container(
                   width: x,
                   height: x,
-                  child: Image.network(linkImg),
+                  child: Image.network(widget.linkImg),
                 ),
               ),
               Flexible(
                 child: Text(
-                  title,
+                  widget.title,
                   softWrap: true,
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
@@ -62,26 +73,43 @@ class ProductItem extends StatelessWidget {
               ),
               Flexible(
                 child: Center(child: Text((() {
-                  if (pret != 0) {
-                    return "\$$pret";
+                  if (widget.pret != 0) {
+                    return "\$" + widget.pret.toString();
                   }
 
-                  return "ERR";
+                  return "Unavailable";
                 })())),
               ),
               Flexible(
                   child: Center(
                 child: IconButton(
                   onPressed: () {
-                    favorited = !favorited!;
-                    c!();
+                    setState(() {
+                      widget.favorited = !widget.favorited!;
+                      widget.c!();
+                    });
                   },
                   icon: Icon(Icons.favorite),
-                  color: favorited! ? Colors.red : Colors.grey,
+                  color: widget.favorited! ? Colors.red : Colors.grey,
+                ),
+              )),
+              Flexible(
+                  child: Center(
+                child: IconButton(
+                  onPressed: () {
+                    // do something;
+                  },
+                  icon: Icon(Icons.add),
                 ),
               ))
             ],
           ),
         ));
+  }
+
+  @override
+  State<StatefulWidget> createState() {
+    // TODO: implement createState
+    throw UnimplementedError();
   }
 }

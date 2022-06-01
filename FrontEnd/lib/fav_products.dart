@@ -1,3 +1,6 @@
+import 'dart:convert';
+import 'package:http/http.dart' as http;
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 // import 'package:flutter/rendering.dart';
@@ -45,7 +48,7 @@ class _FavProductsState extends State<FavProducts> {
   @override
   void initState() {
     super.initState();
-    mockFetch();
+    // mockFetch();
     _scrollController.addListener(() {
       if (_scrollController.position.pixels >=
               _scrollController.position.maxScrollExtent &&
@@ -63,7 +66,7 @@ class _FavProductsState extends State<FavProducts> {
 
   @override
   Widget build(BuildContext context) {
-    if (displayedProducts.isNotEmpty) {
+    if (widget._favProducts.isNotEmpty) {
       return Stack(
         alignment: Alignment.center,
         children: [
@@ -71,21 +74,21 @@ class _FavProductsState extends State<FavProducts> {
             controller: _scrollController,
             shrinkWrap: true,
             physics: AlwaysScrollableScrollPhysics(),
-            children: displayedProducts
+            children: widget._favProducts
                 .map((proData) => ProductItem(proData.name, proData.price,
                     proData.pngUrl, proData.description, proData.id))
                 .toList(),
           ),
-          if (loading) ...[
-            Positioned(
-              // left: 0,
-              bottom: 0,
-              child: Container(
-                child: Center(child: CircularProgressIndicator()),
-                height: 80,
-              ),
-            )
-          ]
+          // if (loading) ...[
+          //   Positioned(
+          //     // left: 0,
+          //     bottom: 0,
+          //     child: Container(
+          //       child: Center(child: CircularProgressIndicator()),
+          //       height: 80,
+          //     ),
+          //   )
+          // ]
         ],
       );
     } else {
