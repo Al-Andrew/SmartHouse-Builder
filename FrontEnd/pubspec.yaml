@@ -42,6 +42,7 @@ dependencies:
   flame: ^1.1.1
   flutter_cors: ^1.3.2
   control_style: ^0.0.2
+  string_validator: ^0.3.0
 
 dev_dependencies:
   flutter_test:
