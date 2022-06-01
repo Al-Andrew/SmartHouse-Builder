@@ -24,6 +24,12 @@ public class UserController {
     public List<User> getAllUsers(){
         return userService.getAllUsers();
     }
+    @GetMapping(path = "/nameUser/{userId}")
+    public String getNameUserById(@PathVariable Integer userId){
+        return userService.getUserById(userId).getNameUser();
+    }
+
+
     @PostMapping(path = "/register")
     public int registerNewUser(@RequestBody User user){
         return userService.addNewUser(user);
