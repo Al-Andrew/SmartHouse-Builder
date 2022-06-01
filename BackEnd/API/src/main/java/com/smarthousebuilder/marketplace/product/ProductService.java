@@ -63,7 +63,7 @@ public class ProductService {
                         {
                             product1.setId(product.getId());
                             product1.setName(product.getName());
-                            product1.setCategoryId(product.getCategoryId());
+                            product1.setCategory(product.getCategory());
                             product1.setPrice(product.getPrice());
                             product1.setForumLink(product.getForumLink());
                             product1.setRating(product.getRating());
@@ -72,13 +72,13 @@ public class ProductService {
                 );
     }
 
-    public List<Product> getByCategoryId(Integer categoryId) {
-        boolean exists = productRepository.existsByCategoryId(categoryId);
+    public List<Product> getByCategory(String category) {
+        boolean exists = productRepository.existsByCategory(category);
 
         if(!exists)
-            throw new IllegalStateException("Product with category id  " + categoryId + " doesn't exist!");
+            throw new IllegalStateException("Product with category id  " + category + " doesn't exist!");
 
-        return productRepository.getAllByCategoryId(categoryId);
+        return productRepository.getAllByCategory(category);
 
     }
 
