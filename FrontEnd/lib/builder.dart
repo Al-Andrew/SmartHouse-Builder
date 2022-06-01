@@ -1,5 +1,6 @@
 // ignore_for_file: non_constant_identifier_names
 
+import 'dart:convert';
 import 'dart:io';
 import 'dart:math' as math;
 
@@ -16,6 +17,26 @@ import 'package:flutter/services.dart';
 
 class Setup {
   List<BaseSchematic> components = [];
+
+  Map<String, dynamic> toJson() {
+    return <String, dynamic>{
+      'components': components.map((e) => e.toJson()).toList()
+    };
+  }
+
+  static Setup fromJson(Map<String, dynamic> json) {
+    var ret = Setup();
+    List<dynamic> cmpDyn = json['components'];
+    List<Map<String, dynamic>> cmp =
+        cmpDyn.map((e) => e as Map<String, dynamic>).toList();
+
+    for (var c in cmp) {
+      BaseSchematic schm = BaseSchematic.fromJson(c);
+      ret.components.add(schm);
+    }
+
+    return ret;
+  }
 }
 
 class BuilderCon extends StatefulWidget {
@@ -109,13 +130,32 @@ class Builder extends FlameGame
     final isSpace = keysPressed.contains(LogicalKeyboardKey.space);
     if (isSpace && isKeyDown) {
       BuilderState.AddNewWall();
+      return KeyEventResult.handled;
     }
     final isB = keysPressed.contains(LogicalKeyboardKey.keyB);
     if (isB && isKeyDown) {
-      var componentsJSON = BuilderState.setup.components.map((e) {
-        return e.toJson();
-      });
-      print(componentsJSON.toString());
+      print(jsonEncode(BuilderState.setup.toJson()));
+      return KeyEventResult.handled;
+    }
+    final isL = keysPressed.contains(LogicalKeyboardKey.keyL);
+    if (isL && isKeyDown) {
+      String json =
+          "{\"components\":[{\"type\":\"Wall\",\"size\":{\"x\":374.3278107919399,\"y\":12.5},\"transform\":{\"position\":{\"x\":562,\"y\":207},\"scale\":{\"x\":1,\"y\":1},\"angle\":0,\"offset\":{\"x\":-187.16390539596995,\"y\":-6.25}},\"anchor\":{\"x\":0.5,\"y\":0.5}},{\"type\":\"Wall\",\"size\":{\"x\":373.5659723015398,\"y\":12.5},\"transform\":{\"position\":{\"x\":563,\"y\":418},\"scale\":{\"x\":1,\"y\":1},\"angle\":0,\"offset\":{\"x\":-186.7829861507699,\"y\":-6.25}},\"anchor\":{\"x\":0.5,\"y\":0.5}},{\"type\":\"Wall\",\"size\":{\"x\":211.156731932318,\"y\":12.5},\"transform\":{\"position\":{\"x\":382,\"y\":311},\"scale\":{\"x\":1,\"y\":1},\"angle\":-1.5759341152893138,\"offset\":{\"x\":-105.578365966159,\"y\":-6.25}},\"anchor\":{\"x\":0.5,\"y\":0.5}},{\"type\":\"Wall\",\"size\":{\"x\":205.63735297020446,\"y\":12.5},\"transform\":{\"position\":{\"x\":743,\"y\":315},\"scale\":{\"x\":1,\"y\":1},\"angle\":-1.5829126244031397,\"offset\":{\"x\":-102.81867648510223,\"y\":-6.25}},\"anchor\":{\"x\":0.5,\"y\":0.5}}]}";
+
+      Map<String, dynamic> de = jsonDecode(json);
+      Setup newsetup = Setup.fromJson(de);
+
+      for (var child in this.children) {
+        remove(child);
+      }
+
+      BuilderState.setup = newsetup;
+
+      for (var schm in BuilderState.setup.components) {
+        add(schm);
+      }
+
+      return KeyEventResult.handled;
     }
 
     return KeyEventResult.ignored;
@@ -303,10 +343,33 @@ abstract class BaseSchematic extends PositionComponent with Tappable {
   Map<String, dynamic> toJson() {
     return <String, dynamic>{
       'type': getType(),
-      'size': size,
+      'size': vecToJson(size),
       'transform': _transformToJson(transform),
-      'anchor': anchor
+      'anchor': vecToJson(anchor.toVector2())
     };
+  }
+
+  static BaseSchematic fromJson(Map<String, dynamic> json) {
+    BaseSchematic? component;
+    switch (json['type']) {
+      case "Wall":
+        {
+          component = Wall();
+          break;
+        }
+      case "Window":
+        {
+          component = Window();
+          break;
+        }
+      default:
+    }
+    component!.size.setFrom(vecFromJson(json['size']));
+    component.transform.setFrom(transformFromJson(json['transform']));
+    final anchorvec = vecFromJson(json['anchor']);
+    component.anchor = Anchor(anchorvec.x, anchorvec.y);
+
+    return component;
   }
 
   @override
@@ -317,11 +380,28 @@ abstract class BaseSchematic extends PositionComponent with Tappable {
 
 Map<String, dynamic> _transformToJson(Transform2D t) {
   return <String, dynamic>{
-    'position': t.position,
-    'scale': t.scale,
+    'position': vecToJson(t.position),
+    'scale': vecToJson(t.scale),
     'angle': t.angle,
-    'offset': t.offset
+    'offset': vecToJson(t.offset)
   };
+}
+
+Transform2D transformFromJson(Map<String, dynamic> json) {
+  Transform2D ret = Transform2D();
+  ret.position.setFrom(vecFromJson(json['position']));
+  ret.scale.setFrom(vecFromJson(json['scale']));
+  ret.angle = json['angle'];
+  ret.offset.setFrom(vecFromJson(json['offset']));
+  return ret;
+}
+
+Map<String, dynamic> vecToJson(Vector2 vec) {
+  return <String, dynamic>{'x': vec.x, 'y': vec.y};
+}
+
+Vector2 vecFromJson(Map<String, dynamic> json) {
+  return Vector2(json['x'], json['y']);
 }
 
 class Window extends BaseSchematic {
