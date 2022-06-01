@@ -2,15 +2,12 @@ import 'dart:html';
 
 import 'package:flutter/material.dart';
 
+import '../marketplace.dart';
+
 class SearchMarket extends StatefulWidget {
   const SearchMarket({
     Key? key,
-    required this.text,
-    required this.onChanged,
   }) : super(key: key);
-
-  final String text;
-  final ValueChanged<String> onChanged;
 
   @override
   State<SearchMarket> createState() => _SearchMarketState();
@@ -56,11 +53,19 @@ class _SearchMarketState extends State<SearchMarket> {
                         width: 1.3, color: Theme.of(context).primaryColor),
                   ),
                   hintText: 'Search',
-                  icon: IconButton(
+                  prefixIcon: IconButton(
                     padding: EdgeInsets.only(bottom: 2.0),
                     icon: Icon(Icons.search, size: 30.0),
-                    onPressed: () { 
-                      // do something??
+                    onPressed: () {
+                      // if (SearchController.text.isNotEmpty) {
+                      Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) =>
+                              Marketplace(all: SearchController.text),
+                        ),
+                      );
+                      // }
                     },
                   ),
                   suffixIcon: IconButton(
@@ -71,7 +76,6 @@ class _SearchMarketState extends State<SearchMarket> {
                     },
                   ),
                 ),
-                onChanged: widget.onChanged,
               ),
             ),
           ),

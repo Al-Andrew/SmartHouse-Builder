@@ -56,14 +56,14 @@ class _ProductItemState extends State<ProductItem> {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Flexible(
+              Expanded(
                 child: Container(
                   width: x,
                   height: x,
                   child: Image.network(widget.linkImg),
                 ),
               ),
-              Flexible(
+              Expanded(
                 child: Text(
                   widget.title,
                   softWrap: true,
@@ -71,16 +71,21 @@ class _ProductItemState extends State<ProductItem> {
                   overflow: TextOverflow.ellipsis,
                 ),
               ),
-              Flexible(
-                child: Center(child: Text((() {
+              Expanded(
+                  child: Center(
+                child: Text((() {
                   if (widget.pret != 0) {
                     return "\$" + widget.pret.toString();
                   }
 
                   return "Unavailable";
-                })())),
-              ),
-              Flexible(
+                })(),
+                    style: const TextStyle(
+                      // fontWeight: FontWeight.bold,
+                      color: Colors.red,
+                    )),
+              )),
+              Expanded(
                   child: Center(
                 child: IconButton(
                   onPressed: () {
@@ -93,7 +98,7 @@ class _ProductItemState extends State<ProductItem> {
                   color: widget.favorited! ? Colors.red : Colors.grey,
                 ),
               )),
-              Flexible(
+              Expanded(
                   child: Center(
                 child: IconButton(
                   onPressed: () {

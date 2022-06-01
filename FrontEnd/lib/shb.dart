@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:homepage/builder.dart';
 import 'package:homepage/dummy_schematics.dart';
-import 'package:homepage/marketplace.dart';
+import 'package:homepage/market.dart';
 import 'package:homepage/schematics.dart';
 
 class SHB extends StatefulWidget {
@@ -15,7 +15,7 @@ class _SHBState extends State<SHB> {
   int _selectedIndex = 0;
 
   static List<Widget> _widgetOptions = <Widget>[
-    Marketplace(),
+    Market(),
     AllSchematics(DUMMY_SCHEMATICS)
   ];
 

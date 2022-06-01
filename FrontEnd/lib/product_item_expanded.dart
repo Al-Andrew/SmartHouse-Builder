@@ -66,16 +66,11 @@ class _ProductItemExpandedState extends State<ProductItemExpanded> {
                 // mainAxisSize: MainAxisSize.max,
                 shrinkWrap: true,
                 children: [
-                  // Flexible(
-                  //   child:
                   Text(
                     widget.title + '\n',
                     softWrap: true,
                     style: TextStyle(fontWeight: FontWeight.bold),
                   ),
-                  // ),
-                  // Flexible(
-                  //     child:
                   Text((() {
                     if (widget.pret != 0) {
                       return "\n\$" + widget.pret.toString() + "\n";
@@ -87,10 +82,7 @@ class _ProductItemExpandedState extends State<ProductItemExpanded> {
                       style: const TextStyle(
                         fontWeight: FontWeight.bold,
                         color: Colors.red,
-                        // ),
                       )),
-                  // Flexible(
-                  //   child:
                   Container(
                     width:
                         MediaQuery.of(context).size.width * 50 / 100 * 80 / 100,
@@ -101,13 +93,8 @@ class _ProductItemExpandedState extends State<ProductItemExpanded> {
                         100,
                     child: Image.network(widget.linkImg),
                   ),
-                  // ),
-                  // Flexible(
-                  // child:
                   SingleChildScrollView(
-                      child: Text('\n' + widget.description.toString() + '\n')
-                      // )
-                      ),
+                      child: Text('\n' + widget.description.toString() + '\n')),
                 ],
               ))),
     );
@@ -115,7 +102,6 @@ class _ProductItemExpandedState extends State<ProductItemExpanded> {
 
   @override
   State<StatefulWidget> createState() {
-    // TODO: implement createState
     throw UnimplementedError();
   }
 }
