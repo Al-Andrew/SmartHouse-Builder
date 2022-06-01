@@ -1,9 +1,11 @@
-package com.smarthousebuilder.forum.user;
+package com.smarthousebuilder.registration.user;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
+import javax.transaction.Transactional;
 import java.util.Optional;
 
 @Repository
@@ -15,6 +17,10 @@ public interface UserRepository extends JpaRepository<User, Integer> {
 
     @Query("SELECT u FROM User u WHERE u.emailUser= ?1")
     Optional<User> findUserByEmail(String email);
+
+    @Query("SELECT u from User u WHERE u.passUser = ?1")
+    Optional<User> findUserByPassword(String password);
+
 
     //@Query("SELECT u FROM User u WHERE u.nameUser=?1 OR u.emailUser= ?2")
     //Optional<User> findUserByNameOrEmail(String name, String email);
