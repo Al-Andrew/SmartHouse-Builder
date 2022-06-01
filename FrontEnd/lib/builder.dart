@@ -1,5 +1,6 @@
 // ignore_for_file: non_constant_identifier_names
 
+import 'dart:convert';
 import 'dart:io';
 import 'dart:math' as math;
 
@@ -14,6 +15,30 @@ import 'package:flutter/services.dart';
 
 //import 'package:flutter/cupertino.dart';
 
+class Setup {
+  List<BaseSchematic> components = [];
+
+  Map<String, dynamic> toJson() {
+    return <String, dynamic>{
+      'components': components.map((e) => e.toJson()).toList()
+    };
+  }
+
+  static Setup fromJson(Map<String, dynamic> json) {
+    var ret = Setup();
+    List<dynamic> cmpDyn = json['components'];
+    List<Map<String, dynamic>> cmp =
+        cmpDyn.map((e) => e as Map<String, dynamic>).toList();
+
+    for (var c in cmp) {
+      BaseSchematic schm = BaseSchematic.fromJson(c);
+      ret.components.add(schm);
+    }
+
+    return ret;
+  }
+}
+
 class BuilderCon extends StatefulWidget {
   @override
   State<StatefulWidget> createState() {
@@ -23,13 +48,18 @@ class BuilderCon extends StatefulWidget {
 
 class BuilderState extends State<BuilderCon> {
   static var flameContext = Builder();
+  static var setup = Setup();
 
   static void AddNewWall() {
-    flameContext.add(Wall());
+    var lewall = Wall();
+    flameContext.add(lewall);
+    setup.components.add(lewall);
   }
 
   static void AddNewWindow() {
-    flameContext.add(Window());
+    var win = Window();
+    flameContext.add(win);
+    setup.components.add(win);
   }
 
   @override
@@ -47,7 +77,6 @@ class Builder extends FlameGame
 
   @override
   Future<void>? onLoad() {
-    add(Wall());
     return super.onLoad();
   }
 
@@ -95,11 +124,38 @@ class Builder extends FlameGame
 
         remove(c.gizmoRef);
         remove(c);
+        BuilderState.setup.components.remove(c);
       }
     }
     final isSpace = keysPressed.contains(LogicalKeyboardKey.space);
     if (isSpace && isKeyDown) {
       BuilderState.AddNewWall();
+      return KeyEventResult.handled;
+    }
+    final isB = keysPressed.contains(LogicalKeyboardKey.keyB);
+    if (isB && isKeyDown) {
+      print(jsonEncode(BuilderState.setup.toJson()));
+      return KeyEventResult.handled;
+    }
+    final isL = keysPressed.contains(LogicalKeyboardKey.keyL);
+    if (isL && isKeyDown) {
+      String json =
+          "{\"components\":[{\"type\":\"Wall\",\"size\":{\"x\":374.3278107919399,\"y\":12.5},\"transform\":{\"position\":{\"x\":562,\"y\":207},\"scale\":{\"x\":1,\"y\":1},\"angle\":0,\"offset\":{\"x\":-187.16390539596995,\"y\":-6.25}},\"anchor\":{\"x\":0.5,\"y\":0.5}},{\"type\":\"Wall\",\"size\":{\"x\":373.5659723015398,\"y\":12.5},\"transform\":{\"position\":{\"x\":563,\"y\":418},\"scale\":{\"x\":1,\"y\":1},\"angle\":0,\"offset\":{\"x\":-186.7829861507699,\"y\":-6.25}},\"anchor\":{\"x\":0.5,\"y\":0.5}},{\"type\":\"Wall\",\"size\":{\"x\":211.156731932318,\"y\":12.5},\"transform\":{\"position\":{\"x\":382,\"y\":311},\"scale\":{\"x\":1,\"y\":1},\"angle\":-1.5759341152893138,\"offset\":{\"x\":-105.578365966159,\"y\":-6.25}},\"anchor\":{\"x\":0.5,\"y\":0.5}},{\"type\":\"Wall\",\"size\":{\"x\":205.63735297020446,\"y\":12.5},\"transform\":{\"position\":{\"x\":743,\"y\":315},\"scale\":{\"x\":1,\"y\":1},\"angle\":-1.5829126244031397,\"offset\":{\"x\":-102.81867648510223,\"y\":-6.25}},\"anchor\":{\"x\":0.5,\"y\":0.5}}]}";
+
+      Map<String, dynamic> de = jsonDecode(json);
+      Setup newsetup = Setup.fromJson(de);
+
+      for (var child in this.children) {
+        remove(child);
+      }
+
+      BuilderState.setup = newsetup;
+
+      for (var schm in BuilderState.setup.components) {
+        add(schm);
+      }
+
+      return KeyEventResult.handled;
     }
 
     return KeyEventResult.ignored;
@@ -254,7 +310,7 @@ class Gizmo extends PositionComponent with Draggable {
   }
 }
 
-class BaseSchematic extends PositionComponent with Tappable {
+abstract class BaseSchematic extends PositionComponent with Tappable {
   @override
   bool debugMode = false;
   bool isFocused = false;
@@ -284,12 +340,77 @@ class BaseSchematic extends PositionComponent with Tappable {
     return true;
   }
 
+  Map<String, dynamic> toJson() {
+    return <String, dynamic>{
+      'type': getType(),
+      'size': vecToJson(size),
+      'transform': _transformToJson(transform),
+      'anchor': vecToJson(anchor.toVector2())
+    };
+  }
+
+  static BaseSchematic fromJson(Map<String, dynamic> json) {
+    BaseSchematic? component;
+    switch (json['type']) {
+      case "Wall":
+        {
+          component = Wall();
+          break;
+        }
+      case "Window":
+        {
+          component = Window();
+          break;
+        }
+      default:
+    }
+    component!.size.setFrom(vecFromJson(json['size']));
+    component.transform.setFrom(transformFromJson(json['transform']));
+    final anchorvec = vecFromJson(json['anchor']);
+    component.anchor = Anchor(anchorvec.x, anchorvec.y);
+
+    return component;
+  }
+
   @override
   void render(Canvas canvas);
+
+  String getType();
+}
+
+Map<String, dynamic> _transformToJson(Transform2D t) {
+  return <String, dynamic>{
+    'position': vecToJson(t.position),
+    'scale': vecToJson(t.scale),
+    'angle': t.angle,
+    'offset': vecToJson(t.offset)
+  };
+}
+
+Transform2D transformFromJson(Map<String, dynamic> json) {
+  Transform2D ret = Transform2D();
+  ret.position.setFrom(vecFromJson(json['position']));
+  ret.scale.setFrom(vecFromJson(json['scale']));
+  ret.angle = json['angle'];
+  ret.offset.setFrom(vecFromJson(json['offset']));
+  return ret;
+}
+
+Map<String, dynamic> vecToJson(Vector2 vec) {
+  return <String, dynamic>{'x': vec.x, 'y': vec.y};
+}
+
+Vector2 vecFromJson(Map<String, dynamic> json) {
+  return Vector2(json['x'], json['y']);
 }
 
 class Window extends BaseSchematic {
   Window() : super(Vector2(100, 100));
+
+  @override
+  String getType() {
+    return "Window";
+  }
 
   @override
   void render(Canvas canvas) {
@@ -323,6 +444,11 @@ class Window extends BaseSchematic {
 
 class Wall extends BaseSchematic {
   Wall() : super(Vector2(100, 100));
+
+  @override
+  String getType() {
+    return "Wall";
+  }
 
   @override
   void render(Canvas canvas) {
