@@ -50,6 +50,10 @@ public class PostController {
     public void addNewPost(@RequestBody Post post){
         postService.addNewPost(post);
     }
+    @PutMapping("/updateLikes")
+    public void modifyLikes(@RequestParam Integer nbLikes, @RequestParam Integer idPost){
+        postService.modifyLikes(idPost, nbLikes);
+    }
 
     @DeleteMapping( path = "/{postId}")
     public void deletePost(@PathVariable("postId") Integer postId){
