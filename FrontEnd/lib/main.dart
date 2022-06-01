@@ -3,7 +3,7 @@ import 'package:homepage/about_us.dart';
 
 import 'package:homepage/global_variables.dart';
 import 'package:homepage/homepage.dart';
-import 'package:homepage/marketplace.dart';
+import 'package:homepage/market.dart';
 import 'package:homepage/forum/Forum.dart';
 
 import 'package:homepage/shb.dart';
@@ -69,7 +69,7 @@ class _MyHomePageState extends State<MyHomePage> {
   static final List<Widget> _widgetOptions = <Widget>[
     HomePage(),
     SHB(),
-    Marketplace(),
+    Market(),
     const Forum(),
     const ContactUs(),
     const AboutUs(),
