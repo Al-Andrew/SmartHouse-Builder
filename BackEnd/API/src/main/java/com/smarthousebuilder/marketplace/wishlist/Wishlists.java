@@ -17,9 +17,7 @@ public class Wishlists {
     @Basic
     @Column(name = "create_date")
     private Date createDate;
-    @Basic
-    @Column(name = "name")
-    private String name;
+
 
     public int getId() {
         return id;
@@ -45,13 +43,6 @@ public class Wishlists {
         this.createDate = createDate;
     }
 
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
 
     @Override
     public boolean equals(Object o) {
@@ -63,7 +54,6 @@ public class Wishlists {
         if (id != wishlists.id) return false;
         if (userId != null ? !userId.equals(wishlists.userId) : wishlists.userId != null) return false;
         if (createDate != null ? !createDate.equals(wishlists.createDate) : wishlists.createDate != null) return false;
-        if (name != null ? !name.equals(wishlists.name) : wishlists.name != null) return false;
 
         return true;
     }
@@ -73,7 +63,6 @@ public class Wishlists {
         int result = id;
         result = 31 * result + (userId != null ? userId.hashCode() : 0);
         result = 31 * result + (createDate != null ? createDate.hashCode() : 0);
-        result = 31 * result + (name != null ? name.hashCode() : 0);
         return result;
     }
 }
