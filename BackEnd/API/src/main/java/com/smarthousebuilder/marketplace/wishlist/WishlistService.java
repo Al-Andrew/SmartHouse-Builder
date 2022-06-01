@@ -106,7 +106,7 @@ public class WishlistService {
             throw new IllegalStateException("Can't delete product from wishlist that is not in wishlist!");
 
 
-        int numberOfProductsInWishlist = wishlistItemRepository.countAllById(wishlistId);
+        int numberOfProductsInWishlist = wishlistItemRepository.countAllByWishlistId(wishlistId);
 
         if (numberOfProductsInWishlist == 1) {
             wishlistItemRepository.delete(wishlistItemRepository.getByProductIdAndWishlistId(productId, wishlistId));
