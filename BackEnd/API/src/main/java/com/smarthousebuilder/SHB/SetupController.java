@@ -32,9 +32,9 @@ public class SetupController {
         return setupService.getSetupByUserId(Id);
     }
     @PostMapping
-    public void saveSetup(@RequestBody Setup setup){
-        System.out.println(setup);
-        setupService.saveSetup(setup);
+    public Setup createSetup(@RequestParam (value = "userId") Integer userId,
+                          @RequestParam (value = "name")String name){
+        return setupService.createSetup(userId,name);
     }
 
 

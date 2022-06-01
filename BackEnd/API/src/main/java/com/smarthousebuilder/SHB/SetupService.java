@@ -30,4 +30,14 @@ public class SetupService {
     public void saveSetup(Setup setup){
         setupRepository.save(setup);
     }
+
+    public Setup createSetup(Integer userId, String name) {
+
+        Setup setup = new Setup();
+        setup.setName(name);
+        setup.setUserId(userId);
+        setup.setComponents("{\"components\":[]}");
+        return setupRepository.save(setup);
+
+    }
 }
