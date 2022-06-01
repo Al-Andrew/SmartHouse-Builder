@@ -15,7 +15,7 @@ public interface WishlistItemRepository extends JpaRepository<WishlistItems,Inte
 
     WishlistItems getByProductIdAndWishlistId(Integer productId, Integer wishlistId);
 
-    Integer countAllById(Integer wishlistId);
+    Integer countAllByWishlistId(Integer wishlistId);
 
     void deleteAllByWishlistId(Integer wishlistId);
 }
