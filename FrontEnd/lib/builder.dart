@@ -225,6 +225,7 @@ class Gizmo extends PositionComponent with Draggable {
     startAngle = this.transform.angle;
     startSizeX = size.x;
     startSizeY = size.y;
+
     return false;
   }
 
@@ -264,10 +265,15 @@ class Gizmo extends PositionComponent with Draggable {
         size.setFrom(Vector2(startSizeX + translatedEventPosition.x, size.y));
       }
     } else if (this.dt == dragType.rotate) {
-      this.transform.angle =
-          Vector2(rsMargin.x, rsMargin.ye).angleTo(event.eventPosition.game);
+      double pantaDreptei = (event.eventPosition.game.y - this.position.y) /
+          (event.eventPosition.game.x - this.position.x);
+      this.transform.angle = atan(pantaDreptei);
     }
+    /*print(this.position.x);
+    print(this.position.y);
     print(event.eventPosition.game.x);
+    print(event.eventPosition.game.y);
+    print("\n\n\n");*/
     fixToSchematic();
     return false;
   }
