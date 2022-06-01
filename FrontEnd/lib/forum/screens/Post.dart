@@ -1028,8 +1028,8 @@ class _POSTState extends State<POST> {
                 return;
               }
 
-              setState(() =>
-                  widget.post.addReport(1, 1, 1, title, motivation, "date"));
+              setState(() => widget.post
+                  .addReport(1, 1, widget.post.id, title, motivation));
               titleReportController.clear();
               motivationReportController.clear();
             }

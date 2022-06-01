@@ -1,8 +1,11 @@
 package com.smarthousebuilder.marketplace.wishlist;
 
+import com.smarthousebuilder.marketplace.product.Product;
 import org.springframework.web.bind.annotation.*;
 
 import javax.transaction.Transactional;
+import java.util.List;
+import java.util.Optional;
 
 @CrossOrigin
 @RestController
@@ -21,7 +24,6 @@ public class WishlistController {
                     @RequestParam (value = "wishlistName")String name){
         boolean conditionIfUserHasWishlist = wishlistService.existsByUserId(userId);
 
-        System.out.println(conditionIfUserHasWishlist);
         if(!conditionIfUserHasWishlist){
             wishlistService.AddFirstTime(userId,productId,name);
         }
@@ -34,6 +36,11 @@ public class WishlistController {
     @GetMapping
     public void all(@RequestParam (value = "wishlistId") Integer wishlistId){
         wishlistService.getByWishlistId(wishlistId);
+    }
+
+    @GetMapping("/userId")
+    public List<Optional<Product>> getAllProductsFromUserId(@RequestParam (value = "userId")Integer userId){
+        return wishlistService.getByUserId(userId);
     }
 
     @DeleteMapping

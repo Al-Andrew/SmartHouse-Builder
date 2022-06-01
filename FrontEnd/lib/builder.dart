@@ -1,5 +1,6 @@
 // ignore_for_file: non_constant_identifier_names
 
+import 'dart:convert';
 import 'dart:io';
 import 'dart:math' as math;
 
@@ -14,6 +15,30 @@ import 'package:flutter/services.dart';
 
 //import 'package:flutter/cupertino.dart';
 
+class Setup {
+  List<BaseSchematic> components = [];
+
+  Map<String, dynamic> toJson() {
+    return <String, dynamic>{
+      'components': components.map((e) => e.toJson()).toList()
+    };
+  }
+
+  static Setup fromJson(Map<String, dynamic> json) {
+    var ret = Setup();
+    List<dynamic> cmpDyn = json['components'];
+    List<Map<String, dynamic>> cmp =
+        cmpDyn.map((e) => e as Map<String, dynamic>).toList();
+
+    for (var c in cmp) {
+      BaseSchematic schm = BaseSchematic.fromJson(c);
+      ret.components.add(schm);
+    }
+
+    return ret;
+  }
+}
+
 class BuilderCon extends StatefulWidget {
   @override
   State<StatefulWidget> createState() {
@@ -23,13 +48,18 @@ class BuilderCon extends StatefulWidget {
 
 class BuilderState extends State<BuilderCon> {
   static var flameContext = Builder();
+  static var setup = Setup();
 
   static void AddNewWall() {
-    flameContext.add(Wall());
+    var lewall = Wall();
+    flameContext.add(lewall);
+    setup.components.add(lewall);
   }
 
   static void AddNewWindow() {
-    flameContext.add(Window());
+    var win = Window();
+    flameContext.add(win);
+    setup.components.add(win);
   }
 
   @override
@@ -47,7 +77,13 @@ class Builder extends FlameGame
 
   @override
   Future<void>? onLoad() {
-    add(Wall());
+    add(Door());
+    add(SmartDevice());
+    add(Thermostat());
+    add(Display());
+    add(Lock());
+    add(TV());
+    add(Speakers());
     return super.onLoad();
   }
 
@@ -95,11 +131,38 @@ class Builder extends FlameGame
 
         remove(c.gizmoRef);
         remove(c);
+        BuilderState.setup.components.remove(c);
       }
     }
     final isSpace = keysPressed.contains(LogicalKeyboardKey.space);
     if (isSpace && isKeyDown) {
       BuilderState.AddNewWall();
+      return KeyEventResult.handled;
+    }
+    final isB = keysPressed.contains(LogicalKeyboardKey.keyB);
+    if (isB && isKeyDown) {
+      print(jsonEncode(BuilderState.setup.toJson()));
+      return KeyEventResult.handled;
+    }
+    final isL = keysPressed.contains(LogicalKeyboardKey.keyL);
+    if (isL && isKeyDown) {
+      String json =
+          "{\"components\":[{\"type\":\"Wall\",\"size\":{\"x\":374.3278107919399,\"y\":12.5},\"transform\":{\"position\":{\"x\":562,\"y\":207},\"scale\":{\"x\":1,\"y\":1},\"angle\":0,\"offset\":{\"x\":-187.16390539596995,\"y\":-6.25}},\"anchor\":{\"x\":0.5,\"y\":0.5}},{\"type\":\"Wall\",\"size\":{\"x\":373.5659723015398,\"y\":12.5},\"transform\":{\"position\":{\"x\":563,\"y\":418},\"scale\":{\"x\":1,\"y\":1},\"angle\":0,\"offset\":{\"x\":-186.7829861507699,\"y\":-6.25}},\"anchor\":{\"x\":0.5,\"y\":0.5}},{\"type\":\"Wall\",\"size\":{\"x\":211.156731932318,\"y\":12.5},\"transform\":{\"position\":{\"x\":382,\"y\":311},\"scale\":{\"x\":1,\"y\":1},\"angle\":-1.5759341152893138,\"offset\":{\"x\":-105.578365966159,\"y\":-6.25}},\"anchor\":{\"x\":0.5,\"y\":0.5}},{\"type\":\"Wall\",\"size\":{\"x\":205.63735297020446,\"y\":12.5},\"transform\":{\"position\":{\"x\":743,\"y\":315},\"scale\":{\"x\":1,\"y\":1},\"angle\":-1.5829126244031397,\"offset\":{\"x\":-102.81867648510223,\"y\":-6.25}},\"anchor\":{\"x\":0.5,\"y\":0.5}}]}";
+
+      Map<String, dynamic> de = jsonDecode(json);
+      Setup newsetup = Setup.fromJson(de);
+
+      for (var child in this.children) {
+        remove(child);
+      }
+
+      BuilderState.setup = newsetup;
+
+      for (var schm in BuilderState.setup.components) {
+        add(schm);
+      }
+
+      return KeyEventResult.handled;
     }
 
     return KeyEventResult.ignored;
@@ -254,7 +317,7 @@ class Gizmo extends PositionComponent with Draggable {
   }
 }
 
-class BaseSchematic extends PositionComponent with Tappable {
+abstract class BaseSchematic extends PositionComponent with Tappable {
   @override
   bool debugMode = false;
   bool isFocused = false;
@@ -284,12 +347,77 @@ class BaseSchematic extends PositionComponent with Tappable {
     return true;
   }
 
+  Map<String, dynamic> toJson() {
+    return <String, dynamic>{
+      'type': getType(),
+      'size': vecToJson(size),
+      'transform': _transformToJson(transform),
+      'anchor': vecToJson(anchor.toVector2())
+    };
+  }
+
+  static BaseSchematic fromJson(Map<String, dynamic> json) {
+    BaseSchematic? component;
+    switch (json['type']) {
+      case "Wall":
+        {
+          component = Wall();
+          break;
+        }
+      case "Window":
+        {
+          component = Window();
+          break;
+        }
+      default:
+    }
+    component!.size.setFrom(vecFromJson(json['size']));
+    component.transform.setFrom(transformFromJson(json['transform']));
+    final anchorvec = vecFromJson(json['anchor']);
+    component.anchor = Anchor(anchorvec.x, anchorvec.y);
+
+    return component;
+  }
+
   @override
   void render(Canvas canvas);
+
+  String getType();
+}
+
+Map<String, dynamic> _transformToJson(Transform2D t) {
+  return <String, dynamic>{
+    'position': vecToJson(t.position),
+    'scale': vecToJson(t.scale),
+    'angle': t.angle,
+    'offset': vecToJson(t.offset)
+  };
+}
+
+Transform2D transformFromJson(Map<String, dynamic> json) {
+  Transform2D ret = Transform2D();
+  ret.position.setFrom(vecFromJson(json['position']));
+  ret.scale.setFrom(vecFromJson(json['scale']));
+  ret.angle = json['angle'];
+  ret.offset.setFrom(vecFromJson(json['offset']));
+  return ret;
+}
+
+Map<String, dynamic> vecToJson(Vector2 vec) {
+  return <String, dynamic>{'x': vec.x, 'y': vec.y};
+}
+
+Vector2 vecFromJson(Map<String, dynamic> json) {
+  return Vector2(json['x'], json['y']);
 }
 
 class Window extends BaseSchematic {
   Window() : super(Vector2(100, 100));
+
+  @override
+  String getType() {
+    return "Window";
+  }
 
   @override
   void render(Canvas canvas) {
@@ -325,6 +453,11 @@ class Wall extends BaseSchematic {
   Wall() : super(Vector2(100, 100));
 
   @override
+  String getType() {
+    return "Wall";
+  }
+
+  @override
   void render(Canvas canvas) {
     Paint paint = Paint();
     paint.style = PaintingStyle.fill;
@@ -333,5 +466,229 @@ class Wall extends BaseSchematic {
 
     Rect myRect = Offset.zero & Size(size.x, size.y);
     canvas.drawRect(myRect, paint);
+  }
+}
+
+class Door extends BaseSchematic {
+  Door() : super(Vector2(100, 100));
+
+  @override
+  String getType() {
+    return "Door";
+  }
+
+  @override
+  void render(Canvas canvas) {
+    Paint paint = Paint();
+    paint.style = PaintingStyle.stroke;
+    paint.color = Colors.black;
+    paint.strokeWidth = 6;
+
+    final arc1 = Path();
+    arc1.moveTo(0, 0.95 * size.y);
+    arc1.arcToPoint(
+      Offset(size.x, 0),
+      radius: Radius.circular(100),
+    );
+
+    canvas.drawLine(Offset(size.x, size.y), Offset(size.x, 0), paint);
+    canvas.drawPath(arc1, paint);
+  }
+}
+
+class SmartDevice extends BaseSchematic {
+  SmartDevice() : super(Vector2(100, 200));
+
+  @override
+  String getType() {
+    return "SmartDevice";
+  }
+
+  @override
+  void render(Canvas canvas) {
+    Paint paint = Paint();
+    paint.style = PaintingStyle.stroke;
+    paint.color = Colors.black;
+    paint.strokeWidth = 2;
+
+    Rect myRect = Offset(0.4 * size.x, 0) & Size(0.2 * size.x, size.y);
+    canvas.drawRect(myRect, paint);
+    canvas.drawLine(
+        Offset(0.4 * size.x, size.y), Offset(0.6 * size.x, 0), paint);
+    canvas.drawLine(
+        Offset(0.6 * size.x, size.y), Offset(0.4 * size.x, 0), paint);
+  }
+}
+
+class Lighting extends SmartDevice {
+  @override
+  String getType() {
+    return "Lighting";
+  }
+
+  @override
+  void render(Canvas canvas) {
+    Paint paint = Paint();
+    paint.style = PaintingStyle.stroke;
+    paint.color = Colors.black;
+    paint.strokeWidth = 2;
+
+    canvas.drawCircle(Offset(size.x * 0.5, size.y * 0.5), size.x * 0.3, paint);
+    canvas.drawLine(Offset(size.x * 0.8, size.y * 0.8),
+        Offset(size.x * 0.2, size.y * 0.2), paint);
+    canvas.drawLine(Offset(size.x * 0.2, size.y * 0.8),
+        Offset(size.x * 0.8, size.y * 0.2), paint);
+  }
+}
+
+class Hub extends SmartDevice {
+  @override
+  String getType() {
+    return "Hub";
+  }
+
+  @override
+  void render(Canvas canvas) {
+    Paint paint = Paint();
+    paint.style = PaintingStyle.stroke;
+    paint.color = Colors.black;
+    paint.strokeWidth = 2;
+
+    canvas.drawCircle(Offset(size.x * 0.5, size.y * 0.5), size.x * 0.25, paint);
+    canvas.drawLine(Offset(0.4 * size.x, 0.1 * size.y),
+        Offset(0.4 * size.x, 0.9 * size.y), paint);
+    canvas.drawLine(Offset(size.x * 0.6, size.y * 0.1),
+        Offset(size.x * 0.6, size.y * 0.9), paint);
+    canvas.drawLine(Offset(size.x * 0.4, size.y * 0.4),
+        Offset(size.x * 0.6, size.y * 0.4), paint);
+  }
+}
+
+class Camera extends SmartDevice {
+  @override
+  String getType() {
+    return "Camera";
+  }
+
+  @override
+  void render(Canvas canvas) {
+    Paint paint = Paint();
+    paint.style = PaintingStyle.stroke;
+    paint.color = Colors.black;
+    paint.strokeWidth = 2;
+    Paint paint2 = Paint();
+    paint2.color = Colors.black;
+    paint2.style = PaintingStyle.fill;
+
+    canvas.drawCircle(
+        Offset(size.x * 0.5, size.y * 0.5), size.x * 0.05, paint2);
+    canvas.drawCircle(Offset(size.x * 0.5, size.y * 0.5), size.x * 0.15, paint);
+    Rect myRect = Offset(0.4 * size.x, 0) & Size(0.2 * size.x, size.y);
+    canvas.drawRect(myRect, paint);
+  }
+}
+
+class Thermostat extends SmartDevice {
+  @override
+  String getType() {
+    return "Thermostat";
+  }
+
+  @override
+  void render(Canvas canvas) {
+    Paint paint = Paint();
+    paint.style = PaintingStyle.stroke;
+    paint.color = Colors.black;
+    paint.strokeWidth = 2;
+
+    canvas.drawCircle(Offset(size.x * 0.5, size.y * 0.5), size.x * 0.2, paint);
+    canvas.drawLine(
+        Offset(0.5 * size.x, 0), Offset(0.5 * size.x, 1.5 * size.y), paint);
+    canvas.drawLine(Offset(size.x * 0.4, 0), Offset(size.x * 0.6, 0), paint);
+  }
+}
+
+class Display extends SmartDevice {
+  @override
+  String getType() {
+    return "Display";
+  }
+
+  @override
+  void render(Canvas canvas) {
+    Paint paint = Paint();
+    paint.style = PaintingStyle.stroke;
+    paint.color = Colors.black;
+    paint.strokeWidth = 2;
+
+    canvas.drawCircle(Offset(size.x * 0.5, size.y * 0.5), size.x * 0.15, paint);
+    Rect myRect = Offset(0.4 * size.x, 0) & Size(0.2 * size.x, size.y);
+    canvas.drawRect(myRect, paint);
+  }
+}
+
+class Lock extends SmartDevice {
+  @override
+  String getType() {
+    return "Lock";
+  }
+
+  @override
+  void render(Canvas canvas) {
+    Paint paint = Paint();
+    paint.style = PaintingStyle.stroke;
+    paint.color = Colors.black;
+    paint.strokeWidth = 2;
+
+    canvas.drawCircle(Offset(size.x * 0.5, size.y * 0.5), size.x * 0.15, paint);
+    canvas.drawLine(Offset(size.x * 0.45, size.y * 1.2),
+        Offset(size.x * 0.55, size.y * 1.2), paint);
+    canvas.drawLine(
+        Offset(size.x * 0.45, size.y * 1.2), Offset(size.x * 0.45, 0), paint);
+  }
+}
+
+class TV extends SmartDevice {
+  @override
+  String getType() {
+    return "TV";
+  }
+
+  @override
+  void render(Canvas canvas) {
+    Paint paint = Paint();
+    paint.style = PaintingStyle.stroke;
+    paint.color = Colors.black;
+    paint.strokeWidth = 2;
+
+    canvas.drawCircle(Offset(size.x * 0.5, size.y * 0.5), size.x * 0.2, paint);
+    Rect myRect = Offset(0.4 * size.x, 0) & Size(0.2 * size.x, size.y);
+    canvas.drawRect(myRect, paint);
+    canvas.drawLine(Offset(0.5 * size.x, size.y),
+        Offset(0.4 * size.x, size.y * 1.5), paint);
+    canvas.drawLine(Offset(0.5 * size.x, size.y),
+        Offset(0.6 * size.x, size.y * 1.5), paint);
+  }
+}
+
+class Speakers extends SmartDevice {
+  @override
+  String getType() {
+    return "Speakers";
+  }
+
+  @override
+  void render(Canvas canvas) {
+    Paint paint = Paint();
+    paint.style = PaintingStyle.stroke;
+    paint.color = Colors.black;
+    paint.strokeWidth = 2;
+
+    canvas.drawCircle(Offset(size.x * 0.5, size.y * 0.5), size.x * 0.2, paint);
+    Rect myRect =
+        Offset(0.45 * size.x, -0.3 * size.y) & Size(0.1 * size.x, size.y * 1.5);
+    canvas.drawRect(myRect, paint);
+    canvas.drawCircle(Offset(size.x * 0.5, size.y * 0.7), size.x * 0.03, paint);
+    canvas.drawCircle(Offset(size.x * 0.5, 0.2 * size.y), size.x * 0.02, paint);
   }
 }

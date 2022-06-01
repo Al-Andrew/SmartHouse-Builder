@@ -14,9 +14,9 @@ public interface ProductRepository extends JpaRepository<Product,Integer> {
 
     Product getByName(String name);
 
-    Boolean existsByCategoryId(Integer categoryId);
+    Boolean existsByCategory(String category);
 
-    List<Product> getAllByCategoryId(Integer categoryId);
+    List<Product> getAllByCategory(String category);
 
     List<Product> findByPriceBetween(Double lower, Double upper);
 
@@ -27,4 +27,7 @@ public interface ProductRepository extends JpaRepository<Product,Integer> {
     Boolean existsByRatingBetween(Double lower, Double upper);
 
     List<Product> findAllByRatingBetween(Double lower, Double upper );
+
+    @Query("SELECT p from Product p")
+    List<Product> findAllProducts();
 }

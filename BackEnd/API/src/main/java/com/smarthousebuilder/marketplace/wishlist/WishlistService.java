@@ -8,7 +8,9 @@ import com.smarthousebuilder.marketplace.wishlistItem.WishlistItemRepository;
 
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -56,7 +58,7 @@ public class WishlistService {
 
     }
 
-    public void AddToExisting(Integer userId, Integer productId, String name) {
+    public Integer AddToExisting(Integer userId, Integer productId, String name) {
         Wishlists wishlists = wishlistRepository.findByUserId(userId);
         Optional<Product> p = productService.getById(productId);
 
@@ -77,9 +79,12 @@ public class WishlistService {
             item1.setProductId(productId);
 
             wishlistItemRepository.save(item1);
-
-
         }
+
+        if(existsInWishlist)
+            return -1;
+
+        return 1;
     }
 
 
@@ -106,7 +111,7 @@ public class WishlistService {
             throw new IllegalStateException("Can't delete product from wishlist that is not in wishlist!");
 
 
-        int numberOfProductsInWishlist = wishlistItemRepository.countAllById(wishlistId);
+        int numberOfProductsInWishlist = wishlistItemRepository.countAllByWishlistId(wishlistId);
 
         if (numberOfProductsInWishlist == 1) {
             wishlistItemRepository.delete(wishlistItemRepository.getByProductIdAndWishlistId(productId, wishlistId));
@@ -125,5 +130,22 @@ public class WishlistService {
         wishlistItemRepository.deleteAllByWishlistId(wishlistId);
         wishlistRepository.deleteById(wishlistId);
         }
+
+    public List<Optional<Product>> getByUserId(Integer userId) {
+
+        Wishlists wishlist = wishlistRepository.findByUserId(userId);
+
+        List<WishlistItems> list =  wishlistItemRepository.findAllByWishlistId(wishlist.getId());
+
+        List<Optional<Product>> productsList = new ArrayList<>();
+
+        for(WishlistItems wishlistItems : list){
+            Optional<Product> product = productService.getById(wishlistItems.getProductId());
+
+            productsList.add(product);
+        }
+        return productsList;
+
     }
+}
 

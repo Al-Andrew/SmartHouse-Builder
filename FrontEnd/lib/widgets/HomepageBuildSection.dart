@@ -1,6 +1,5 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:homepage/mainshb.dart';
+import 'package:homepage/main.dart';
 import 'package:simple_gradient_text/simple_gradient_text.dart';
 
 class HomepageBuildSection extends StatelessWidget {
@@ -13,7 +12,7 @@ class HomepageBuildSection extends StatelessWidget {
     return Row(
       // crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Container(
+        SizedBox(
           width: MediaQuery.of(context).size.width * 4 / 10,
           child: Center(
               child: Column(
@@ -21,10 +20,12 @@ class HomepageBuildSection extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               const Text('CREATE YOUR HOUSE',
+                  textAlign: TextAlign.center,
                   style:
                       TextStyle(fontSize: 50, fontFamily: 'BarlowCondensed')),
               GradientText(
                 'THE SMART WAY',
+                textAlign: TextAlign.center,
                 style: const TextStyle(
                     fontSize: 50,
                     color: Colors.cyan,
@@ -40,25 +41,28 @@ class HomepageBuildSection extends StatelessWidget {
                   height: 45,
                   width: 100,
                   decoration: BoxDecoration(
-                      color: Colors.blueGrey,
+                      color: const Color.fromRGBO(44, 44, 44, 1),
                       borderRadius: BorderRadius.circular(20)),
                   child: TextButton(
-                    style: TextButton.styleFrom(
-                        textStyle: const TextStyle(color: Colors.black)),
-                    onPressed: () => {Navigator.pushReplacement(context,
-                            MaterialPageRoute(builder: (context) => MyHomePageSHB()))
-                      },
+                    onPressed: () => {
+                      Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => const MyApp(
+                                    selectedIndex: 1,
+                                  )))
+                    },
                     child: const Center(
                         child: Text('Build',
                             style: TextStyle(
-                                color: Colors.black,
-                                fontSize: 30,
+                                color: Colors.white,
+                                fontSize: 27,
                                 fontFamily: 'BebasNeuePro'))),
                   )),
             ],
           )),
         ),
-        Container(
+        SizedBox(
           height: 600,
           width: MediaQuery.of(context).size.width * 6 / 10,
           child: const Image(

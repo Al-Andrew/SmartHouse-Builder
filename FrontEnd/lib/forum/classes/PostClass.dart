@@ -10,6 +10,7 @@ import '../ForumGlobals.dart' as globals;
 
 class Post {
   int id;
+  int id_user;
   String topic;
   String content;
   String author;
@@ -23,6 +24,7 @@ class Post {
 
   Post({
     required this.id,
+    required this.id_user,
     required this.topic,
     required this.content,
     required this.author,
@@ -35,7 +37,8 @@ class Post {
 
   factory Post.fromJson(dynamic json) {
     return Post(
-        id: json["id_user"],
+        id: json["id"],
+        id_user: json["id_user"],
         date: json["date"],
         topic: json["title"],
         content: json["content"],
@@ -43,11 +46,18 @@ class Post {
         tags: [],
         comments: [],
         reports: [],
-        tags_integers: json["tags"]);
+        tags_integers: new Tags(
+            id: 1,
+            flagHard: 1,
+            flagQuestion: 1,
+            flagReview: 1,
+            flagSetup: 1,
+            flagSoft: 1));
   }
 
   Map<String, dynamic> toJson() => {
-        'id_user': id,
+        'id': id,
+        'id_user': id_user,
         'title': topic,
         'content': content,
         'author': author,
@@ -57,23 +67,23 @@ class Post {
       };
   static void setTags(Post post) {
     if (post.tags_integers.flagHard == 1) {
-      print("hard");
+      //print("hard");
       post.tags.add("Hardware");
     }
     if (post.tags_integers.flagQuestion == 1) {
-      print("ques");
+      //print("ques");
       post.tags.add("Question");
     }
     if (post.tags_integers.flagReview == 1) {
-      print("rev");
+      //print("rev");
       post.tags.add("Review");
     }
     if (post.tags_integers.flagSetup == 1) {
-      print("set");
+      //print("set");
       post.tags.add("Setup");
     }
     if (post.tags_integers.flagSoft == 1) {
-      print("soft");
+      // print("soft");
       post.tags.add("Software");
     }
   }
@@ -115,6 +125,7 @@ class Post {
     /*here we have a problem because the post from */
     Post newPost = new Post(
         id: id,
+        id_user: id_author,
         topic: title,
         content: content,
         author: author,
@@ -124,16 +135,41 @@ class Post {
         tags_integers: tags,
         tags: <String>[]);
     print(newPost);
+    //Tags tagCopy = newPost.tags_integers;
+
+    Post.setTags(newPost);
+    globals.posts.add(newPost);
+    print(newPost.tags);
     print(jsonEncode(newPost));
 
-    http.post(
+    var body = jsonEncode({
+      "id_user": newPost.id_user,
+      "title": newPost.topic,
+      "date": newPost.date,
+      "content": newPost.content,
+      "author": newPost.author,
+      "comments": [],
+      "reports": [],
+      "tags": {
+        "id": newPost.id,
+        "reviewFlag": newPost.tags_integers.flagReview,
+        "questionFlag": newPost.tags_integers.flagQuestion,
+        "setupFlag": newPost.tags_integers.flagSetup,
+        "hardwareFlag": newPost.tags_integers.flagHard,
+        "softwareFlag": newPost.tags_integers.flagSoft
+      }
+    });
+    print(body);
+    var response = http.post(
         Uri.parse(
           'https://smart-house-builder.azurewebsites.net/api/forum',
         ),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
         },
-        body: json.encode(newPost));
+        body: body);
+
+    print(response.toString());
   }
 
   void removeComment(Comment comment) {
@@ -150,7 +186,7 @@ class Post {
     print(searchedPost);
     if (route == '/myposts') {
       globals.isSearched = true;
-      final uri = Uri.http('smart-house-builder.azurewebsites.net',
+      final uri = Uri.https('smart-house-builder.azurewebsites.net',
           '/api/forum/search/$searchedPost');
 
       final response = await http.get(uri);
@@ -170,12 +206,20 @@ class Post {
           postare.comments.add(com);
         }
         postare.nrComments = postare.comments.length;
+        final response3 = await http.get(
+            Uri.parse(
+              'https://smart-house-builder.azurewebsites.net/api/forum/tags/$postId',
+            ),
+            headers: {"Access-Control-Allow-Origin": "*"});
+        var tag = jsonDecode(response3.body);
+        postare.tags_integers = Tags.fromJson(tag);
+        Post.setTags(postare);
         posts.add(postare);
       }
       return posts;
     } else {
       globals.isSearched = true;
-      final uri = Uri.http('smart-house-builder.azurewebsites.net',
+      final uri = Uri.https('smart-house-builder.azurewebsites.net',
           '/api/forum/search/$searchedPost');
 
       final response = await http.get(uri);
@@ -195,6 +239,13 @@ class Post {
           postare.comments.add(com);
         }
         postare.nrComments = postare.comments.length;
+        final response3 = await http.get(
+            Uri.parse(
+              'https://smart-house-builder.azurewebsites.net/api/forum/tags/$postId',
+            ),
+            headers: {"Access-Control-Allow-Origin": "*"});
+        var tag = jsonDecode(response3.body);
+        postare.tags_integers = Tags.fromJson(tag);
         Post.setTags(postare);
         posts.add(postare);
       }
@@ -215,10 +266,6 @@ class Post {
       checkedCommented = globals.checkedCommentedM;
       checkedPopular = globals.checkedPopularM;
     }
-    print("SORT");
-    print(checkedPopular);
-    print(checkedRecent);
-    print(checkedCommented);
     final queryParameters = {
       'Date': '$checkedRecent',
       'Comments': '$checkedCommented',
@@ -227,7 +274,7 @@ class Post {
 
     if (route == '/myposts') {
       globals.isSorted = true;
-      final uri = Uri.http('smart-house-builder.azurewebsites.net',
+      final uri = Uri.https('smart-house-builder.azurewebsites.net',
           '/api/forum/sort/', queryParameters);
 
       var headers = {
@@ -242,6 +289,7 @@ class Post {
         Post postare = Post.fromJson(v);
 
         int postId = Post.fromJson(v).id;
+        print(postare.id);
         final response2 = await http.get(
             Uri.parse(
               'https://smart-house-builder.azurewebsites.net/api/forum/comment/$postId',
@@ -252,13 +300,20 @@ class Post {
           postare.comments.add(com);
         }
         postare.nrComments = postare.comments.length;
+        final response3 = await http.get(
+            Uri.parse(
+              'https://smart-house-builder.azurewebsites.net/api/forum/tags/$postId',
+            ),
+            headers: {"Access-Control-Allow-Origin": "*"});
+        var tag = jsonDecode(response3.body);
+        postare.tags_integers = Tags.fromJson(tag);
         Post.setTags(postare);
         posts.add(postare);
       }
       return posts;
     } else {
       globals.isSorted = true;
-      final uri = Uri.http('smart-house-builder.azurewebsites.net',
+      final uri = Uri.https('smart-house-builder.azurewebsites.net',
           '/api/forum/sort/', queryParameters);
       var headers = {
         HttpHeaders.authorizationHeader: 'Token $String',
@@ -270,7 +325,7 @@ class Post {
       List<Post> posts = [];
       for (var v in jsonData) {
         Post postare = Post.fromJson(v);
-
+        print(postare.id);
         int postId = Post.fromJson(v).id;
         final response2 = await http.get(
             Uri.parse(
@@ -282,6 +337,13 @@ class Post {
           postare.comments.add(com);
         }
         postare.nrComments = postare.comments.length;
+        final response3 = await http.get(
+            Uri.parse(
+              'https://smart-house-builder.azurewebsites.net/api/forum/tags/$postId',
+            ),
+            headers: {"Access-Control-Allow-Origin": "*"});
+        var tag = jsonDecode(response3.body);
+        postare.tags_integers = Tags.fromJson(tag);
         Post.setTags(postare);
 
         posts.add(postare);
@@ -290,19 +352,27 @@ class Post {
     }
   }
 
-  void addReport(int id, int id_author, int id_post, String title,
-      String motivation, String date) {
-    reports.add(new Report(
+  Future<void> addReport(int id, int id_author, int id_post, String title,
+      String motivation) async {
+    Report report = new Report(
       id: id,
       id_author: id_author,
       id_post: id_post,
       title: title,
       motivation: motivation,
-      date: date,
-    ));
-    print(id);
-    print(motivation);
-    print(title);
+      date: "",
+    );
+    reports.add(report);
+    var headers = {
+      HttpHeaders.authorizationHeader: 'Token $String',
+      HttpHeaders.contentTypeHeader: 'application/json',
+    };
+    final response = await http.post(
+        Uri.parse(
+          'https://smart-house-builder.azurewebsites.net/api/forum/report',
+        ),
+        headers: headers,
+        body: json.encode(report));
   }
 
   static void removePosts(List<Post> selectedPosts, List<Post> posts) {
@@ -325,23 +395,15 @@ class Post {
   }
 
   static Future<List<Post>> getPosts() async {
-    print("1");
-    print(Uri.parse('https://smart-house-builder.azurewebsites.net/api/forum'));
-
-    http.get(
-        Uri.parse('https://smart-house-builder.azurewebsites.net/api/forum'));
     final response = await http.get(
         Uri.parse(
           'https://smart-house-builder.azurewebsites.net/api/forum',
         ),
         headers: {"Access-Control-Allow-Origin": "*"});
-    print("2");
     List<Post> posts = [];
-
     var jsonData = json.decode(response.body);
     for (var v in jsonData) {
       Post postare = Post.fromJson(v);
-
       int postId = Post.fromJson(v).id;
       final response2 = await http.get(
           Uri.parse(
@@ -350,13 +412,25 @@ class Post {
           headers: {"Access-Control-Allow-Origin": "*"});
       for (var comment in jsonDecode(response2.body)) {
         Comment com = Comment.fromJson(comment);
-        //postare.nrComments++;
-        //print(postare.nrComments);
         postare.comments.add(com);
       }
-      postare.nrComments = postare.comments.length;
-      Post.setTags(postare);
 
+      postare.nrComments = postare.comments.length;
+      final response3 = await http.get(
+          Uri.parse(
+            'https://smart-house-builder.azurewebsites.net/api/forum/tags/$postId',
+          ),
+          headers: {"Access-Control-Allow-Origin": "*"});
+      var tag = jsonDecode(response3.body);
+      //print(tag);
+      postare.tags_integers = Tags.fromJson(tag);
+      /* print(postare.tags_integers.flagHard);
+      print(postare.tags_integers.flagQuestion);
+      print(postare.tags_integers.flagReview);
+      print(postare.tags_integers.flagSetup);
+      print(postare.tags_integers.flagSoft);
+      */
+      Post.setTags(postare);
       postare.nrLikes = 0;
       posts.add(postare);
     }
@@ -400,6 +474,7 @@ class Post {
     posts.add(
       Post(
         id: 1,
+        id_user: 1,
         topic: "What do you think about Amazon Alexa?",
         content:
             "Hello everyone! I just got started with tehnology and as every beginner..Its kinda hard to get used to the nowadays techonology. I just found out about Alexa and I need some opinions about her. Is she worth it? I mean I saw a lot of very good feedback about her but still I have my doubts. Moreover could I (less than an average man in techonology) get along with her? She could the perfect tool for me but still if I cant use her its still uselessfor your suggestions and answers! Thank you!",
@@ -425,6 +500,7 @@ class Post {
     posts.add(
       Post(
         id: 1,
+        id_user: 1,
         topic: "AAAAAAAA?",
         content:
             "Hello everyone! I just got started with tehnology and as every beginner..Its kinda hard to get used to the nowadays techonology. I just found out about Alexa and I need some opinions about her. Is she worth it? I mean I saw a lot of very good feedback about her but still I have my doubts. Moreover could I (less than an average man in techonology) get along with her? She could the perfect tool for me but still if I cant use her its still uselessfor your suggestions and answers! Thank you!",

@@ -1,4 +1,6 @@
-package com.smarthousebuilder.forum.user;
+package com.smarthousebuilder.registration.user;
+
+import org.hibernate.annotations.DynamicUpdate;
 
 import javax.persistence.*;
 
