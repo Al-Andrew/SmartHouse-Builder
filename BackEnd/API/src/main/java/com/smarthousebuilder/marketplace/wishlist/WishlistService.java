@@ -86,19 +86,14 @@ public class WishlistService {
         return 1;
     }
 
-
-    public void getByWishlistId(Integer wishlistId) {
-        boolean exists = wishlistRepository.existsByUserId(wishlistId);
-
-        if(!exists)
-            throw  new IllegalStateException("No wishlist for user with id " + wishlistId);
-
-        wishlistItemRepository.findAllByWishlistId(wishlistId);
-    }
+    
 
 
-    public void deleteOneFromWishlist(Integer wishlistId, Integer productId) {
+    public void deleteOneFromWishlist(Integer userId, Integer productId) {
 
+
+        Wishlists wishlist = wishlistRepository.findWishlistsByUserId(userId);
+        Integer wishlistId = wishlist.getId();
         boolean existsWishlist = wishlistRepository.existsById(wishlistId);
 
         if (!existsWishlist)
