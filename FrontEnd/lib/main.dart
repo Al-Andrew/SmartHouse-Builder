@@ -1,12 +1,25 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:homepage/about_us.dart';
 import 'package:homepage/homepage.dart';
 import 'package:homepage/marketplace.dart';
+import 'package:homepage/forum/Forum.dart';
 import 'package:homepage/shb.dart';
-// import 'package:simple_gradient_text/simple_gradient_text.dart';
+import 'package:homepage/contact_us.dart';
+import 'package:homepage/signup.dart';
+import 'package:flutter/gestures.dart';
 
 void main() {
   runApp(const MyApp());
+}
+
+class MyCustomScrollBehavior extends MaterialScrollBehavior {
+  // Override behavior methods and getters like dragDevices
+  @override
+  Set<PointerDeviceKind> get dragDevices => {
+        PointerDeviceKind.touch,
+        PointerDeviceKind.mouse,
+      };
 }
 
 class MyApp extends StatelessWidget {
@@ -15,12 +28,13 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      scrollBehavior: MyCustomScrollBehavior(),
       debugShowCheckedModeBanner: false,
-      title: 'Homepage',
+      title: 'Smart House Builder',
       theme: ThemeData(
         primarySwatch: Colors.cyan,
       ),
-      home: const MyHomePage(title: 'Homepage'),
+      home: const MyHomePage(title: 'Smart House Builder'),
     );
   }
 }
@@ -36,10 +50,14 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   int _selectedIndex = 0;
 
-  static List<Widget> _widgetOptions = <Widget>[
+  static final List<Widget> _widgetOptions = <Widget>[
     HomePage(),
     SHB(),
     Marketplace(),
+    const Forum(),
+    const ContactUs(),
+    const AboutUs(),
+    SignUp(),
   ];
 
   void changeScreen(int index) {
@@ -57,7 +75,7 @@ class _MyHomePageState extends State<MyHomePage> {
           toolbarHeight: 100,
           backgroundColor: Colors.transparent,
           title: TextButton(
-            onPressed: () => changeScreen(0),
+            onPressed: () {},
             child: const Image(
               image: AssetImage('assets/logo_smart.png'),
               height: 90,
@@ -77,9 +95,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 TextButton(
                     style: TextButton.styleFrom(
                         textStyle: const TextStyle(color: Colors.black)),
-                    onPressed: () => {
-                          //do something
-                        },
+                    onPressed: () => changeScreen(3),
                     child: const Center(
                       child: Text('Forum'),
                     )),
@@ -100,18 +116,14 @@ class _MyHomePageState extends State<MyHomePage> {
                 TextButton(
                     style: TextButton.styleFrom(
                         textStyle: const TextStyle(color: Colors.black)),
-                    onPressed: () => {
-                          //do something
-                        },
+                    onPressed: () => changeScreen(5),
                     child: const Center(
                       child: Text('About'),
                     )),
                 TextButton(
                     style: TextButton.styleFrom(
                         textStyle: const TextStyle(color: Colors.black)),
-                    onPressed: () => {
-                          //do something
-                        },
+                    onPressed: () => changeScreen(4),
                     child: const Center(
                       child: Text('Contact Us'),
                     )),
@@ -123,9 +135,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     child: TextButton(
                         style: TextButton.styleFrom(
                             textStyle: const TextStyle(color: Colors.white)),
-                        onPressed: () => {
-                              //do something
-                            },
+                        onPressed: () => changeScreen(6),
                         child: const Center(
                           child: Text(
                             'Sign Up',
