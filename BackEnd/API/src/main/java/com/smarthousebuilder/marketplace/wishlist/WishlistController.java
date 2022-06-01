@@ -43,9 +43,9 @@ public class WishlistController {
     }
 
     @DeleteMapping
-    public void deleteOneItem(@RequestParam (value = "wishlistId") Integer wishlistId,
+    public void deleteOneItem(@RequestParam (value = "userId") Integer userId,
                               @RequestParam (value = "productId") Integer productId){
-        wishlistService.deleteOneFromWishlist(wishlistId,productId);
+        wishlistService.deleteOneFromWishlist(userId,productId);
     }
 
     @Transactional
