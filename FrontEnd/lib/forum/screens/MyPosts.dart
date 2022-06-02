@@ -57,6 +57,7 @@ class _MyPostsState extends State<MyPosts> {
 
   onSelectedRow(bool selected, Post post) async {
     setState(() {
+      globals.nrMyPosts = 0;
       if (selected) {
         selectedPosts.add(post);
       } else {
@@ -528,16 +529,7 @@ class _MyPostsState extends State<MyPosts> {
           ),
         ),
       );
-    else if (globals.isSearched == true) {
-      globals.isSearched = false;
-      return Center(
-        child: Container(
-            child: Text(
-          "No post found!",
-          style: TextStyle(fontSize: 20),
-        )),
-      );
-    } else {
+    else {
       return CircularProgressIndicator();
     }
   }
