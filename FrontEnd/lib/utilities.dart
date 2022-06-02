@@ -4,6 +4,7 @@ import 'dart:io';
 // import 'dart:ffi';
 import 'package:flutter/material.dart';
 import 'package:homepage/all_products.dart';
+import 'package:homepage/builder.dart';
 // import 'package:homepage/schematics.dart';
 // import 'package:flutter/rendering.dart';
 // import 'package:homepage/dummy_products.dart';
@@ -76,7 +77,42 @@ class _UtilitiesState extends State<Utilities> {
             ],
           ),
         ])),
-        Expanded(child: widgetOptions.elementAt(_selectedIndex))
+        SingleChildScrollView(
+            child: Expanded(child: widgetOptions.elementAt(_selectedIndex))),
+        Positioned(
+          // left: 0,
+          bottom: 0,
+          child: Container(
+            child: Center(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  TextButton(
+                      onPressed: () => {BuilderState.SaveSetup()},
+                      child: Text(
+                        'Save',
+                        style: TextStyle(color: Colors.black),
+                      ),
+                      style: ButtonStyle(
+                          backgroundColor:
+                              MaterialStateProperty.all(Colors.white),
+                          elevation: MaterialStateProperty.all(1))),
+                  TextButton(
+                      onPressed: () => {BuilderState.DeleteSelected()},
+                      child: Text(
+                        'Delete',
+                        style: TextStyle(color: Colors.black),
+                      ),
+                      style: ButtonStyle(
+                          backgroundColor:
+                              MaterialStateProperty.all(Colors.white),
+                          elevation: MaterialStateProperty.all(1))),
+                ],
+              ),
+            ),
+            // height: 80,
+          ),
+        )
       ]),
     ));
   }

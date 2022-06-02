@@ -36,8 +36,8 @@ Future<List<Setup>> getSetupsForUserRequest(int userId) async {
 
 Future updateSetupComponentsRequest() async {
   int id = BuilderState.setup.id;
+  print(BuilderState.setup);
   String j = jsonEncode(BuilderState.setup.toJson());
-  print(j);
 
   final resp = await http
       .post(Uri.parse(baseUri + "/api/shb/setup/updateComponents?id=$id"),
@@ -49,6 +49,29 @@ Future updateSetupComponentsRequest() async {
           onError: (err) => print(err));
 
   return resp;
+}
+
+Future<SmartDevice> getSmartDeviceRequest(int id) async {
+  final resp = await http.get(Uri.parse(baseUri + "/api/products/$id"));
+
+  print(resp.body);
+  Map<String, dynamic> json = jsonDecode(resp.body);
+  int jid = json['id'];
+  String category = json['category'];
+
+  SmartDevice res;
+  switch (category) {
+    case "Lighting":
+      res = Lighting(jid);
+      break;
+    case "Hub":
+      res = Hub(jid);
+      break;
+    default:
+      res = SmartDevice(jid);
+  }
+
+  return res;
 }
 
 class Setup {
@@ -109,10 +132,52 @@ class BuilderState extends State<BuilderCon> {
         case Window:
           AddNewWindow(schm as Window);
           break;
+        case Door:
+          AddNewDoor(schm as Door);
+          break;
+        case Lighting:
+          AddSmart(schm as Lighting);
+          break;
+        case Hub:
+          AddSmart(schm as Hub);
+          break;
+        case SmartDevice:
+          AddSmart(schm as SmartDevice);
+          break;
         default:
           print("Unrecognized kinda schm");
       }
     }
+  }
+
+  static void SaveSetup() {
+    print("Saving");
+    updateSetupComponentsRequest();
+  }
+
+  static void DeleteSelected() {
+    for (var child in flameContext.children) {
+      if (child is! BaseSchematic) continue;
+
+      BaseSchematic c = child as BaseSchematic;
+      if (!c.isFocused) continue;
+
+      flameContext.remove(c.gizmoRef);
+      flameContext.remove(c);
+      BuilderState.setup.components.remove(c);
+    }
+  }
+
+  static void AddNewSmartDevice(int id) {
+    print("Adding smart device id: " + id.toString());
+    getSmartDeviceRequest(id).then((value) {
+      AddSmart(value);
+      BuilderState.setup.components.add(value);
+    }, onError: (err) => print(err));
+  }
+
+  static void AddSmart(SmartDevice dev) {
+    flameContext.add(dev);
   }
 
   static void AddNewWall(Wall? newWall) {
@@ -132,6 +197,16 @@ class BuilderState extends State<BuilderCon> {
       return;
     }
     var win = Window();
+    flameContext.add(win);
+    setup.components.add(win);
+  }
+
+  static void AddNewDoor(Door? schm) {
+    if (schm != null) {
+      flameContext.add(schm);
+      return;
+    }
+    var win = Door();
     flameContext.add(win);
     setup.components.add(win);
   }
@@ -208,18 +283,7 @@ class Builder extends FlameGame
     final isKeyDown = event is RawKeyDownEvent;
     final isDelete = keysPressed.contains(LogicalKeyboardKey.delete);
     print("keyEvent");
-    if (isDelete && isKeyDown) {
-      for (var child in this.children) {
-        if (child is! BaseSchematic) continue;
-
-        BaseSchematic c = child as BaseSchematic;
-        if (!c.isFocused) continue;
-
-        remove(c.gizmoRef);
-        remove(c);
-        BuilderState.setup.components.remove(c);
-      }
-    }
+    if (isDelete && isKeyDown) {}
     final isSpace = keysPressed.contains(LogicalKeyboardKey.space);
     if (isSpace && isKeyDown) {
       BuilderState.AddNewWall(null);
@@ -233,7 +297,7 @@ class Builder extends FlameGame
     final isL = keysPressed.contains(LogicalKeyboardKey.keyL);
     if (isL && isKeyDown) {
       print(jsonEncode(BuilderState.setup.toJson()));
-      updateSetupComponentsRequest();
+
       return KeyEventResult.handled;
     }
 
@@ -432,10 +496,8 @@ abstract class BaseSchematic extends PositionComponent with Tappable {
   bool isFocused = false;
   late Gizmo gizmoRef;
 
-  BaseSchematic(Vector2? position)
-      : super(
-            position: position ?? Vector2(100, 100), size: Vector2(100, 12.5));
-
+  BaseSchematic(Vector2? position, [double szx = 100, double szy = 12.5])
+      : super(position: position ?? Vector2(100, 100), size: Vector2(szx, szy));
   @override
   Future<void>? onLoad() {
     gizmoRef = Gizmo(this);
@@ -457,12 +519,14 @@ abstract class BaseSchematic extends PositionComponent with Tappable {
   }
 
   Map<String, dynamic> toJson() {
-    return <String, dynamic>{
+    print("BaseSchematic::toJson");
+    Map<String, dynamic> ret = <String, dynamic>{
       'type': getType(),
       'size': vecToJson(size),
       'transform': _transformToJson(transform),
       'anchor': vecToJson(anchor.toVector2())
     };
+    return ret;
   }
 
   static BaseSchematic fromJson(Map<String, dynamic> json) {
@@ -478,9 +542,15 @@ abstract class BaseSchematic extends PositionComponent with Tappable {
           component = Window();
           break;
         }
+      case "Door":
+        {
+          component = Door();
+          break;
+        }
       default:
+        component = SmartDevice.fromJson(json);
     }
-    component!.size.setFrom(vecFromJson(json['size']));
+    component.size.setFrom(vecFromJson(json['size']));
     component.transform.setFrom(transformFromJson(json['transform']));
     final anchorvec = vecFromJson(json['anchor']);
     component.anchor = Anchor(anchorvec.x, anchorvec.y);
@@ -579,7 +649,7 @@ class Wall extends BaseSchematic {
 }
 
 class Door extends BaseSchematic {
-  Door() : super(Vector2(100, 100));
+  Door() : super(Vector2(100, 100), 100, 100);
 
   @override
   String getType() {
@@ -606,7 +676,9 @@ class Door extends BaseSchematic {
 }
 
 class SmartDevice extends BaseSchematic {
-  SmartDevice() : super(Vector2(100, 200));
+  int id;
+
+  SmartDevice(this.id) : super(Vector2(100, 200));
 
   @override
   String getType() {
@@ -627,9 +699,49 @@ class SmartDevice extends BaseSchematic {
     canvas.drawLine(
         Offset(0.6 * size.x, size.y), Offset(0.4 * size.x, 0), paint);
   }
+
+  @override
+  Map<String, dynamic> toJson() {
+    Map<String, dynamic> ret = <String, dynamic>{
+      'id': id,
+      'type': getType(),
+      'size': vecToJson(size),
+      'transform': _transformToJson(transform),
+      'anchor': vecToJson(anchor.toVector2())
+    };
+    return ret;
+  }
+
+  @override
+  static SmartDevice fromJson(Map<String, dynamic> json) {
+    SmartDevice? component;
+    int id = json['id'];
+    switch (json['type']) {
+      case "Lighting":
+        {
+          component = Lighting(id);
+          break;
+        }
+      case "Hub":
+        {
+          component = Hub(id);
+          break;
+        }
+      default:
+        component = SmartDevice(id);
+    }
+    component.size.setFrom(vecFromJson(json['size']));
+    component.transform.setFrom(transformFromJson(json['transform']));
+    final anchorvec = vecFromJson(json['anchor']);
+    component.anchor = Anchor(anchorvec.x, anchorvec.y);
+
+    return component;
+  }
 }
 
 class Lighting extends SmartDevice {
+  Lighting(int id) : super(id);
+
   @override
   String getType() {
     return "Lighting";
@@ -651,6 +763,8 @@ class Lighting extends SmartDevice {
 }
 
 class Hub extends SmartDevice {
+  Hub(int id) : super(id);
+
   @override
   String getType() {
     return "Hub";
@@ -674,6 +788,8 @@ class Hub extends SmartDevice {
 }
 
 class Camera extends SmartDevice {
+  Camera(int id) : super(id);
+
   @override
   String getType() {
     return "Camera";
@@ -698,6 +814,8 @@ class Camera extends SmartDevice {
 }
 
 class Thermostat extends SmartDevice {
+  Thermostat(int id) : super(id);
+
   @override
   String getType() {
     return "Thermostat";
@@ -718,6 +836,8 @@ class Thermostat extends SmartDevice {
 }
 
 class Display extends SmartDevice {
+  Display(int id) : super(id);
+
   @override
   String getType() {
     return "Display";
@@ -737,6 +857,8 @@ class Display extends SmartDevice {
 }
 
 class Lock extends SmartDevice {
+  Lock(int id) : super(id);
+
   @override
   String getType() {
     return "Lock";
@@ -758,6 +880,8 @@ class Lock extends SmartDevice {
 }
 
 class TV extends SmartDevice {
+  TV(int id) : super(id);
+
   @override
   String getType() {
     return "TV";
@@ -781,6 +905,8 @@ class TV extends SmartDevice {
 }
 
 class Speakers extends SmartDevice {
+  Speakers(int id) : super(id);
+
   @override
   String getType() {
     return "Speakers";
