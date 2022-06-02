@@ -2,6 +2,7 @@
 import 'dart:html';
 import 'package:flutter/material.dart';
 import 'package:homepage/marketplace.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class ProductItemExpanded extends StatefulWidget {
   final int id;
@@ -9,11 +10,12 @@ class ProductItemExpanded extends StatefulWidget {
   final double pret;
   final String linkImg;
   final String description;
+  String productUrl;
   bool? favorited;
 
   void Function()? c;
-  ProductItemExpanded(
-      this.title, this.pret, this.linkImg, this.description, this.id) {
+  ProductItemExpanded(this.title, this.pret, this.linkImg, this.description,
+      this.id, this.productUrl) {
     c = () {
       Marketplace.state.ToggleFavorite(id);
     };
@@ -70,6 +72,15 @@ class _ProductItemExpandedState extends State<ProductItemExpanded> {
                         fontWeight: FontWeight.bold,
                         color: Colors.red,
                       )),
+                  Center(
+                    child: new InkWell(
+                        child: new Text(
+                          'Open Browser\n',
+                          style: const TextStyle(
+                              fontWeight: FontWeight.bold, color: Colors.cyan),
+                        ),
+                        onTap: () => launch(widget.productUrl)),
+                  ),
                   Container(
                     width:
                         MediaQuery.of(context).size.width * 50 / 100 * 80 / 100,

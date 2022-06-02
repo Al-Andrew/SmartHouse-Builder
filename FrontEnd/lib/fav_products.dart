@@ -75,8 +75,13 @@ class _FavProductsState extends State<FavProducts> {
             shrinkWrap: true,
             physics: AlwaysScrollableScrollPhysics(),
             children: widget._favProducts
-                .map((proData) => ProductItem(proData.name, proData.price,
-                    proData.pngUrl, proData.description, proData.id))
+                .map((proData) => ProductItem(
+                    proData.name,
+                    proData.price,
+                    proData.pngUrl,
+                    proData.description,
+                    proData.id,
+                    proData.productUrl))
                 .toList(),
           ),
           // if (loading) ...[

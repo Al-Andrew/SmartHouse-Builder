@@ -16,11 +16,13 @@ class ProductItem extends StatefulWidget {
   final String linkImg;
   final String description;
   final int id;
+  String productUrl;
   bool? favorited;
 
   void Function()? c;
 
-  ProductItem(this.title, this.pret, this.linkImg, this.description, this.id) {
+  ProductItem(this.title, this.pret, this.linkImg, this.description, this.id,
+      this.productUrl) {
     c = () {
       Marketplace.state.ToggleFavorite(id);
     };
@@ -48,8 +50,13 @@ class _ProductItemState extends State<ProductItem> {
             showDialog(
                 context: context,
                 builder: (BuildContext context) {
-                  return ProductItemExpanded(widget.title, widget.pret,
-                      widget.linkImg, widget.description, widget.id);
+                  return ProductItemExpanded(
+                      widget.title,
+                      widget.pret,
+                      widget.linkImg,
+                      widget.description,
+                      widget.id,
+                      widget.productUrl);
                 });
           },
           style:
