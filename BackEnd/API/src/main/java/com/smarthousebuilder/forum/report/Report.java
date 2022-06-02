@@ -21,8 +21,7 @@ public class Report {
   protected String motivation;
   protected String date;
 
-  @Transient
-  protected String author;
+
 
   public Report(int id,int id_post,int id_author,String title, String motivation, String date) {
     this.id=id;
@@ -45,9 +44,6 @@ public class Report {
   }
   public String getTitle() {
     return title;
-  }
-  public String getAuthor() {
-    return author;
   }
   public String getDate() {
     return date;
