@@ -6,7 +6,7 @@ var DUMMY_SCHEMATICS = [
   Schematic(
     id: '0',
     title: 'Wall',
-    linkImg: 'assets/schematics/wall.png',
+    linkImg: 'https://i.imgur.com/rqpEfFa.png',
     addFn: () {
       BuilderState.AddNewWall(null);
     },
@@ -14,17 +14,17 @@ var DUMMY_SCHEMATICS = [
   Schematic(
     id: '1',
     title: 'Door',
-    linkImg: 'assets/schematics/door.png',
+    linkImg: 'https://i.imgur.com/eCPy7jI.png',
     addFn: () {
-      BuilderState.AddNewWall(null);
+      BuilderState.AddNewDoor(null);
     },
   ),
   Schematic(
     id: '2',
     title: 'Window',
-    linkImg: 'assets/schematics/window.png',
+    linkImg: 'https://i.imgur.com/tKWeNek.png',
     addFn: () {
-      BuilderState.AddNewWall(null);
+      BuilderState.AddNewWindow(null);
     },
   ),
 ];

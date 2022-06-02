@@ -15,7 +15,7 @@ class SchematicItem extends StatelessWidget {
     return Container(
         padding: const EdgeInsets.all(8),
         child: TextButton(
-          onPressed: () => {print('buna ziua schematics')},
+          onPressed: add,
           onHover: null,
           style:
               TextButton.styleFrom(textStyle: TextStyle(color: Colors.black)),

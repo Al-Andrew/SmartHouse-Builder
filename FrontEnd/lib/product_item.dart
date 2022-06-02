@@ -3,6 +3,7 @@
 import 'dart:html';
 
 import 'package:flutter/material.dart';
+import 'package:homepage/builder.dart';
 import 'package:homepage/marketplace.dart';
 import 'package:homepage/product_item_expanded.dart';
 
@@ -117,7 +118,7 @@ class _ProductItemState extends State<ProductItem> {
                   child: Center(
                 child: IconButton(
                   onPressed: () {
-                    // do something;
+                    BuilderState.AddNewSmartDevice(widget.id);
                   },
                   icon: Icon(Icons.add),
                 ),
