@@ -77,42 +77,7 @@ class _UtilitiesState extends State<Utilities> {
             ],
           ),
         ])),
-        SingleChildScrollView(
-            child: Expanded(child: widgetOptions.elementAt(_selectedIndex))),
-        Positioned(
-          // left: 0,
-          bottom: 0,
-          child: Container(
-            child: Center(
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  TextButton(
-                      onPressed: () => {BuilderState.SaveSetup()},
-                      child: Text(
-                        'Save',
-                        style: TextStyle(color: Colors.black),
-                      ),
-                      style: ButtonStyle(
-                          backgroundColor:
-                              MaterialStateProperty.all(Colors.white),
-                          elevation: MaterialStateProperty.all(1))),
-                  TextButton(
-                      onPressed: () => {BuilderState.DeleteSelected()},
-                      child: Text(
-                        'Delete',
-                        style: TextStyle(color: Colors.black),
-                      ),
-                      style: ButtonStyle(
-                          backgroundColor:
-                              MaterialStateProperty.all(Colors.white),
-                          elevation: MaterialStateProperty.all(1))),
-                ],
-              ),
-            ),
-            // height: 80,
-          ),
-        )
+        Expanded(child: widgetOptions.elementAt(_selectedIndex))
       ]),
     ));
   }

@@ -15,9 +15,9 @@ class AllSchematics extends StatefulWidget {
 class _AllSchematicsState extends State<AllSchematics> {
   @override
   Widget build(BuildContext context) {
-    return ListView(
-      shrinkWrap: true,
-      physics: AlwaysScrollableScrollPhysics(),
+    return Column(
+      //shrinkWrap: true,
+      //physics: AlwaysScrollableScrollPhysics(),
       children: widget._allSchematics
           .map((schData) => SchematicItem(
               schData.id, schData.title, schData.linkImg, schData.addFn))
