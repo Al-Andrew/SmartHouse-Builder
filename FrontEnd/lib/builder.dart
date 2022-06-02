@@ -2,7 +2,7 @@
 
 import 'dart:convert';
 import 'dart:io';
-import 'dart:math' as math;
+import 'dart:math';
 
 import 'package:homepage/global_variables.dart' as gv;
 import 'package:http/http.dart' as http;
@@ -241,7 +241,15 @@ class Builder extends FlameGame
   }
 }
 
-enum dragType { translate, rotate, size_x, size_y, none }
+enum dragType {
+  translate,
+  rotate,
+  size_x_left,
+  size_x_right,
+  size_y_top,
+  size_y_bottom,
+  none
+}
 
 class Gizmo extends PositionComponent with Draggable {
   late BaseSchematic schematic;
@@ -330,24 +338,29 @@ class Gizmo extends PositionComponent with Draggable {
     //TODO(Al-Andrew): The transformations should be more intuitive
     //TODO(Al-Andrew): handle all sizing rs separatedly
     if (schematic.isFocused == false) return false;
-    if (rs_topMid.contains(translatedEventPosition.toOffset()) ||
-        rs_botMid.contains(translatedEventPosition.toOffset())) {
-      dt = dragType.size_y;
-    } else if (rs_midLeft.contains(translatedEventPosition.toOffset()) ||
-        rs_midRight.contains(translatedEventPosition.toOffset())) {
-      dt = dragType.size_x;
-    } else if (rs_topLeft.contains(translatedEventPosition.toOffset()) ||
-        rs_botLeft.contains(translatedEventPosition.toOffset()) ||
-        rs_topRight.contains(translatedEventPosition.toOffset()) ||
-        rs_botRight.contains(translatedEventPosition.toOffset())) {
-      dt = dragType.rotate;
+    if (rs_topMid.contains(translatedEventPosition.toOffset())) {
+      dt = dragType.size_y_top;
+    } else if (rs_botMid.contains(translatedEventPosition.toOffset())) {
+      dt = dragType.size_y_bottom;
+    } else if (rs_midLeft.contains(translatedEventPosition.toOffset())) {
+      dt = dragType.size_x_left;
+    } else if (rs_midRight.contains(translatedEventPosition.toOffset())) {
+      dt = dragType.size_x_right;
     } else {
-      dt = dragType.translate;
+      if (rs_topLeft.contains(translatedEventPosition.toOffset()) ||
+          rs_botLeft.contains(translatedEventPosition.toOffset()) ||
+          rs_topRight.contains(translatedEventPosition.toOffset()) ||
+          rs_botRight.contains(translatedEventPosition.toOffset())) {
+        dt = dragType.rotate;
+      } else {
+        dt = dragType.translate;
+      }
     }
     dragDeltaPosition = info.eventPosition.game - position;
     startAngle = this.transform.angle;
     startSizeX = size.x;
     startSizeY = size.y;
+
     return false;
   }
 
@@ -364,14 +377,38 @@ class Gizmo extends PositionComponent with Draggable {
     //TODO(Al-Andrew): handle all sizing rs separatedly
     if (this.dt == dragType.translate) {
       position.setFrom(event.eventPosition.game - dragDeltaPosition);
-    } else if (this.dt == dragType.size_y) {
-      size.setFrom(Vector2(size.x, startSizeY - translatedEventPosition.y));
-    } else if (this.dt == dragType.size_x) {
-      size.setFrom(Vector2(startSizeX - translatedEventPosition.x, size.y));
+    } else if (this.dt == dragType.size_y_top) {
+      if (startSizeY - translatedEventPosition.y < margin.y + 10)
+        size.setFrom(Vector2(size.x, margin.y + 10));
+      else
+        size.setFrom(Vector2(size.x, startSizeY - translatedEventPosition.y));
+    } else if (this.dt == dragType.size_y_bottom) {
+      if (startSizeY + translatedEventPosition.y < margin.y + 10)
+        size.setFrom(Vector2(size.x, margin.y + 10));
+      else
+        size.setFrom(Vector2(size.x, startSizeY + translatedEventPosition.y));
+    } else if (this.dt == dragType.size_x_left) {
+      if (startSizeX - translatedEventPosition.x < margin.x + 30) {
+        size.setFrom(Vector2(margin.x + 30, size.y));
+      } else {
+        size.setFrom(Vector2(startSizeX - translatedEventPosition.x, size.y));
+      }
+    } else if (this.dt == dragType.size_x_right) {
+      if (startSizeX + translatedEventPosition.x < margin.x + 30) {
+        size.setFrom(Vector2(margin.x + 30, size.y));
+      } else {
+        size.setFrom(Vector2(startSizeX + translatedEventPosition.x, size.y));
+      }
     } else if (this.dt == dragType.rotate) {
-      this.transform.angle = startAngle - translatedEventPosition.y / 108;
+      double pantaDreptei = (event.eventPosition.game.y - this.position.y) /
+          (event.eventPosition.game.x - this.position.x);
+      this.transform.angle = atan(pantaDreptei);
     }
-
+    /*print(this.position.x);
+    print(this.position.y);
+    print(event.eventPosition.game.x);
+    print(event.eventPosition.game.y);
+    print("\n\n\n");*/
     fixToSchematic();
     return false;
   }
