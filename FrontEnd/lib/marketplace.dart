@@ -214,7 +214,7 @@ class MarketplaceState extends State<Marketplace> {
             // rating: info[i]["rating"],
             pngUrl: info[i]["pngUrl"],
             // forumLink: info[i]["forumLink"],
-            // productUrl: info[i]["productUrl"],
+            productUrl: info[i]["productUrl"],
             description: info[i]["description"],
             // specifications: info[i]["specification"]
           ));
