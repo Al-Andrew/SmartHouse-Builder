@@ -6,6 +6,9 @@ import 'package:flutter/material.dart';
 import 'package:homepage/marketplace.dart';
 import 'package:homepage/product_item_expanded.dart';
 
+import 'all_products.dart';
+import 'fav_products.dart';
+
 class ProductItem extends StatefulWidget {
   // final String id;
   final String title;
@@ -21,7 +24,7 @@ class ProductItem extends StatefulWidget {
     c = () {
       Marketplace.state.ToggleFavorite(id);
     };
-    favorited = false;
+    favorited = Marketplace.state.IsItFavorite(id);
   }
 
   @override
@@ -90,8 +93,20 @@ class _ProductItemState extends State<ProductItem> {
                 child: IconButton(
                   onPressed: () {
                     setState(() {
-                      widget.favorited = !widget.favorited!;
                       widget.c!();
+                      // MarketplaceState.widgetOptions = <Widget>[
+                      //   AllProducts(MarketplaceState.allProducts),
+                      //   FavProducts(MarketplaceState.favProducts),
+                      // ];
+                      //MarketplaceState.;
+                      Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => Marketplace(all: ''),
+                        ),
+                      );
+                      widget.favorited =
+                          Marketplace.state.IsItFavorite(widget.id);
                     });
                   },
                   icon: Icon(Icons.favorite),

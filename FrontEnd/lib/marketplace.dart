@@ -1,10 +1,12 @@
+// import 'dart:http';
 import 'dart:convert';
+import 'dart:io';
 // import 'dart:ffi';
 import 'package:flutter/material.dart';
 import 'package:homepage/all_products.dart';
 // import 'package:homepage/schematics.dart';
 // import 'package:flutter/rendering.dart';
-import 'package:homepage/dummy_products.dart';
+// import 'package:homepage/dummy_products.dart';
 // import 'package:homepage/dummy_schematics.dart';
 import 'package:homepage/fav_products.dart';
 import 'package:homepage/models/product.dart';
@@ -30,25 +32,28 @@ class Marketplace extends StatefulWidget {
 
 class MarketplaceState extends State<Marketplace> {
   List<Product> _allProducts = [];
-  final List<Product> _favProducts = [];
+  List<Product> _favProducts = [];
   // List<Product> _searchedProducts = [];
   // int userId = 1;
 
   // List<Schematic> _allSchematics = DUMMY_SCHEMATICS;
   int _selectedIndex = 0;
-
-  late List<Widget> _widgetOptions;
+  late List<Widget> widgetOptions;
 
   @override
   void initState() {
     // String query = '';
-    fetchSearched(widget.all);
+    fetchSearched(widget.all).then((value) {
+      /*DO SOMETHING A.K.A update view*/
+    }, onError: (err) => print(err));
     // _allProducts = DUMMY_PRODUCTS;
     fetchWishlist();
-    _widgetOptions = <Widget>[
+
+    widgetOptions = <Widget>[
       AllProducts(_allProducts),
       FavProducts(_favProducts),
     ];
+
     super.initState();
   }
 
@@ -56,6 +61,55 @@ class MarketplaceState extends State<Marketplace> {
     setState(() {
       _selectedIndex = index;
     });
+  }
+
+  Future<void> AddToFavorites(int idProdus) async {
+    int productID = idProdus;
+    int userId = globals.userID;
+    final queryParameters = {
+      'userId': '$userId',
+      'productId': '$productID',
+    };
+    print(productID);
+    print(userId);
+    final uri = Uri.https('smart-house-builder.azurewebsites.net',
+        '/api/wishlist/', queryParameters);
+    // var headers = {
+    //   HttpHeaders.authorizationHeader: 'Token $String',
+    //   HttpHeaders.contentTypeHeader: 'application/json',
+    // };
+
+    final response = await http.post(
+      uri,
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+    );
+    if (response.statusCode == 200) {
+      print('succes');
+    }
+    // print(response.body);
+  }
+
+  Future<void> RemoveFromFavorites(int idProdus) async {
+    int productID = idProdus;
+    int userId = globals.userID;
+    final queryParameters = {
+      'userId': '$userId',
+      'productId': '$productID',
+    };
+    final uri = Uri.https('smart-house-builder.azurewebsites.net',
+        '/api/wishlist/', queryParameters);
+    final response = await http.delete(
+      uri,
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+    );
+    if (response.statusCode == 200) {
+      print('succes');
+    }
+    // print(response.body);
   }
 
   void fetchProducts() async {
@@ -133,7 +187,7 @@ class MarketplaceState extends State<Marketplace> {
     }
   }
 
-  void fetchSearched(String query) async {
+  Future fetchSearched(String query) async {
     final response = await http.get(Uri.parse(
         'https://smart-house-builder.azurewebsites.net/api/products/name?string=' +
             query));
@@ -173,30 +227,20 @@ class MarketplaceState extends State<Marketplace> {
     }
   }
 
-  @override
-  void setState(VoidCallback fn) {
-    fetchSearched(widget.all);
-    fetchWishlist();
-    super.setState(fn);
-  }
-
-  void incomingSearch(String incomingQuery) {
-    setState(() {
-      fetchSearched(incomingQuery);
-    });
-  }
-
   void ToggleFavorite(int ProductId) {
+    print(ProductId);
     final ExistingIndex =
         _favProducts.indexWhere((Product) => Product.id == ProductId);
     if (ExistingIndex >= 0) {
       setState(() {
-        _favProducts.removeAt(ExistingIndex);
+        // _favProducts.removeAt(ExistingIndex);
+        RemoveFromFavorites(ProductId);
       });
     } else {
       setState(() {
-        _favProducts
-            .add(_allProducts.firstWhere((Product) => Product.id == ProductId));
+        // _favProducts
+        //     .add(_allProducts.firstWhere((Product) => Product.id == ProductId));
+        AddToFavorites(ProductId);
       });
     }
   }
@@ -224,6 +268,14 @@ class MarketplaceState extends State<Marketplace> {
             children: [
               TextButton(
                   onPressed: () => changeScreen(0),
+                  // onPressed: () {
+                  //   Navigator.pushReplacement(
+                  //     context,
+                  //     MaterialPageRoute(
+                  //       builder: (context) => AllProducts(_allProducts),
+                  //     ),
+                  //   );
+                  // },
                   child: Text(
                     'All',
                     style: TextStyle(color: Colors.black),
@@ -233,6 +285,14 @@ class MarketplaceState extends State<Marketplace> {
                       elevation: MaterialStateProperty.all(1))),
               TextButton(
                   onPressed: () => changeScreen(1),
+                  // onPressed: () {
+                  //   Navigator.pushReplacement(
+                  //     context,
+                  //     MaterialPageRoute(
+                  //       builder: (context) => FavProducts(_favProducts),
+                  //     ),
+                  //   );
+                  // },
                   child: Text(
                     'Wishlist',
                     style: TextStyle(color: Colors.black),
@@ -243,7 +303,7 @@ class MarketplaceState extends State<Marketplace> {
             ],
           ),
         ])),
-        Expanded(child: _widgetOptions.elementAt(_selectedIndex))
+        Expanded(child: widgetOptions.elementAt(_selectedIndex))
       ]),
     ));
   }
