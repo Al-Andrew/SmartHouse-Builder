@@ -98,7 +98,7 @@ public class PostService {
             Collections.sort(posts, new Comparator<Post>() {
                 @Override
                 public int compare(Post o1, Post o2) {
-                    return Integer.compare(o1.numberLikes, o2.numberLikes);
+                    return Integer.compare(o2.numberLikes, o1.numberLikes);
                 }
             });
         }
