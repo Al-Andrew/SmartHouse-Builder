@@ -5,5 +5,9 @@ bool hasUserRegisteredSuccessfully = false;
 
 String userName = 'Default Username';
 String userEmail = "DefaultEmail";
-int userID = 2;
+int userID = 1;
+
 int lastSelectedIndex = 0;
+
+String errorMesageForUsernameFromResponse = '';
+String errorMesageForEmailFromResponse = '';
