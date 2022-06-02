@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:homepage/builder.dart';
 
-class SchematicItem extends StatelessWidget {
+class SetupItem extends StatelessWidget {
   final String id;
   final String title;
-  final String linkImg;
+  // final String linkImg;
   var add;
 
-  SchematicItem(this.id, this.title, this.linkImg, this.add);
+  SetupItem(this.id, this.title, this.add);
 
   @override
   Widget build(BuildContext context) {
@@ -15,7 +15,7 @@ class SchematicItem extends StatelessWidget {
     return Container(
         padding: const EdgeInsets.all(8),
         child: TextButton(
-          onPressed: () => {print('buna ziua schematics')},
+          onPressed: () => {print('buna ziua setup')},
           onHover: null,
           style:
               TextButton.styleFrom(textStyle: TextStyle(color: Colors.black)),
@@ -32,13 +32,6 @@ class SchematicItem extends StatelessWidget {
                   style: TextStyle(color: Colors.black),
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
-                ),
-              ),
-              Flexible(
-                child: Container(
-                  width: 50,
-                  height: 50,
-                  child: Image.network(linkImg),
                 ),
               ),
             ],
