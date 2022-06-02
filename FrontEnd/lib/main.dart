@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:homepage/about_us.dart';
+import 'package:homepage/change_email.dart';
+import 'package:homepage/change_password.dart';
 
 import 'package:homepage/global_variables.dart';
 import 'package:homepage/homepage.dart';
-import 'package:homepage/marketplace.dart';
+import 'package:homepage/market.dart';
 import 'package:homepage/forum/Forum.dart';
+import 'package:homepage/myaccount.dart';
 
 import 'package:homepage/shb.dart';
 import 'package:homepage/contact_us.dart';
@@ -69,11 +72,14 @@ class _MyHomePageState extends State<MyHomePage> {
   static final List<Widget> _widgetOptions = <Widget>[
     HomePage(),
     SHB(),
-    Marketplace(),
+    const Market(),
     const Forum(),
     const ContactUs(),
     const AboutUs(),
     SignUp(),
+    const MyAccount(),
+    const ChangePassword(),
+    const ChangeEmail()
   ];
 
   void changeScreen(int index) {
@@ -124,7 +130,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                 style: TextButton.styleFrom(
                                     textStyle:
                                         const TextStyle(color: Colors.black)),
-                                onPressed: () => changeScreen(6),
+                                onPressed: () => changeScreen(3),
                                 child: const Center(
                                   child: Text('Forum'),
                                 )),
@@ -600,13 +606,13 @@ class AccountMenu extends StatelessWidget {
               color: Colors.white,
               child: InkWell(
                 onTap: () {
-                  // lastSelectedIndex = 7;
-                  // Navigator.pushReplacement(
-                  // context,
-                  // MaterialPageRoute(
-                  // builder: (context) => const MyApp(
-                  // selectedIndex: 7,
-                  // )));
+                  lastSelectedIndex = 7;
+                  Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const MyApp(
+                                selectedIndex: 7,
+                              )));
                 },
                 child: Row(
                   children: const [

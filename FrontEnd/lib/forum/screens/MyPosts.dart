@@ -2,6 +2,7 @@ import 'dart:html';
 
 import 'package:flutter/material.dart';
 import 'package:homepage/forum/utilities/Utilities.dart';
+import '../../global_variables.dart';
 import '../ForumGlobals.dart' as globals;
 
 import 'package:homepage/forum/classes/PostClass.dart';
@@ -21,8 +22,9 @@ class _MyPostsState extends State<MyPosts> {
   String route = "/";
   @override
   void initState() {
+    globals.nrMyPosts = 0;
     if (globals.isSorted == false && globals.isSearched == false) {
-      Post.getMyPosts(1).then(
+      Post.getMyPosts(userID).then(
         (value) {
           setState(() {
             globals.myPosts = value;
@@ -55,6 +57,7 @@ class _MyPostsState extends State<MyPosts> {
 
   onSelectedRow(bool selected, Post post) async {
     setState(() {
+      globals.nrMyPosts = 0;
       if (selected) {
         selectedPosts.add(post);
       } else {
@@ -399,7 +402,7 @@ class _MyPostsState extends State<MyPosts> {
 
   Widget MyPostsTable(
       double spaceBetweenColumns, double fontSize, double topicWidth) {
-    if (globals.myPosts.length > 0)
+    if (posts.length > 0)
       return SingleChildScrollView(
         child: Center(
           child: SingleChildScrollView(
@@ -474,7 +477,9 @@ class _MyPostsState extends State<MyPosts> {
                         cells: [
                           DataCell(
                             Center(
-                              child: Center(child: Text(post.id.toString())),
+                              child: Center(
+                                  child:
+                                      Text((++globals.nrMyPosts).toString())),
                             ),
                           ),
                           DataCell(
@@ -524,16 +529,7 @@ class _MyPostsState extends State<MyPosts> {
           ),
         ),
       );
-    else if (globals.isSearched == true) {
-      globals.isSearched = false;
-      return Center(
-        child: Container(
-            child: Text(
-          "No post found!",
-          style: TextStyle(fontSize: 20),
-        )),
-      );
-    } else {
+    else {
       return CircularProgressIndicator();
     }
   }

@@ -31,7 +31,10 @@ class _PostsTabelState extends State<PostsTabel> {
   List<Post> posts = [];
   @override
   void initState() {
-    if (globals.isSorted == false && globals.isSearched == false) {
+    globals.nrPosts = 0;
+    if (globals.isSorted == false &&
+        globals.isSearched == false &&
+        globals.isCreated == false) {
       Post.getPosts().then(
         (value) {
           setState(() {
@@ -40,6 +43,12 @@ class _PostsTabelState extends State<PostsTabel> {
           });
         },
       );
+    } else if (globals.isCreated == true) {
+      globals.isCreated = false;
+      posts.clear();
+      setState(() {
+        posts = globals.posts;
+      });
     } else if (globals.isSorted == true) {
       globals.isSorted = false;
       Post.sortPosts("/").then((value) {
@@ -156,7 +165,7 @@ class _PostsTabelState extends State<PostsTabel> {
                           Center(
                             child: Center(
                                 child: Text(
-                              post.id.toString(),
+                              (++globals.nrPosts).toString(),
                               style: TextStyle(
                                 fontSize: widget.fontSizeRow,
                                 color: Colors.black,

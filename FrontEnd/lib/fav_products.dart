@@ -1,3 +1,6 @@
+import 'dart:convert';
+import 'package:http/http.dart' as http;
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 // import 'package:flutter/rendering.dart';
@@ -20,50 +23,50 @@ class _FavProductsState extends State<FavProducts> {
   bool allLoaded = false;
   List<Product> displayedProducts = [];
 
-  mockFetch() async {
-    if (allLoaded) {
-      return;
-    }
-    setState(() {
-      loading = true;
-    });
-    await Future.delayed(Duration(milliseconds: 500));
-    List<Product> newProducts = [];
-    for (int i = widget.index; i <= widget.index + 10; i++) {
-      newProducts.add(widget._favProducts.elementAt(i));
-    }
-    widget.index = widget.index + 10;
-    if (newProducts.isNotEmpty) {
-      displayedProducts.addAll(newProducts);
-    }
-    setState(() {
-      loading = false;
-      allLoaded = listEquals(displayedProducts, widget._favProducts);
-    });
-  }
+  // mockFetch() async {
+  //   if (allLoaded) {
+  //     return;
+  //   }
+  //   setState(() {
+  //     loading = true;
+  //   });
+  //   await Future.delayed(Duration(milliseconds: 500));
+  //   List<Product> newProducts = [];
+  //   for (int i = widget.index; i <= widget.index + 10; i++) {
+  //     newProducts.add(widget._favProducts.elementAt(i));
+  //   }
+  //   widget.index = widget.index + 10;
+  //   if (newProducts.isNotEmpty) {
+  //     displayedProducts.addAll(newProducts);
+  //   }
+  //   setState(() {
+  //     loading = false;
+  //     allLoaded = listEquals(displayedProducts, widget._favProducts);
+  //   });
+  // }
 
-  @override
-  void initState() {
-    super.initState();
-    mockFetch();
-    _scrollController.addListener(() {
-      if (_scrollController.position.pixels >=
-              _scrollController.position.maxScrollExtent &&
-          !loading) {
-        mockFetch();
-      }
-    });
-  }
+  // @override
+  // void initState() {
+  //   super.initState();
+  //   // mockFetch();
+  //   _scrollController.addListener(() {
+  //     if (_scrollController.position.pixels >=
+  //             _scrollController.position.maxScrollExtent &&
+  //         !loading) {
+  //       mockFetch();
+  //     }
+  //   });
+  // }
 
-  @override
-  void dispose() {
-    super.dispose();
-    _scrollController.dispose();
-  }
+  // @override
+  // void dispose() {
+  //   super.dispose();
+  //   _scrollController.dispose();
+  // }
 
   @override
   Widget build(BuildContext context) {
-    if (displayedProducts.isNotEmpty) {
+    if (widget._favProducts.isNotEmpty) {
       return Stack(
         alignment: Alignment.center,
         children: [
@@ -71,21 +74,26 @@ class _FavProductsState extends State<FavProducts> {
             controller: _scrollController,
             shrinkWrap: true,
             physics: AlwaysScrollableScrollPhysics(),
-            children: displayedProducts
-                .map((proData) => ProductItem(proData.name, proData.price,
-                    proData.pngUrl, proData.description))
+            children: widget._favProducts
+                .map((proData) => ProductItem(
+                    proData.name,
+                    proData.price,
+                    proData.pngUrl,
+                    proData.description,
+                    proData.id,
+                    proData.productUrl))
                 .toList(),
           ),
-          if (loading) ...[
-            Positioned(
-              // left: 0,
-              bottom: 0,
-              child: Container(
-                child: Center(child: CircularProgressIndicator()),
-                height: 80,
-              ),
-            )
-          ]
+          // if (loading) ...[
+          //   Positioned(
+          //     // left: 0,
+          //     bottom: 0,
+          //     child: Container(
+          //       child: Center(child: CircularProgressIndicator()),
+          //       height: 80,
+          //     ),
+          //   )
+          // ]
         ],
       );
     } else {

@@ -39,6 +39,8 @@ class _ButtonBackState extends State<ButtonBack> {
           onPressed: () {
             if (globals.isChanged) {
               if (this.widget.route == '/myposts') {
+                globals.nrMyPosts = 0;
+
                 print("E");
                 if ((globals.checkedPopularM ||
                         globals.checkedCommentedM ||
@@ -67,6 +69,7 @@ class _ButtonBackState extends State<ButtonBack> {
                     (route) => false);
                 globals.isChanged = true;
               } else {
+                globals.nrPosts = 0;
                 print("D");
                 if ((globals.checkedPopularH ||
                         globals.checkedCommentedH ||

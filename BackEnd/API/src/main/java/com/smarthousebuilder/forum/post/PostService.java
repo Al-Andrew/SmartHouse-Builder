@@ -41,6 +41,7 @@ public class PostService {
 //
 //        post.setAuthor(userCopy.getNameUser());
 //        System.out.println(post);
+
         System.out.println(post.getTag());
         post = postRepository.save(post);
         Tag tagCopy = post.getTag();
@@ -97,7 +98,7 @@ public class PostService {
             Collections.sort(posts, new Comparator<Post>() {
                 @Override
                 public int compare(Post o1, Post o2) {
-                    return o1.title.compareTo(o2.title);
+                    return Integer.compare(o2.numberLikes, o1.numberLikes);
                 }
             });
         }

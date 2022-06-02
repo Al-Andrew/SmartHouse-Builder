@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:homepage/builder.dart';
-import 'package:homepage/dummy_schematics.dart';
-import 'package:homepage/marketplace.dart';
+import 'package:homepage/market.dart';
 import 'package:homepage/schematics.dart';
+import 'package:homepage/utilities.dart';
 
 class SHB extends StatefulWidget {
   SHB();
@@ -15,8 +15,8 @@ class _SHBState extends State<SHB> {
   int _selectedIndex = 0;
 
   static List<Widget> _widgetOptions = <Widget>[
-    Marketplace(),
-    AllSchematics(DUMMY_SCHEMATICS)
+    Market(),
+    Utilities(),
   ];
 
   void changeScreen(int index) {
@@ -50,6 +50,8 @@ class _SHBState extends State<SHB> {
                             style: TextStyle(color: Colors.black),
                           ),
                           style: ButtonStyle(
+                              backgroundColor:
+                                  MaterialStateProperty.all(Colors.white),
                               elevation: MaterialStateProperty.all(1))),
                       Padding(
                           padding: EdgeInsets.only(
@@ -62,6 +64,8 @@ class _SHBState extends State<SHB> {
                             style: TextStyle(color: Colors.black),
                           ),
                           style: ButtonStyle(
+                              backgroundColor:
+                                  MaterialStateProperty.all(Colors.white),
                               elevation: MaterialStateProperty.all(1))),
                     ],
                   ),

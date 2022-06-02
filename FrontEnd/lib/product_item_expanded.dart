@@ -1,15 +1,36 @@
 // import 'dart:ffi';
 import 'dart:html';
 import 'package:flutter/material.dart';
+import 'package:homepage/marketplace.dart';
+import 'package:url_launcher/url_launcher.dart';
 
-class ProductItemExpanded extends StatelessWidget {
-  // final String id;
+class ProductItemExpanded extends StatefulWidget {
+  final int id;
   final String title;
   final double pret;
   final String linkImg;
   final String description;
+  String productUrl;
+  bool? favorited;
 
-  ProductItemExpanded(this.title, this.pret, this.linkImg, this.description);
+  void Function()? c;
+  ProductItemExpanded(this.title, this.pret, this.linkImg, this.description,
+      this.id, this.productUrl) {
+    c = () {
+      Marketplace.state.ToggleFavorite(id);
+    };
+    favorited = Marketplace.state.IsItFavorite(id);
+  }
+  @override
+  State<ProductItemExpanded> createState() => _ProductItemExpandedState();
+}
+
+class _ProductItemExpandedState extends State<ProductItemExpanded> {
+  @override
+  void initState() {
+    widget.favorited = Marketplace.state.IsItFavorite(widget.id);
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -17,119 +38,68 @@ class ProductItemExpanded extends StatelessWidget {
     double y = MediaQuery.of(context).size.height * 80 / 100;
     double z = MediaQuery.of(context).size.height * 15 / 100;
     return AlertDialog(
-        insetPadding: EdgeInsets.fromLTRB(z, z, z, z),
-        contentPadding: EdgeInsets.all(10),
-        actionsAlignment: MainAxisAlignment.center,
-        // actionsPadding: EdgeInsetsGeometry.infinity,
-        actions: [
-          Expanded(
-              child: FloatingActionButton(
-                  onPressed: null, child: Icon(Icons.add))),
-          Expanded(
-              child: FloatingActionButton(
-                  onPressed: null,
-                  child: Icon(
-                    Icons.favorite,
-                  ))),
-          Expanded(
-              child: FloatingActionButton(
-                  onPressed: Navigator.of(context).pop,
-                  child: Icon(Icons.close))),
-        ],
-        content: Center(
-            child: Container(
-                width: y,
-                // height: y,
-                child: Expanded(
-                    child: ListView(
-                  children: [
-                    Expanded(
-                      child: Text(
-                        title + '\n',
-                        softWrap: true,
-                        style: TextStyle(fontWeight: FontWeight.bold),
-                      ),
-                    ),
-                    Expanded(
-                        child: Text(
-                      (() {
-                        if (pret != 0) {
-                          return "\n\$$pret\n";
-                        }
+      //insetPadding: EdgeInsets.fromLTRB(z, z, z, z),
+      //contentPadding: EdgeInsets.all(10),
+      actionsAlignment: MainAxisAlignment.center,
+      // actionsPadding: EdgeInsetsGeometry.infinity,
+      //actionsOverflowButtonSpacing: 1,
+      actions: [
+        FloatingActionButton(
+            onPressed: Navigator.of(context).pop, child: Icon(Icons.close)),
+      ],
+      content: Center(
+          child: Container(
+              width: y,
+              height: y,
+              child: ListView(
+                // mainAxisSize: MainAxisSize.max,
+                shrinkWrap: true,
+                children: [
+                  Text(
+                    widget.title + '\n',
+                    softWrap: true,
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                  Text((() {
+                    if (widget.pret != 0) {
+                      return "\n\$" + widget.pret.toString() + "\n";
+                    }
 
-                        return "ERR";
-                      })(),
+                    return "Unavailable product.\n";
+                  })(),
                       textAlign: TextAlign.center,
-                      style: TextStyle(
+                      style: const TextStyle(
                         fontWeight: FontWeight.bold,
                         color: Colors.red,
-                      ),
-                    )
-
-                        //     Text(
-                        //   '\n\$$pret\n',
-                        //   textAlign: TextAlign.center,
-                        //   style: TextStyle(
-                        //       fontWeight: FontWeight.bold, color: Colors.red),
-                        // )
+                      )),
+                  Center(
+                    child: new InkWell(
+                        child: new Text(
+                          'Open Browser\n',
+                          style: const TextStyle(
+                              fontWeight: FontWeight.bold, color: Colors.cyan),
                         ),
-                    Expanded(
-                      child: Container(
-                        width: MediaQuery.of(context).size.width *
-                            50 /
-                            100 *
-                            80 /
-                            100,
-                        height: MediaQuery.of(context).size.height *
-                            50 /
-                            100 *
-                            80 /
-                            100,
-                        child: Image.network(linkImg),
-                      ),
-                    ),
-                    Expanded(child: Text('\n$description\n')),
-                  ],
-                )))));
-    // TextButton(
-    //   onPressed: null,
-    //   child: Row(
-    //     crossAxisAlignment: CrossAxisAlignment.center,
-    //     children: [
-    //       Expanded(
-    //         child: Container(
-    //           width: x,
-    //           height: x,
-    //           child: Image.network(linkImg),
-    //         ),
-    //       ),
-    //       Expanded(
-    //         child: Text(
-    //           title,
-    //           softWrap: true,
-    //           maxLines: 2,
-    //           overflow: TextOverflow.ellipsis,
-    //         ),
-    //       ),
-    //       Expanded(
-    //         child: Center(child: Text((() {
-    //           if (pret != 0) {
-    //             return "\$$pret";
-    //           }
+                        onTap: () => launch(widget.productUrl)),
+                  ),
+                  Container(
+                    width:
+                        MediaQuery.of(context).size.width * 50 / 100 * 80 / 100,
+                    height: MediaQuery.of(context).size.height *
+                        50 /
+                        100 *
+                        80 /
+                        100,
+                    child: Image.network(widget.linkImg),
+                  ),
+                  SingleChildScrollView(
+                      child: Text('\n' + widget.description.toString() + '\n')),
+                ],
+              ))),
+    );
+  }
 
-    //           return "ERR";
-    //         })())),
-    //       ),
-    //       const Expanded(
-    //           child: Center(
-    //         child: IconButton(
-    //           onPressed: null,
-    //           icon: Icon(Icons.favorite),
-    //           color: Colors.red,
-    //         ),
-    //       ))
-    //     ],
-    //   ),
-    // ));
+  @override
+  State<StatefulWidget> createState() {
+    throw UnimplementedError();
   }
 }

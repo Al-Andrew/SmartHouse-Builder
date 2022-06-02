@@ -1,16 +1,44 @@
 // import 'dart:ffi';
 
+import 'dart:html';
+
 import 'package:flutter/material.dart';
+import 'package:homepage/marketplace.dart';
 import 'package:homepage/product_item_expanded.dart';
 
-class ProductItem extends StatelessWidget {
+import 'all_products.dart';
+import 'fav_products.dart';
+
+class ProductItem extends StatefulWidget {
   // final String id;
   final String title;
   final double pret;
   final String linkImg;
   final String description;
+  final int id;
+  String productUrl;
+  bool? favorited;
 
-  ProductItem(this.title, this.pret, this.linkImg, this.description);
+  void Function()? c;
+
+  ProductItem(this.title, this.pret, this.linkImg, this.description, this.id,
+      this.productUrl) {
+    c = () {
+      Marketplace.state.ToggleFavorite(id);
+    };
+    favorited = Marketplace.state.IsItFavorite(id);
+  }
+
+  @override
+  State<ProductItem> createState() => _ProductItemState();
+}
+
+class _ProductItemState extends State<ProductItem> {
+  @override
+  void initState() {
+    widget.favorited = Marketplace.state.IsItFavorite(widget.id);
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -23,7 +51,12 @@ class ProductItem extends StatelessWidget {
                 context: context,
                 builder: (BuildContext context) {
                   return ProductItemExpanded(
-                      this.title, this.pret, this.linkImg, this.description);
+                      widget.title,
+                      widget.pret,
+                      widget.linkImg,
+                      widget.description,
+                      widget.id,
+                      widget.productUrl);
                 });
           },
           style:
@@ -33,40 +66,77 @@ class ProductItem extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Flexible(
+              Expanded(
                 child: Container(
                   width: x,
                   height: x,
-                  child: Image.network(linkImg),
+                  child: Image.network(widget.linkImg),
                 ),
               ),
-              Flexible(
+              Expanded(
                 child: Text(
-                  title,
+                  widget.title,
                   softWrap: true,
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
                 ),
               ),
-              Flexible(
-                child: Center(child: Text((() {
-                  if (pret != 0) {
-                    return "\$$pret";
+              Expanded(
+                  child: Center(
+                child: Text((() {
+                  if (widget.pret != 0) {
+                    return "\$" + widget.pret.toString();
                   }
 
-                  return "ERR";
-                })())),
-              ),
-              const Flexible(
+                  return "Unavailable";
+                })(),
+                    style: const TextStyle(
+                      // fontWeight: FontWeight.bold,
+                      color: Colors.red,
+                    )),
+              )),
+              Expanded(
                   child: Center(
                 child: IconButton(
-                  onPressed: null,
+                  onPressed: () {
+                    setState(() {
+                      widget.c!();
+                      // MarketplaceState.widgetOptions = <Widget>[
+                      //   AllProducts(MarketplaceState.allProducts),
+                      //   FavProducts(MarketplaceState.favProducts),
+                      // ];
+                      //MarketplaceState.;
+                      Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => Marketplace(all: ''),
+                        ),
+                      );
+                      widget.favorited =
+                          Marketplace.state.IsItFavorite(widget.id);
+                    });
+                  },
                   icon: Icon(Icons.favorite),
-                  color: Colors.red,
+                  color: widget.favorited! ? Colors.red : Colors.grey,
+                ),
+              )),
+              Expanded(
+                  child: Center(
+                child: IconButton(
+                  onPressed: () {
+                    // do something;
+                  },
+                  icon: Icon(Icons.add),
                 ),
               ))
             ],
           ),
         ));
+  }
+
+  @override
+  State<StatefulWidget> createState() {
+    // TODO: implement createState
+    throw UnimplementedError();
   }
 }

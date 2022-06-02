@@ -6,7 +6,7 @@ import java.util.*;
 
 public class Product {
     @JsonProperty
-    Integer categoryId;
+    String category;
     @JsonProperty
     String forumLink;
     @JsonProperty
@@ -26,11 +26,8 @@ public class Product {
     @JsonIgnore
     Map<String, String> detailsOfProduct;
 
-
-    //TODO(Razvan): ecosystem sa fie lista!!!
-
-    Product(String linkToPng, String linkToProduct) {
-        this.categoryId = null;
+    Product(String linkToPng, String linkToProduct, String category) {
+        this.category = category;
         this.forumLink = "None";
         this.rating = null;
         this.name = null;
@@ -40,100 +37,54 @@ public class Product {
         this.detailsOfProduct = new HashMap<>();
     }
 
-    Product(){}
-
-
-
-    public Integer getCategoryId() {
-        return categoryId;
+    public void setCategory(String category) {
+        this.category = category;
     }
-
-    public String getForumLink() {
-        return forumLink;
-    }
-
-    public Float getRating() {
-        return rating;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public Map<String, String> getDetailsOfProduct() {
-        return detailsOfProduct;
-    }
-
-
-    public void setCategoryId(Integer categoryId) {
-        this.categoryId = categoryId;
-    }
-
-    public void setForumLink(String forumLink) {
-        this.forumLink = forumLink;
-    }
-
     public void setName(String name) {
         this.name = name;
     }
-
-    public void setPrice(Float price) {
-        this.price = price;
-    }
-
     public void setRating(Float rating) {
         this.rating = rating;
     }
-
-    public void setProductUrl(String productUrl) {
-        this.productUrl = productUrl;
-    }
-
-    public void setPngUrl(String pngUrl) {
-        this.pngUrl = pngUrl;
-    }
-
     public void setDescription(String description) {
         this.description = description;
     }
-
-
     public void addPrice(Float price){
         this.price = price;
     }
-    public String ecosystems(String name) {
-        List<String> a = new LinkedList<>();
-        String ecfinal = "";
-        a.add("Control4");
-        a.add("Yonomi");
-        a.add("Smart Life");
-        a.add("IFTTT");
-        a.add("Alexa");
-        a.add("Logitech");
-        a.add("Apple HomeKit");
-        a.add("Google Asistant");
-        a.add("Google Home");
-        a.add("SmartThings");
-        for (int i = 0; i < a.size(); i++) {
-            if (name.contains(a.get(i))) {
-                if (ecfinal.equals("")) {
-                    ecfinal = a.get(i);
-                } else {
-                    ecfinal = ecfinal + ", " + a.get(i);
-                }
-            }
-        }
-        if (ecfinal.equals(""))
-            return "None";
-        else
-            return ecfinal;
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Product product = (Product) o;
+        return  Objects.equals(forumLink, product.forumLink) && Objects.equals(name, product.name) && Objects.equals(price, product.price) && Objects.equals(rating, product.rating) && Objects.equals(productUrl, product.productUrl) && Objects.equals(pngUrl, product.pngUrl) && Objects.equals(description, product.description) && Objects.equals(specifications, product.specifications) && Objects.equals(detailsOfProduct, product.detailsOfProduct);
     }
 
+    @Override
+    public int hashCode() {
+        return Objects.hash(category, forumLink, name, price, rating, productUrl, pngUrl, description, specifications, detailsOfProduct);
+    }
+
+    public List<String> getEcosystems(String name) {
+        List<String> ecosystemList = new LinkedList<>(
+                Arrays.asList("Control4", "Yonomi", "Smart Life", "IFTTT", "Alexa", "Logitech", "Apple HomeKit", "Google Asistant", "Google Home", "SmartThings")
+        );
+
+        List<String> result = new ArrayList<>();
+        for (var ecosystem : ecosystemList) {
+            if (name.contains(ecosystem))
+                result.add(ecosystem);
+        }
+        if(result.size() == 0)
+            result.add("None");
+        return result;
+    }
 
     @Override
     public String toString() {
         return "Product{" +
-                "categoryId=" + categoryId +
+                "categoryId=" + category +
                 ", forumLink='" + forumLink + '\'' +
                 ", name='" + name + '\'' +
                 ", price=" + price +
