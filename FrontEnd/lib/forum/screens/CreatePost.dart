@@ -7,7 +7,9 @@ import 'package:homepage/homepage.dart';
 import 'package:homepage/main.dart';
 import 'package:homepage/forum/classes/Tags.dart';
 import 'package:homepage/forum/classes/PostClass.dart';
+import 'package:intl/intl.dart';
 import '../ForumGlobals.dart' as globals;
+import '../../global_variables.dart';
 
 import '../Forum.dart';
 
@@ -85,8 +87,16 @@ class _CreatePostState extends State<CreatePost> {
     } else {
       bool yesOrNo = await _isYesOrNo();
       if (yesOrNo) {
-        Post.addPost(globals.posts.length + 2, 1, topicText, "05/11/2022",
-            descText, "Marcel", tags);
+        var now = new DateTime.now();
+        var formatter = DateFormat('yyyy-MM-dd');
+        String formattedDate = formatter.format(now);
+        if (globals.posts.isNotEmpty)
+          Post.addPost(globals.posts.last.id + 1, userID, topicText,
+              formattedDate, descText, userName, tags);
+        else {
+          Post.addPost(
+              0, userID, topicText, formattedDate, descText, userName, tags);
+        }
         Navigator.of(context).pop();
         if (globals.nrPrefferencesHomePage > 0) {
           if (globals.searchedH != "") {
@@ -98,11 +108,13 @@ class _CreatePostState extends State<CreatePost> {
           } else {
             globals.isChanged = true;
             globals.isSorted = true;
+
             Navigator.of(context).pushAndRemoveUntil(
                 MaterialPageRoute(builder: (child) => ForumHomePage()),
                 (route) => false);
           }
         } else {
+          globals.isCreated = true;
           Navigator.of(context).pushAndRemoveUntil(
               MaterialPageRoute(builder: (child) => ForumHomePage()),
               (route) => false);

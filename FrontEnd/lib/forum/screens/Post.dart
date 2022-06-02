@@ -1,10 +1,11 @@
 import 'dart:html';
-
+import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
 import 'package:homepage/forum/utilities/Utilities.dart';
 import 'package:homepage/forum/classes/PostClass.dart';
 import 'package:homepage/forum/classes/CommentClass.dart';
 import 'package:url_launcher/url_launcher.dart';
+import '../../global_variables.dart';
 
 import '../ForumGlobals.dart' as globals;
 import 'MyPosts.dart';
@@ -34,6 +35,12 @@ class _POSTState extends State<POST> {
 
   @override
   void initState() {
+    for (int idPost in globals.likedPosts) {
+      if (widget.post.id == idPost) {
+        _isLiked = true;
+        _likeIconColor = Colors.red;
+      }
+    }
     commentController = TextEditingController();
     titleReportController = TextEditingController();
     motivationReportController = TextEditingController();
@@ -886,10 +893,12 @@ class _POSTState extends State<POST> {
                 _likeIconColor = Colors.red;
                 _isLiked = true;
                 widget.post.setNrLikes(widget.post.nrLikes + 1);
+                globals.likedPosts.add(widget.post.id);
               } else {
                 _likeIconColor = Colors.black;
                 _isLiked = false;
                 widget.post.setNrLikes(widget.post.nrLikes - 1);
+                globals.likedPosts.remove(widget.post.id);
               }
             });
           },
@@ -960,11 +969,11 @@ class _POSTState extends State<POST> {
 
             return;
           }
-          // var now = new DateTime.now();
-          // var formatter = DateFormat('dd/MM/yyyy');
-          // String formattedDate = formatter.format(now);
-          setState(() => widget.post
-              .addComment(1, 1, widget.post.id, comment, "author", "date", 0));
+          var now = new DateTime.now();
+          var formatter = DateFormat('yyyy-MM-dd');
+          String formattedDate = formatter.format(now);
+          setState(() => widget.post.addComment(++globals.nextIdComment, userID,
+              widget.post.id, comment, userName, formattedDate, 0));
           globals.isChanged = true;
           commentController.clear();
         },
@@ -1027,16 +1036,14 @@ class _POSTState extends State<POST> {
                 motivationReportController.clear();
                 return;
               }
-
-              setState(() => widget.post
-                  .addReport(1, 1, widget.post.id, title, motivation));
+              var now = new DateTime.now();
+              var formatter = DateFormat('yyyy-MM-dd');
+              String formattedDate = formatter.format(now);
+              setState(() => widget.post.addReport(
+                  1, userID, widget.post.id, title, motivation, formattedDate));
               titleReportController.clear();
               motivationReportController.clear();
             }
-
-            // var now = new DateTime.now();
-            // var formatter = DateFormat('dd/MM/yyyy');
-            // String formattedDate = formatter.format(now);
           },
           icon: Icon(Icons.report, color: Colors.black),
           iconSize: 28,
@@ -1125,18 +1132,18 @@ class _POSTState extends State<POST> {
       width: width,
       child: Ink(
         child: IconButton(
-          onPressed: () {
-            setState(
-              () async {
-                final isConfirmed = await _isDeletingDesired();
-                if (isConfirmed == true) {
-                  globals.isChanged = true;
-                  setState(() {
-                    widget.post.removeComment(comment);
-                  });
-                } else {}
-              },
-            );
+          onPressed: () async {
+            if (userID == comment.id_user) {
+              final isConfirmed = await _isDeletingDesired();
+              if (isConfirmed == true) {
+                globals.isChanged = true;
+                setState(() {
+                  widget.post.removeComment(comment);
+                });
+              } else {}
+            } else {
+              final errorMessages = await _errorMessage();
+            }
           },
           icon: Icon(Icons.delete, color: Colors.black),
           hoverColor: Colors.transparent,
@@ -1171,6 +1178,30 @@ class _POSTState extends State<POST> {
                   TextButton(
                     onPressed: () {
                       Navigator.of(context).pop(false);
+                    },
+                    child: const Text('Close'),
+                  ),
+                ],
+              );
+            }) ??
+        false;
+  }
+
+  Future<bool> _errorMessage() async {
+    return await showDialog<bool>(
+            context: context,
+            builder: (context) {
+              return AlertDialog(
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(30),
+                ),
+                title: const Text('Error'),
+                content: const Text(
+                    'The comment can be deleted only by the author.'),
+                actions: [
+                  TextButton(
+                    onPressed: () {
+                      Navigator.of(context).pop(true);
                     },
                     child: const Text('Close'),
                   ),

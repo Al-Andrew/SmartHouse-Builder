@@ -9,4 +9,6 @@ public interface WishlistRepository extends JpaRepository<Wishlists,Integer> {
 
     Wishlists findByUserId(Integer userId);
 
+    Wishlists findWishlistsByUserId(Integer userId);
+
 }
