@@ -130,7 +130,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                 style: TextButton.styleFrom(
                                     textStyle:
                                         const TextStyle(color: Colors.black)),
-                                onPressed: () => changeScreen(3),
+                                onPressed: () => changeScreen(6),
                                 child: const Center(
                                   child: Text('Forum'),
                                 )),

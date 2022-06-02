@@ -37,7 +37,6 @@ class _ContactUsState extends State<ContactUs> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
               const HomepageBuildSection(),
-              const SizedBox(height: 50),
               GradientText(
                 'CONTACT US',
                 style: const TextStyle(
@@ -52,7 +51,7 @@ class _ContactUsState extends State<ContactUs> {
                 ],
               ),
               Container(
-                  padding: const EdgeInsets.only(top: 45),
+                  padding: const EdgeInsets.only(top: 55),
                   width: MediaQuery.of(context).size.width * 6 / 10,
                   child: const SelectableText(
                       'We\'d love to hear from you! Whether you\'re curious about our features, '
