@@ -20,23 +20,19 @@ public class WishlistController {
 
 
     @PostMapping
-    public void add(@RequestParam (value = "userId") Integer userId,@RequestParam(value = "productId")Integer productId,
-                    @RequestParam (value = "wishlistName")String name){
+    public void add(@RequestParam (value = "userId") Integer userId,@RequestParam(value = "productId")Integer productId){
         boolean conditionIfUserHasWishlist = wishlistService.existsByUserId(userId);
 
         if(!conditionIfUserHasWishlist){
-            wishlistService.AddFirstTime(userId,productId,name);
+            wishlistService.AddFirstTime(userId,productId);
         }
         else
         {
-            wishlistService.AddToExisting(userId,productId,name);
+            wishlistService.AddToExisting(userId,productId);
         }
     }
 
-    @GetMapping
-    public void all(@RequestParam (value = "wishlistId") Integer wishlistId){
-        wishlistService.getByWishlistId(wishlistId);
-    }
+   
 
     @GetMapping("/userId")
     public List<Optional<Product>> getAllProductsFromUserId(@RequestParam (value = "userId")Integer userId){
@@ -44,9 +40,9 @@ public class WishlistController {
     }
 
     @DeleteMapping
-    public void deleteOneItem(@RequestParam (value = "wishlistId") Integer wishlistId,
+    public void deleteOneItem(@RequestParam (value = "userId") Integer userId,
                               @RequestParam (value = "productId") Integer productId){
-        wishlistService.deleteOneFromWishlist(wishlistId,productId);
+        wishlistService.deleteOneFromWishlist(userId,productId);
     }
 
     @Transactional

@@ -17,7 +17,7 @@ class ProductItemExpanded extends StatefulWidget {
     c = () {
       Marketplace.state.ToggleFavorite(id);
     };
-    favorited = false;
+    favorited = Marketplace.state.IsItFavorite(id);
   }
   @override
   State<ProductItemExpanded> createState() => _ProductItemExpandedState();
@@ -42,19 +42,6 @@ class _ProductItemExpandedState extends State<ProductItemExpanded> {
       // actionsPadding: EdgeInsetsGeometry.infinity,
       //actionsOverflowButtonSpacing: 1,
       actions: [
-        FloatingActionButton(onPressed: null, child: Icon(Icons.add)),
-        FloatingActionButton(
-          onPressed: () {
-            setState(() {
-              widget.favorited = !widget.favorited!;
-              widget.c!();
-            });
-          },
-          child: Icon(
-            Icons.favorite,
-          ),
-          foregroundColor: widget.favorited! ? Colors.red : Colors.black,
-        ),
         FloatingActionButton(
             onPressed: Navigator.of(context).pop, child: Icon(Icons.close)),
       ],

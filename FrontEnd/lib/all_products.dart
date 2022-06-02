@@ -12,55 +12,61 @@ class AllProducts extends StatefulWidget {
   AllProducts(this._allProducts);
 
   @override
-  State<AllProducts> createState() => _AllProductsState();
+  State<AllProducts> createState() => AllProductsState();
 }
 
-class _AllProductsState extends State<AllProducts> {
+class AllProductsState extends State<AllProducts> {
   final ScrollController _scrollController = ScrollController();
   bool loading = false;
   bool allLoaded = false;
-  List<Product> displayedProducts = [];
+  // List<Product> displayedProducts = [];
 
-  mockFetch() async {
-    if (allLoaded) {
-      return;
-    }
-    setState(() {
-      loading = true;
-    });
-    await Future.delayed(Duration(milliseconds: 500));
-    List<Product> newProducts = [];
+  // mockFetch() async {
+  //   if (allLoaded) {
+  //     return;
+  //   }
+  //   setState(() {
+  //     loading = true;
+  //   });
+  //   await Future.delayed(Duration(milliseconds: 500));
+  //   List<Product> newProducts = [];
 
-    for (int i = widget.index; i < widget.index + 10; i++) {
-      newProducts.add(widget._allProducts.elementAt(i));
-    }
-    widget.index = widget.index + 10;
-    if (newProducts.isNotEmpty) {
-      displayedProducts.addAll(newProducts);
-    }
-    setState(() {
-      loading = false;
-      allLoaded = listEquals(displayedProducts, widget._allProducts);
-    });
-  }
+  //   for (int i = widget.index; i < widget.index + 10; i++) {
+  //     newProducts.add(widget._allProducts.elementAt(i));
+  //   }
+  //   widget.index = widget.index + 10;
+  //   if (newProducts.isNotEmpty) {
+  //     displayedProducts.addAll(newProducts);
+  //   }
+  //   setState(() {
+  //     loading = false;
+  //     allLoaded = listEquals(displayedProducts, widget._allProducts);
+  //   });
+  // }
+
+  // @override
+  // void initState() {
+  //   super.initState();
+  //   mockFetch();
+  //   _scrollController.addListener(() {
+  //     if (_scrollController.position.pixels >=
+  //             _scrollController.position.maxScrollExtent &&
+  //         !loading) {
+  //       mockFetch();
+  //     }
+  //   });
+  // }
+
+  // @override
+  // void dispose() {
+  //   super.dispose();
+  //   _scrollController.dispose();
+  // }
 
   @override
-  void initState() {
-    super.initState();
-    mockFetch();
-    _scrollController.addListener(() {
-      if (_scrollController.position.pixels >=
-              _scrollController.position.maxScrollExtent &&
-          !loading) {
-        mockFetch();
-      }
-    });
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-    _scrollController.dispose();
+  void setState(VoidCallback fn) {
+    // TODO: implement setState
+    super.setState(fn);
   }
 
   @override

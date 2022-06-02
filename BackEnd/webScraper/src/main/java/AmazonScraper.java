@@ -5,75 +5,82 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
-import java.util.List;
+import java.util.*;
 
 public class AmazonScraper {
-    public final List<Product> listOfProducts;
-    public StringBuilder url;
 
-    ScraperApp checkIdenticalProducts;
+    public final Set<Product> totalSetOfProducts;
+    public  Set<Product> currentSet;
+    private StringBuilder url;
+    public String category;
 
-
-    AmazonScraper(StringBuilder url, List<Product> prod, ScraperApp checkIdenticalProducts) {
-        this.listOfProducts = prod;
+    public void setCategory(String category) {
+        this.category = category;
+    }
+    public StringBuilder getUrl() {
+        return url;
+    }
+    public void setUrl(StringBuilder url) {
         this.url = url;
-        this.checkIdenticalProducts = checkIdenticalProducts;
     }
 
-    public void startScrape(int startPage, int howManyPages) {
-        mainScrape(startPage,howManyPages);
+    AmazonScraper(StringBuilder url, Set<Product> prod) {
+        this.totalSetOfProducts = prod;
+        this.url = url;
+    }
+
+    public void startScrape() {
+        mainScrape();
         productInformationScrape();
     }
 
-    private void mainScrape(int startPage, int howManyPages){
-            try {
-                for (int i = startPage; i <= howManyPages; i++) {
-                    this.url.append(i);
-                    Thread.sleep(2500);
-                    Connection conn = Jsoup.connect(String.valueOf(url)).userAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko)");
-                    Document document = conn.get();
-
-                    Elements content = document.select("div.s-card-container.s-overflow-hidden.aok-relative.s-expand-height.s-include-content-margin.s-latency-cf-section.s-card-border");
-
-                    for (Element e : content) {
-                        String img = e.select("img").attr("src");
-                        String link = "https://amazon.com" + e.select("a.a-link-normal.s-no-outline").attr("href");
-                        listOfProducts.add(new Product(img, link));
-                    }
-                }
-            } catch (Exception ex) {
-                ex.printStackTrace();
+    private void mainScrape() {
+        try {
+            currentSet = new HashSet<>();
+            Thread.sleep(5000);
+            Connection conn = Jsoup.connect(String.valueOf(url)).userAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.5005.63 Safari/537.36").referrer("https://www.google.ro/");
+            Document document = conn.get();
+            Elements content;
+            content = document.select("div.sg-col-inner");
+            for (Element e : content) {
+                String img = e.select("img").attr("src");
+                String link = "https://amazon.com" + e.select("a.a-link-normal.s-no-outline").attr("href");
+                Product currentProduct = new Product(img, link, category);
+                if(totalSetOfProducts.add(currentProduct))
+                    currentSet.add(currentProduct);
             }
-            this.url.deleteCharAt(url.length() - 1);
-         System.out.println(listOfProducts.size());
+        } catch (Exception ex){
+            ex.printStackTrace();
         }
+    }
 
-
-
-    private void productInformationScrape(){
-        for (Product temporary : this.listOfProducts) {
+    private void productInformationScrape() {
+        for (Product temporary : this.currentSet) {
             try {
                 ObjectMapper mapper = new ObjectMapper();
-                if(checkIdenticalProducts.allNames.contains(temporary.name)){
-                    continue;
-                }
-                Thread.sleep(2500);
-                Document connectToProduct = Jsoup.connect(temporary.productUrl).userAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko)").get();
+                Thread.sleep(5000);
+                Connection connect = Jsoup.connect(temporary.productUrl).userAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.5005.63 Safari/537.36").referrer("https://www.google.ro/");
+                Document connectToProduct = connect.get();
                 Element content = connectToProduct.select("span[data-a-size='b'].a-price.a-text-price.a-size-medium span.a-offscreen").first();
+                temporary.setCategory(category);
                 if (content != null) {
                     String price = content.text().replace("$", "").replace(",", ".");
+                    System.out.println(price);
                     temporary.addPrice(Float.parseFloat(price));
+                }
+
+                if (temporary.price == null) {
+                    continue;
                 }
 
                 String title = connectToProduct.select("#productTitle").text();
 
-             // if(checkIdenticalProducts.allNames.contains(title)){
-             //     temporary = new Product();
-             //     continue;
-             // }
-                //TODO(Razvan) : Trebuie sa fac treaba cu produsele identice sa functioneze
-                    temporary.setName(title);
-                checkIdenticalProducts.allNames.add(title);
+                temporary.setName(title);
+                System.out.println(temporary.name);
+                if (temporary.name == null) {
+                    continue;
+                }
+
                 String rating = connectToProduct.select("span[data-hook='rating-out-of-text']").text().replace(" out of 5", "");
                 if (!rating.equals(""))
                     temporary.setRating(Float.parseFloat(rating));
@@ -102,33 +109,19 @@ public class AmazonScraper {
                         }
                     }
                 }
+
+                temporary.detailsOfProduct.put("ecosystem", mapper.writeValueAsString(temporary.getEcosystems(temporary.name)));
+
+                ScraperApp.changeFormatOfSize(temporary.detailsOfProduct);
+
                 temporary.specifications = mapper.writeValueAsString(temporary.detailsOfProduct);
                 String json = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(temporary);
-                System.out.println(json);
-            }
-            catch (
+                ScraperApp.post("https://smart-house-builder.azurewebsites.net/api/products/add", json);
+
+            } catch (
                     Exception ex) {
                 ex.printStackTrace();
             }
-        }
-    }
-
-
-    private void TestClass(){
-        try {
-            for (Product temporary : this.listOfProducts) {
-                Document titleconn = Jsoup.connect(temporary.productUrl).userAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/101.0.4951.67 Safari/537.36").get();
-                String ratingElement = titleconn.select("span[data-hook='rating-out-of-text']").text().replace("out of 5", "");
-                System.out.println(ratingElement + "    " + temporary.productUrl);
-            }
-        }
-        catch (Exception e){
-            e.printStackTrace();
-        }
-    }
-    private void printProducts(){
-        for (Product prod : this.listOfProducts) {
-            System.out.println(prod);
         }
     }
 }

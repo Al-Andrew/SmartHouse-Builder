@@ -17,8 +17,8 @@ class Tags {
 
   factory Tags.fromJson(dynamic json) {
     Tags tag = new Tags(
-      id: json["id"],
-      flagReview: (json["rewiewFlag"] != null) ? json["rewiewFlag"] : 0,
+      id: (json["id"] != null) ? json["id"] : 0,
+      flagReview: (json["reviewFlag"] != null) ? json["reviewFlag"] : 0,
       flagQuestion: (json["questionFlag"] != null) ? json["questionFlag"] : 0,
       flagSetup: (json["setupFlag"] != null) ? json["setupFlag"] : 0,
       flagHard: (json["hardwareFlag"] != null) ? json["hardwareFlag"] : 0,

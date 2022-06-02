@@ -1,6 +1,8 @@
 import 'dart:html';
 import 'dart:io';
 
+import 'package:homepage/global_variables.dart';
+
 import './CommentClass.dart';
 import './ReportClass.dart';
 import './Tags.dart';
@@ -187,11 +189,11 @@ class Post {
       searchedPost = globals.searchedM;
     }
     print(searchedPost);
-    if (route == '/myposts') {
+    if (route == "/myposts") {
       globals.isSearched = true;
       final uri = Uri.http('smart-house-builder.azurewebsites.net',
-          '/api/forum/search/$searchedPost');
-
+          '/api/forum/search/$userID/$searchedPost');
+      print("Z1");
       final response = await http.get(uri);
       var jsonData = json.decode(response.body);
       List<Post> posts = [];
@@ -200,6 +202,8 @@ class Post {
 
         int postId = Post.fromJson(v).id;
         int idAuthor = Post.fromJson(v).id_user;
+        print("Z2");
+
         final responseA = await http.get(
             Uri.parse(
                 'https://smart-house-builder.azurewebsites.net/api/user/nameUser/$idAuthor'),
@@ -208,6 +212,8 @@ class Post {
           postare.author = responseA.body;
         } else
           postare.author = "Default Author";
+        print("Z3");
+
         final response2 = await http.get(
             Uri.parse(
               'https://smart-house-builder.azurewebsites.net/api/forum/comment/$postId',
@@ -215,7 +221,7 @@ class Post {
             headers: {"Access-Control-Allow-Origin": "*"});
         for (var comment in jsonDecode(response2.body)) {
           Comment com = Comment.fromJson(comment);
-          int idAuthor = Comment.fromJson(v).id_user;
+          int idAuthor = Comment.fromJson(comment).id_user;
           final responseA = await http.get(
               Uri.parse(
                   'https://smart-house-builder.azurewebsites.net/api/user/nameUser/$idAuthor'),
@@ -247,6 +253,7 @@ class Post {
       var jsonData = json.decode(response.body);
       List<Post> posts = [];
       for (var v in jsonData) {
+        print("1D");
         Post postare = Post.fromJson(v);
 
         int postId = Post.fromJson(v).id;
@@ -255,6 +262,8 @@ class Post {
             Uri.parse(
                 'https://smart-house-builder.azurewebsites.net/api/user/nameUser/$idAuthor'),
             headers: {"Access-Control-Allow-Origin": "*"});
+        print("2D");
+
         if (responseA.statusCode == 200) {
           postare.author = responseA.body;
         } else
@@ -266,7 +275,8 @@ class Post {
             headers: {"Access-Control-Allow-Origin": "*"});
         for (var comment in jsonDecode(response2.body)) {
           Comment com = Comment.fromJson(comment);
-          int idAuthor = Comment.fromJson(v).id_user;
+          int idAuthor = Comment.fromJson(comment).id_user;
+
           final responseA = await http.get(
               Uri.parse(
                   'https://smart-house-builder.azurewebsites.net/api/user/nameUser/$idAuthor'),
@@ -285,6 +295,8 @@ class Post {
             headers: {"Access-Control-Allow-Origin": "*"});
         var tag = jsonDecode(response3.body);
         postare.tags_integers = Tags.fromJson(tag);
+        print("3D");
+
         Post.setTags(postare);
         posts.add(postare);
       }
@@ -345,7 +357,7 @@ class Post {
             headers: {"Access-Control-Allow-Origin": "*"});
         for (var comment in jsonDecode(response2.body)) {
           Comment com = Comment.fromJson(comment);
-          int idAuthor = Comment.fromJson(v).id_user;
+          int idAuthor = Comment.fromJson(comment).id_user;
           final responseA = await http.get(
               Uri.parse(
                   'https://smart-house-builder.azurewebsites.net/api/user/nameUser/$idAuthor'),
@@ -447,7 +459,7 @@ class Post {
     }
   }
 
-  Future<void> setNrLikes(int newNrLikes) async {
+  void setNrLikes(int newNrLikes) {
     this.nrLikes = newNrLikes;
     int id = this.id;
     final queryParameters = {
@@ -461,8 +473,7 @@ class Post {
       HttpHeaders.contentTypeHeader: 'application/json',
     };
 
-    final response = await http.put(uri, headers: headers);
-    print(response.body);
+    http.put(uri, headers: headers);
   }
 
   static Future<List<Post>> getPosts() async {
@@ -536,6 +547,15 @@ class Post {
     for (var v in jsonData) {
       Post postHere = Post.fromJson(v);
       int postId = Post.fromJson(v).id;
+      int idAuthor = Post.fromJson(v).id_user;
+      final responseA = await http.get(
+          Uri.parse(
+              'https://smart-house-builder.azurewebsites.net/api/user/nameUser/$idAuthor'),
+          headers: {"Access-Control-Allow-Origin": "*"});
+      if (responseA.statusCode == 200) {
+        postHere.author = responseA.body;
+      } else
+        postHere.author = "Default Author";
       final response2 = await http.get(
           Uri.parse(
             'https://smart-house-builder.azurewebsites.net/api/forum/comment/$postId',
@@ -543,12 +563,26 @@ class Post {
           headers: {"Access-Control-Allow-Origin": "*"});
       for (var comment in jsonDecode(response2.body)) {
         Comment com = Comment.fromJson(comment);
+        int idAuthor = Comment.fromJson(comment).id_user;
+        final responseA = await http.get(
+            Uri.parse(
+                'https://smart-house-builder.azurewebsites.net/api/user/nameUser/$idAuthor'),
+            headers: {"Access-Control-Allow-Origin": "*"});
+        if (responseA.statusCode == 200) {
+          com.author = responseA.body;
+        } else
+          com.author = "Default Author";
         postHere.comments.add(com);
       }
       postHere.nrComments = postHere.comments.length;
-      postHere.nrLikes = 0;
+      final response3 = await http.get(
+          Uri.parse(
+            'https://smart-house-builder.azurewebsites.net/api/forum/tags/$postId',
+          ),
+          headers: {"Access-Control-Allow-Origin": "*"});
+      var tag = jsonDecode(response3.body);
+      postHere.tags_integers = Tags.fromJson(tag);
       Post.setTags(postHere);
-
       posts.add(postHere);
     }
 
