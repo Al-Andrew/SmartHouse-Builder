@@ -1,13 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:homepage/about_us.dart';
-import 'package:homepage/change_email.dart';
-import 'package:homepage/change_password.dart';
 
 import 'package:homepage/global_variables.dart';
 import 'package:homepage/homepage.dart';
-import 'package:homepage/market.dart';
+import 'package:homepage/marketplace.dart';
 import 'package:homepage/forum/Forum.dart';
-import 'package:homepage/myaccount.dart';
 
 import 'package:homepage/shb.dart';
 import 'package:homepage/contact_us.dart';
@@ -70,16 +67,13 @@ class _MyHomePageState extends State<MyHomePage> {
   _MyHomePageState(this._selectedIndex);
 
   static final List<Widget> _widgetOptions = <Widget>[
-    HomePage(),
+    const HomePage(),
     SHB(),
-    const Market(),
+    Marketplace(all: ""),
     const Forum(),
     const ContactUs(),
     const AboutUs(),
     SignUp(),
-    const MyAccount(),
-    const ChangePassword(),
-    const ChangeEmail()
   ];
 
   void changeScreen(int index) {
@@ -412,6 +406,8 @@ class _MyHomePageState extends State<MyHomePage> {
                                 child: InkWell(
                                   onTap: () {
                                     showDialog<String>(
+                                      barrierColor:
+                                          Colors.blue.withOpacity(0.5),
                                       context: context,
                                       builder: (BuildContext context) =>
                                           const AccountMenu(),
@@ -596,80 +592,106 @@ class AccountMenu extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      shape: const RoundedRectangleBorder(
-          borderRadius: BorderRadius.all(Radius.circular(20.0))),
-      content: SizedBox(
-        height: 100,
-        child: Column(
-          children: [
-            Material(
-              color: Colors.white,
-              child: InkWell(
-                onTap: () {
-                  lastSelectedIndex = 7;
-                  Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => const MyApp(
-                                selectedIndex: 7,
-                              )));
-                },
-                child: Row(
-                  children: const [
-                    InkWell(
-                      child: Image(
-                        image: AssetImage('assets/user_icon.png'),
-                        height: 40,
-                        fit: BoxFit.cover,
+        shape: const RoundedRectangleBorder(
+            side:
+                BorderSide(width: 8, color: Color.fromARGB(255, 46, 111, 191)),
+            borderRadius: BorderRadius.all(Radius.circular(20.0))),
+        content: SizedBox(
+          width: 100,
+          height: 150,
+          child: Column(
+            children: [
+              Material(
+                color: Colors.white,
+                child: InkWell(
+                  onTap: () {
+                    // lastSelectedIndex = 7;
+                    // Navigator.pushReplacement(
+                    // context,
+                    // MaterialPageRoute(
+                    // builder: (context) => const MyApp(
+                    // selectedIndex: 7,
+                    // )));
+                  },
+                  child: Row(
+                    children: const [
+                      InkWell(
+                        child: Image(
+                          image: AssetImage('assets/user_icon.png'),
+                          height: 60,
+                          fit: BoxFit.cover,
+                        ),
                       ),
-                    ),
-                    SizedBox(width: 10),
-                    Text('My account',
-                        style: TextStyle(fontSize: 16, color: Colors.blue))
-                  ],
+                      SizedBox(width: 10),
+                      Text('My account',
+                          style: TextStyle(
+                              color: Color.fromARGB(255, 46, 111, 191),
+                              fontSize: 30,
+                              fontFamily: 'BebasNeuePro'))
+                    ],
+                  ),
                 ),
               ),
-            ),
-            const SizedBox(height: 20),
-            Material(
-              color: Colors.white,
-              child: InkWell(
-                onTap: () {
-                  isUserLogged = false;
-                  lastSelectedIndex = 0;
+              const SizedBox(height: 15),
+              Material(
+                color: Colors.white,
+                child: InkWell(
+                  onTap: () {
+                    isUserLogged = false;
+                    lastSelectedIndex = 0;
 
-                  Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => const MyApp(
-                                selectedIndex: 0,
-                              )));
-                },
-                child: Row(
-                  children: const [
-                    InkWell(
-                      child: Image(
-                        image: AssetImage('assets/log_out.png'),
-                        height: 40,
-                        fit: BoxFit.cover,
+                    Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const MyApp(
+                                  selectedIndex: 0,
+                                )));
+                  },
+                  child: Row(
+                    children: const [
+                      InkWell(
+                        child: Image(
+                          image: AssetImage('assets/log_out.png'),
+                          height: 60,
+                          fit: BoxFit.cover,
+                        ),
                       ),
-                    ),
-                    SizedBox(width: 10),
-                    Text('Log out',
-                        style: TextStyle(fontSize: 16, color: Colors.blue))
-                  ],
+                      SizedBox(width: 10),
+                      Text(' Log out',
+                          style: TextStyle(
+                              color: Color.fromARGB(255, 46, 111, 191),
+                              fontSize: 30,
+                              fontFamily: 'BebasNeuePro'))
+                    ],
+                  ),
                 ),
-              ),
-            )
-          ],
+              )
+            ],
+          ),
         ),
-      ),
-      actions: <Widget>[
-        TextButton(
-          onPressed: () => Navigator.pop(context, 'OK'),
-          child: const Text('OK'),
-        ),
-      ],
-    );
+        actions: [
+          SizedBox(
+              height: 70,
+              child: Padding(
+                  padding: const EdgeInsets.all(20.0),
+                  child: Column(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        ElevatedButton(
+                            onPressed: () {
+                              Navigator.pop(context);
+                            },
+                            child: const Text(
+                              "OK",
+                              style: TextStyle(color: Colors.white),
+                            ),
+                            style: ElevatedButton.styleFrom(
+                                primary:
+                                    const Color.fromARGB(255, 46, 111, 191),
+                                textStyle: const TextStyle(
+                                    fontFamily: 'BebasNeuePro', fontSize: 25)))
+                      ])))
+        ]);
   }
 }
