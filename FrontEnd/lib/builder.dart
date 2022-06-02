@@ -4,6 +4,8 @@ import 'dart:convert';
 import 'dart:io';
 import 'dart:math' as math;
 
+import 'package:homepage/global_variables.dart' as gv;
+import 'package:http/http.dart' as http;
 import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
 import 'package:flame/flame.dart';
@@ -13,9 +15,44 @@ import 'package:flame/palette.dart';
 import 'package:flutter/material.dart' hide Draggable;
 import 'package:flutter/services.dart';
 
-//import 'package:flutter/cupertino.dart';
+const String baseUri = "http://localhost:8070";
+
+Future<Setup> createSetupRequest(int userId, String name) async {
+  final resp = await http
+      .post(Uri.parse(baseUri + "/api/shb/setup?userId=$userId&name=$name"));
+
+  return Setup.fromJson(jsonDecode(resp.body));
+}
+
+Future<List<Setup>> getSetupsForUserRequest(int userId) async {
+  final resp = await http.get(Uri.parse(baseUri + "/api/shb/setup/$userId"));
+
+  List<dynamic> setups = jsonDecode(resp.body);
+  List<Setup> ret =
+      setups.map((e) => Setup.fromJson(e as Map<String, dynamic>)).toList();
+
+  return ret;
+}
+
+Future updateSetupComponentsRequest() async {
+  int id = BuilderState.setup.id;
+  String j = jsonEncode(BuilderState.setup.toJson());
+  print(j);
+
+  final resp = await http
+      .post(Uri.parse(baseUri + "/api/shb/setup/updateComponents?id=$id"),
+          headers: <String, String>{
+            HttpHeaders.contentTypeHeader: 'text/plain'
+          },
+          body: j)
+      .then((value) => print("Updated setup components"),
+          onError: (err) => print(err));
+
+  return resp;
+}
 
 class Setup {
+  var id;
   List<BaseSchematic> components = [];
 
   Map<String, dynamic> toJson() {
@@ -26,7 +63,8 @@ class Setup {
 
   static Setup fromJson(Map<String, dynamic> json) {
     var ret = Setup();
-    List<dynamic> cmpDyn = json['components'];
+    ret.id = json['id'];
+    List<dynamic> cmpDyn = jsonDecode(json['components'])['components'];
     List<Map<String, dynamic>> cmp =
         cmpDyn.map((e) => e as Map<String, dynamic>).toList();
 
@@ -48,18 +86,59 @@ class BuilderCon extends StatefulWidget {
 
 class BuilderState extends State<BuilderCon> {
   static var flameContext = Builder();
-  static var setup = Setup();
+  static Setup setup = Setup();
 
-  static void AddNewWall() {
+  static void createEmptySetup() {
+    Future<Setup> r = createSetupRequest(gv.userID, 'unnamed setup');
+    r.then((value) => BuilderState.replaceSetup(value),
+        onError: (err) => print(err));
+  }
+
+  static void replaceSetup(Setup newSetup) {
+    for (var child in flameContext.children) {
+      flameContext.remove(child);
+    }
+
+    BuilderState.setup = newSetup;
+
+    for (var schm in BuilderState.setup.components) {
+      switch (schm.runtimeType) {
+        case Wall:
+          AddNewWall(schm as Wall);
+          break;
+        case Window:
+          AddNewWindow(schm as Window);
+          break;
+        default:
+          print("Unrecognized kinda schm");
+      }
+    }
+  }
+
+  static void AddNewWall(Wall? newWall) {
+    if (newWall != null) {
+      flameContext.add(newWall);
+      return;
+    }
+
     var lewall = Wall();
     flameContext.add(lewall);
     setup.components.add(lewall);
   }
 
-  static void AddNewWindow() {
+  static void AddNewWindow(Window? schm) {
+    if (schm != null) {
+      flameContext.add(schm);
+      return;
+    }
     var win = Window();
     flameContext.add(win);
     setup.components.add(win);
+  }
+
+  @override
+  void initState() {
+    super.initState();
   }
 
   @override
@@ -77,8 +156,21 @@ class Builder extends FlameGame
 
   @override
   Future<void>? onLoad() {
-    add(Door());
-    add(SmartObject());
+    List<Setup> userSetups = [];
+
+    getSetupsForUserRequest(gv.userID).then((List<Setup> value) {
+      userSetups = value;
+    }, onError: (err) => print(err)).then((value) {
+      if (userSetups.length == 0) {
+        print("First time user");
+        createSetupRequest(gv.userID, 'unnamed setup').then((value) {
+          userSetups.add(value);
+        }, onError: (err) => print(err));
+      }
+    }).then((value) {
+      BuilderState.replaceSetup(userSetups.last);
+    }, onError: (err) => print(err));
+
     return super.onLoad();
   }
 
@@ -131,7 +223,7 @@ class Builder extends FlameGame
     }
     final isSpace = keysPressed.contains(LogicalKeyboardKey.space);
     if (isSpace && isKeyDown) {
-      BuilderState.AddNewWall();
+      BuilderState.AddNewWall(null);
       return KeyEventResult.handled;
     }
     final isB = keysPressed.contains(LogicalKeyboardKey.keyB);
@@ -141,22 +233,8 @@ class Builder extends FlameGame
     }
     final isL = keysPressed.contains(LogicalKeyboardKey.keyL);
     if (isL && isKeyDown) {
-      String json =
-          "{\"components\":[{\"type\":\"Wall\",\"size\":{\"x\":374.3278107919399,\"y\":12.5},\"transform\":{\"position\":{\"x\":562,\"y\":207},\"scale\":{\"x\":1,\"y\":1},\"angle\":0,\"offset\":{\"x\":-187.16390539596995,\"y\":-6.25}},\"anchor\":{\"x\":0.5,\"y\":0.5}},{\"type\":\"Wall\",\"size\":{\"x\":373.5659723015398,\"y\":12.5},\"transform\":{\"position\":{\"x\":563,\"y\":418},\"scale\":{\"x\":1,\"y\":1},\"angle\":0,\"offset\":{\"x\":-186.7829861507699,\"y\":-6.25}},\"anchor\":{\"x\":0.5,\"y\":0.5}},{\"type\":\"Wall\",\"size\":{\"x\":211.156731932318,\"y\":12.5},\"transform\":{\"position\":{\"x\":382,\"y\":311},\"scale\":{\"x\":1,\"y\":1},\"angle\":-1.5759341152893138,\"offset\":{\"x\":-105.578365966159,\"y\":-6.25}},\"anchor\":{\"x\":0.5,\"y\":0.5}},{\"type\":\"Wall\",\"size\":{\"x\":205.63735297020446,\"y\":12.5},\"transform\":{\"position\":{\"x\":743,\"y\":315},\"scale\":{\"x\":1,\"y\":1},\"angle\":-1.5829126244031397,\"offset\":{\"x\":-102.81867648510223,\"y\":-6.25}},\"anchor\":{\"x\":0.5,\"y\":0.5}}]}";
-
-      Map<String, dynamic> de = jsonDecode(json);
-      Setup newsetup = Setup.fromJson(de);
-
-      for (var child in this.children) {
-        remove(child);
-      }
-
-      BuilderState.setup = newsetup;
-
-      for (var schm in BuilderState.setup.components) {
-        add(schm);
-      }
-
+      print(jsonEncode(BuilderState.setup.toJson()));
+      updateSetupComponentsRequest();
       return KeyEventResult.handled;
     }
 
