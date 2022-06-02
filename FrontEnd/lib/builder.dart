@@ -15,7 +15,7 @@ import 'package:flame/palette.dart';
 import 'package:flutter/material.dart' hide Draggable;
 import 'package:flutter/services.dart';
 
-const String baseUri = "http://localhost:8070";
+const String baseUri = "https://smart-house-builder.azurewebsites.net";
 
 Future<Setup> createSetupRequest(int userId, String name) async {
   final resp = await http
