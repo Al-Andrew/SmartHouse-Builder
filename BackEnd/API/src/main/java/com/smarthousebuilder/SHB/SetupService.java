@@ -31,6 +31,18 @@ public class SetupService {
         setupRepository.save(setup);
     }
 
+    public void updateSetupName(int id, String name) {
+        Setup s = setupRepository.findSetupById(id);
+        s.setName(name);
+        setupRepository.save(s);
+    }
+
+    public void updateSetupComponents(int id, String components) {
+        Setup s = setupRepository.findSetupById(id);
+        s.setComponents(components);
+        setupRepository.save(s);
+    }
+
     public Setup createSetup(Integer userId, String name) {
 
         Setup setup = new Setup();
