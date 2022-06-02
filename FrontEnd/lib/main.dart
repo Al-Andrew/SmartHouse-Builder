@@ -12,6 +12,10 @@ import 'package:homepage/contact_us.dart';
 import 'package:homepage/signup.dart';
 import 'package:flutter/gestures.dart';
 
+import 'package:homepage/myaccount.dart';
+import 'package:homepage/change_email.dart';
+import 'package:homepage/change_password.dart';
+
 void main() {
   runApp(const MyApp(
     selectedIndex: 0,
@@ -74,6 +78,9 @@ class _MyHomePageState extends State<MyHomePage> {
     const ContactUs(),
     const AboutUs(),
     SignUp(),
+    const MyAccount(),
+    const ChangePassword(),
+    const ChangeEmail()
   ];
 
   void changeScreen(int index) {
@@ -605,13 +612,13 @@ class AccountMenu extends StatelessWidget {
                 color: Colors.white,
                 child: InkWell(
                   onTap: () {
-                    // lastSelectedIndex = 7;
-                    // Navigator.pushReplacement(
-                    // context,
-                    // MaterialPageRoute(
-                    // builder: (context) => const MyApp(
-                    // selectedIndex: 7,
-                    // )));
+                    lastSelectedIndex = 7;
+                    Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const MyApp(
+                                  selectedIndex: 7,
+                                )));
                   },
                   child: Row(
                     children: const [

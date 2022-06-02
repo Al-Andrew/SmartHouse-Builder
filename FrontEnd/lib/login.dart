@@ -29,6 +29,11 @@ class _LoginState extends State<Login> {
     var byteHasedPassword = utf8.encode(password);
     String hasedPassword = sha256.convert(byteHasedPassword).toString();
 
+    final responseUsername = await get(
+        Uri.parse(
+            'https://smart-house-builder.azurewebsites.net/api/user/nameUser/$userID'),
+        headers: {"Access-Control-Allow-Origin": "*"});
+
     if (emailOrUser.contains("@")) {
       var body =
           jsonEncode({'emailUser': emailOrUser, 'passUser': hasedPassword});
@@ -51,6 +56,7 @@ class _LoginState extends State<Login> {
         } else {
           isNameEmailMatched = true;
           userID = int.parse(response.body);
+          userName = responseUsername.body;
           isUserLogged = true;
           print("Login succesfully");
         }
@@ -67,6 +73,11 @@ class _LoginState extends State<Login> {
           body: body,
           headers: headers);
 
+      final responseUsername = await get(
+          Uri.parse(
+              'https://smart-house-builder.azurewebsites.net/api/user/nameUser/$userID'),
+          headers: {"Access-Control-Allow-Origin": "*"});
+
       print(response.body);
 
       if (response.statusCode == 200) {
@@ -78,7 +89,7 @@ class _LoginState extends State<Login> {
           print("Passwords don't match");
         } else {
           userID = int.parse(response.body);
-          userName = emailOrUser;
+          userName = responseUsername.body;
           isUserLogged = true;
           print("Login succesfully");
         }
