@@ -86,7 +86,9 @@ class _AboutUsState extends State<AboutUs> {
                       child: const SelectableText('Why choose the SMART way? !',
                           textAlign: TextAlign.center,
                           style: TextStyle(
-                              fontFamily: 'BebasNeuePro', fontSize: 30)),
+                              fontFamily: 'BebasNeuePro',
+                              fontSize: 30,
+                              fontWeight: FontWeight.bold)),
                     ),
                     Container(
                       child: const SelectableText(
