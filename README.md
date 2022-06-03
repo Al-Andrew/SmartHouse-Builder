@@ -6,14 +6,14 @@ Our application desires to make it easy for the clients to search for smart devi
 <br />
 
 ## Project Management
-| Team 1              | Team 2                  | Team 3             | Team 4           | Team 5           |
-|---------------------|-------------------------|--------------------|------------------|------------------|
-| **Frentescu Cezar** | **Cibotariu Cosmin**    | **Opariuc Rares**  | **Aldea Andrei** | **Matei Adelin** |
-| Ghiorghiu Ana Maria | Calcan Teodor Alexandru | Lapteacru Cristian | Doroftei Andrei  | Gavrila Andreea  |
-| Morariu Georgiana   | Balteanu Andrei         | Guzovatii Dan      | Cristea Stefan   | Sima Bianca      |
-| Lascar Andrada      | Iordache Alexandru      | Baranceanu Vlad    | Apostol Horia    |                  |
-| Petraru Ecaterina   | Tabalae Ioan            | Brezuleanu Alex    | Enascuta Razvan  |                  |
-| Nedelcu Adina       | Sacara Samuel           | Stan Claudiu       | Dodan Gabriel    |                  |
+| Team 1              | Team 2                    | Team 3             | Team 4           | Team 5           |
+|---------------------|---------------------------|--------------------|------------------|------------------|
+| **Frentescu Cezar** | **Cibotariu Cristian**    | **Opariuc Rares**  | **Aldea Andrei** | **Matei Adelin** |
+| Ghiorghiu Ana Maria | Calcan Teodor Alexandru   | Lapteacru Cristian | Doroftei Andrei  | Gavrila Andreea  |
+| Morariu Georgiana   | Balteanu Andrei           | Guzovatii Dan      | Cristea Stefan   | Sima Bianca      |
+| Lascar Andrada      | Iordache Alexandru        | Baranceanu Vlad    | Apostol Horia    |                  |
+| Petraru Ecaterina   | Tabalae Ioan              | Brezuleanu Alex    | Enascuta Razvan  |                  |
+| Nedelcu Adina       | Sacara Samuel             | Stan Claudiu       | Dodan Gabriel    |                  |
 <br />
 
 ## Web Technologies used <br />
